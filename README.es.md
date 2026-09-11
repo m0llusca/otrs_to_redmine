@@ -8,7 +8,7 @@
 
 Puente OTRS 6 CE / Znuny 7 ↔ Redmine: escalar o vincular tickets y sincronizar estado y notas en ambos sentidos.
 
-[![Version](https://img.shields.io/badge/version-1.0.25-0B5FFF)](./OTRSRedmineBridge.sopm)
+[![Version](https://img.shields.io/badge/version-1.0.26-0B5FFF)](./OTRSRedmineBridge.sopm)
 [![License: GPL v3](https://img.shields.io/badge/license-GPL--3.0-green)](./LICENSE)
 [![OTRS](https://img.shields.io/badge/OTRS-6.0-informational)](https://community.znuny.org/)
 [![Znuny](https://img.shields.io/badge/Znuny-7.x-informational)](https://www.znuny.org/)
@@ -27,7 +27,7 @@ Puente OTRS 6 CE / Znuny 7 ↔ Redmine: escalar o vincular tickets y sincronizar
 - OTRS 6.0+ o Znuny 7.x (Perl 5.16+)
 - Redmine con API REST y clave de **cuenta de servicio**
 - Red desde OTRS hacia Redmine (HTTPS / proxy / DNS)
-- **OTRS Daemon** para el sync Redmine → OTRS y reintentos
+- **Daemon** (`otrs.Daemon.pl` / `znuny.Daemon.pl`) para el sync Redmine → tickets y reintentos
 
 ## Instalación
 

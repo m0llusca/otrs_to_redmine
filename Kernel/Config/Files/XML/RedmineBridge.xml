@@ -14,7 +14,7 @@
     </Setting>
 
     <Setting Name="Redmine::OTRSBaseURL" Required="0" Valid="1">
-        <Description Translatable="1">Public OTRS base for links written into Redmine (no trailing slash), e.g. https://otrs.example.org/otrs. Empty = HttpType+FQDN+ScriptAlias (often wrong on copies with hostname FQDN).</Description>
+        <Description Translatable="1">Public ticket-system base for links written into Redmine (no trailing slash), e.g. https://otrs.example.org/otrs or https://znuny.example.org/znuny. Empty = HttpType+FQDN+ScriptAlias.</Description>
         <Navigation>Core::Redmine</Navigation>
         <Value><Item ValueType="String" ValueRegex="^(https?://[^/\s]+(/.*)?)?$"></Item></Value>
     </Setting>
@@ -195,6 +195,23 @@
         </Value>
     </Setting>
 
+    <Setting Name="Loader::Module::AgentTicketRedmineEscalate###002-OTRSRedmineBridge" Required="0" Valid="1">
+        <Description Translatable="1">Loader module registration for the agent escalate popup.</Description>
+        <Navigation>Frontend::Agent::ModuleRegistration::Loader</Navigation>
+        <Value>
+            <Hash>
+                <Item Key="CSS">
+                    <Array>
+                    </Array>
+                </Item>
+                <Item Key="JavaScript">
+                    <Array>
+                    </Array>
+                </Item>
+            </Hash>
+        </Value>
+    </Setting>
+
     <Setting Name="Frontend::Module###AgentTicketRedmineOpen" Required="0" Valid="1">
         <Description Translatable="1">Frontend module registration for Open in Redmine menu ACL.</Description>
         <Navigation>Frontend::Agent::ModuleRegistration</Navigation>
@@ -208,6 +225,23 @@
                     <Item Key="NavBarName">Ticket</Item>
                 </Hash>
             </Item>
+        </Value>
+    </Setting>
+
+    <Setting Name="Loader::Module::AgentTicketRedmineOpen###002-OTRSRedmineBridge" Required="0" Valid="1">
+        <Description Translatable="1">Loader module registration for the Open in Redmine action.</Description>
+        <Navigation>Frontend::Agent::ModuleRegistration::Loader</Navigation>
+        <Value>
+            <Hash>
+                <Item Key="CSS">
+                    <Array>
+                    </Array>
+                </Item>
+                <Item Key="JavaScript">
+                    <Array>
+                    </Array>
+                </Item>
+            </Hash>
         </Value>
     </Setting>
 
@@ -225,6 +259,7 @@
                 <Item Key="PopupType">TicketAction</Item>
                 <Item Key="ClusterName" Translatable="1">Miscellaneous</Item>
                 <Item Key="ClusterPriority">800</Item>
+                <Item Key="Prio">315</Item>
             </Hash>
         </Value>
     </Setting>
@@ -242,6 +277,7 @@
                 <Item Key="PopupType"></Item>
                 <Item Key="ClusterName" Translatable="1">Miscellaneous</Item>
                 <Item Key="ClusterPriority">800</Item>
+                <Item Key="Prio">316</Item>
             </Hash>
         </Value>
     </Setting>
@@ -308,6 +344,36 @@
                     <Item Key="NavBarName">Admin</Item>
                 </Hash>
             </Item>
+        </Value>
+    </Setting>
+
+    <Setting Name="Loader::Module::AdminRedmineBridge###002-OTRSRedmineBridge" Required="0" Valid="1">
+        <Description Translatable="1">Loader module registration for the Admin Redmine bridge screen.</Description>
+        <Navigation>Frontend::Admin::ModuleRegistration::Loader</Navigation>
+        <Value>
+            <Hash>
+                <Item Key="CSS">
+                    <Array>
+                    </Array>
+                </Item>
+                <Item Key="JavaScript">
+                    <Array>
+                    </Array>
+                </Item>
+            </Hash>
+        </Value>
+    </Setting>
+
+    <Setting Name="Frontend::Navigation###AdminRedmineBridge###002-OTRSRedmineBridge" Required="0" Valid="0">
+        <Description Translatable="1">Main menu item registration (disabled; Admin overview tile is used).</Description>
+        <Navigation>Frontend::Admin::ModuleRegistration::MainMenu</Navigation>
+        <Value>
+            <Array>
+                <DefaultItem ValueType="FrontendNavigation">
+                    <Hash>
+                    </Hash>
+                </DefaultItem>
+            </Array>
         </Value>
     </Setting>
 

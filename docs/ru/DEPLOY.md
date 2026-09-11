@@ -14,7 +14,7 @@
    - Если curl/openssl OK, а мост падает на SSL — Admin → TLS diagnostics; при необходимости `Redmine::AllowLegacyTLS` только временно.
    - Если выход только через proxy — SysConfig `WebUserAgent::Proxy`.
 4. `Package::AllowNotVerifiedPackages` (или подпись пакета по политике ИБ).
-5. **OTRS Daemon** должен быть запущен (иначе нет Redmine→OTRS sync / retry).
+5. **Daemon** должен быть запущен (`otrs.Daemon.pl` или `znuny.Daemon.pl`) — иначе нет sync / retry Redmine → тикет-система.
 
 ## Шаги
 

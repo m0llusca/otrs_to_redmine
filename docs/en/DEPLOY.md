@@ -14,7 +14,7 @@ Build the `.opm`, install it in Package Manager, then set SysConfig (or the Admi
    - If curl/openssl succeed but the bridge fails on SSL — Admin → TLS diagnostics; use `Redmine::AllowLegacyTLS` only temporarily.
    - If outbound traffic must go through a proxy — SysConfig `WebUserAgent::Proxy`.
 4. `Package::AllowNotVerifiedPackages` (or sign the package per your security policy).
-5. **OTRS Daemon** must be running (otherwise there is no Redmine → OTRS sync / retry).
+5. The **Daemon** must be running (`otrs.Daemon.pl` or `znuny.Daemon.pl`) — otherwise there is no Redmine → ticket-system sync / retry.
 
 ## Steps
 

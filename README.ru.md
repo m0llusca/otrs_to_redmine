@@ -8,7 +8,7 @@
 
 Мост OTRS 6 CE / Znuny 7 ↔ Redmine: эскалация или привязка тикетов и двусторонняя синхронизация статуса и заметок.
 
-[![Version](https://img.shields.io/badge/version-1.0.25-0B5FFF)](./OTRSRedmineBridge.sopm)
+[![Version](https://img.shields.io/badge/version-1.0.26-0B5FFF)](./OTRSRedmineBridge.sopm)
 [![License: GPL v3](https://img.shields.io/badge/license-GPL--3.0-green)](./LICENSE)
 [![OTRS](https://img.shields.io/badge/OTRS-6.0-informational)](https://community.znuny.org/)
 [![Znuny](https://img.shields.io/badge/Znuny-7.x-informational)](https://www.znuny.org/)
@@ -18,7 +18,7 @@
 - **Разное → Создать задачу в Redmine** — создание или привязка, проект / трекер / исполнитель / приоритет, подтверждение
 - **Разное → Open in Redmine** — URL из `Redmine::BaseURL`
 - Окно уже привязанного тикета: соседние тикеты, отвязка / перепривязка, синк сейчас
-- Двусторонний синк комментариев, вложений и статуса (OTRS Daemon)
+- Двусторонний синк комментариев, вложений и статуса (Daemon OTRS/Znuny)
 - Admin UI: проверка связи / TLS, таймауты, здоровье Daemon, поля Ticket Zoom
 - Защита: UI-таймаут, circuit breaker, allow-list URL вложений, список проектов только для Create
 
@@ -27,7 +27,7 @@
 - OTRS 6.0+ или Znuny 7.x (Perl 5.16+)
 - Redmine с REST API и **сервисным** ключом
 - Сеть от OTRS до Redmine (HTTPS / proxy / DNS)
-- **OTRS Daemon** для синка Redmine → OTRS и повторов
+- **Daemon** (`otrs.Daemon.pl` / `znuny.Daemon.pl`) для синка Redmine → тикеты и повторов
 
 ## Установка
 

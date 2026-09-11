@@ -8,7 +8,7 @@
 
 OTRS 6 CE / Znuny 7 ↔ Redmine bridge: escalate or link tickets, then sync status and notes both ways.
 
-[![Version](https://img.shields.io/badge/version-1.0.25-0B5FFF)](./OTRSRedmineBridge.sopm)
+[![Version](https://img.shields.io/badge/version-1.0.26-0B5FFF)](./OTRSRedmineBridge.sopm)
 [![License: GPL v3](https://img.shields.io/badge/license-GPL--3.0-green)](./LICENSE)
 [![OTRS](https://img.shields.io/badge/OTRS-6.0-informational)](https://community.znuny.org/)
 [![Znuny](https://img.shields.io/badge/Znuny-7.x-informational)](https://www.znuny.org/)
@@ -18,7 +18,7 @@ OTRS 6 CE / Znuny 7 ↔ Redmine bridge: escalate or link tickets, then sync stat
 - **Miscellaneous → Create Redmine issue** — create or link, project / tracker / assignee / priority, confirmation
 - **Miscellaneous → Open in Redmine** — uses `Redmine::BaseURL`
 - Already-linked popup: siblings, unlink / relink, sync now
-- Bidirectional sync of comments, attachments, and status (OTRS Daemon)
+- Bidirectional sync of comments, attachments, and status (OTRS/Znuny Daemon)
 - Admin UI: connectivity / TLS checks, timeouts, Daemon health, Ticket Zoom fields
 - Hardening: UI timeout, circuit breaker, content URL allow-list, create-only project allow-list
 
@@ -27,7 +27,7 @@ OTRS 6 CE / Znuny 7 ↔ Redmine bridge: escalate or link tickets, then sync stat
 - OTRS 6.0+ or Znuny 7.x (Perl 5.16+)
 - Redmine with REST API and a **service** API key
 - Network path from OTRS to Redmine (HTTPS / proxy / DNS)
-- **OTRS Daemon** for Redmine → OTRS sync and retries
+- **Daemon** (`otrs.Daemon.pl` / `znuny.Daemon.pl`) for Redmine → ticket sync and retries
 
 ## Install
 
