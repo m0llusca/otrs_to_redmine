@@ -212,7 +212,7 @@
                 <div class="Field">
                     <input type="checkbox" name="ConfirmLink" id="ConfirmLink" value="1"/>
                     [% Translate("I confirm linking this ticket to the existing Redmine issue") | html %]
-                    <p class="FieldExplanation">[% Translate("Past Redmine comments will not be copied; only new activity will sync. A short note with the OTRS link is added to the Redmine issue.") | html %]</p>
+                    <p class="FieldExplanation">[% Translate("Past Redmine comments will not be copied; only new activity will sync. No comment is written to the Redmine issue.") | html %]</p>
                 </div>
                 <div class="Clear"></div>
             </fieldset>

@@ -35,7 +35,7 @@ Build the `.opm`, install it in Package Manager, then set SysConfig (or the Admi
 
 ## Sync (from 1.0.27)
 
-Ticket mail and notes are **not** pushed to Redmine after create/link. Redmine → OTRS needs the Daemon and `Redmine::InboundSync`.
+Ticket mail and notes are **not** pushed to Redmine after create/link, and the bridge does not write a journal comment on link/unlink. Redmine → OTRS needs the Daemon and `Redmine::InboundSync`.
 
 `Redmine::StatusSync` — one rule per line, Redmine status name = OTRS state:
 

@@ -461,7 +461,7 @@ sub LinkTicketToIssue {
     my %User = $Kernel::OM->Get('Kernel::System::User')->GetUserData( UserID => $Param{UserID} );
     my $AgentLabel = $User{UserLogin} || $Param{UserID};
 
-    # Order: validate project (done) → OTRS DFs → then Redmine note.
+    # Link is local DFs only — do not write a Redmine journal comment.
     eval {
         $Self->_SetDF(
             TicketID => $Param{TicketID},
@@ -534,32 +534,6 @@ sub LinkTicketToIssue {
         );
     };
 
-    my $ZoomURL = $Self->TicketZoomURL( TicketID => $Param{TicketID} );
-    my $Note    = $Self->_BridgeJournalNote(
-        Kind         => 'link',
-        TicketNumber => $Ticket{TicketNumber},
-        AgentLabel   => $AgentLabel,
-        ZoomURL      => $ZoomURL,
-    );
-    my %NoteRes = $Self->_Request(
-        Method => 'PUT',
-        Path   => "/issues/$IssueID.json",
-        JSON   => { issue => { notes => $Note } },
-    );
-    if ( $NoteRes{Success} ) {
-
-        # Advance cursor locally — avoid a second journals GET.
-        eval {
-            $Self->_SetDF(
-                TicketID => $Param{TicketID},
-                Name     => 'RedmineLastJournalID',
-                Value    => '' . ( $MaxJournal + 1 ),
-                UserID   => $Param{UserID},
-            );
-            1;
-        };
-    }
-
     eval {
         $Self->_AddInternalArticle(
             TicketID       => $Param{TicketID},
@@ -607,9 +581,8 @@ sub UnlinkTicketFromIssue {
 
     my %User = $Kernel::OM->Get('Kernel::System::User')->GetUserData( UserID => $Param{UserID} );
     my $AgentLabel = $User{UserLogin} || $Param{UserID};
-    my $TN         = $Ticket{TicketNumber} // '';
 
-    # Local unlink first — Redmine note is best-effort.
+    # Local unlink only — do not write a Redmine journal comment.
     for my $Name (
         qw(
             RedmineID RedmineURL RedmineStatus RedmineLastError
@@ -646,26 +619,6 @@ sub UnlinkTicketFromIssue {
         TicketID     => $Param{TicketID},
         CreateUserID => $Param{UserID},
     );
-
-    my $ZoomURL = $Self->TicketZoomURL( TicketID => $Param{TicketID} );
-    my $Note    = $Self->_BridgeJournalNote(
-        Kind         => 'unlink',
-        TicketNumber => $TN,
-        AgentLabel   => $AgentLabel,
-        ZoomURL      => $ZoomURL,
-    );
-    my %NoteRes = $Self->_Request(
-        Method => 'PUT',
-        Path   => "/issues/$IssueID.json",
-        JSON   => { issue => { notes => $Note } },
-    );
-    if ( !$NoteRes{Success} ) {
-        $Kernel::OM->Get('Kernel::System::Log')->Log(
-            Priority => 'notice',
-            Message  => "Redmine UnlinkTicketFromIssue: local unlink OK, Redmine note failed for #$IssueID: "
-                . ( $NoteRes{Error} || 'unknown' ),
-        );
-    }
 
     return ( Success => 1, Status => 'unlinked', IssueID => $IssueID );
 }
@@ -1509,29 +1462,6 @@ sub _EscalateFailureRecord {
     );
 
     return 1;
-}
-
-# Compact Redmine journal for link/unlink (Markdown-friendly; Textile
-# is not assumed). No duplicate «тикет / привязан» lines.
-sub _BridgeJournalNote {
-    my ( $Self, %Param ) = @_;
-
-    my $Kind  = $Param{Kind}         || 'link';
-    my $TN    = $Param{TicketNumber} // '';
-    my $Agent = $Param{AgentLabel}   // '';
-    my $Zoom  = $Param{ZoomURL}      // '';
-
-    my $Verb = $Kind eq 'unlink' ? 'Отвязка' : 'Привязка';
-    my $Ticket
-        = ( length $TN && length $Zoom ) ? "[$TN]($Zoom)"
-        : length $TN                     ? $TN
-        :                                  '—';
-
-    my @Lines = ("**$Verb OTRS:** $Ticket");
-    push @Lines, "Агент: $Agent" if length $Agent;
-    push @Lines, '';
-
-    return join( "\n", @Lines );
 }
 
 # Create-only allow-list: Redmine::AllowedProjectIDs, or Redmine::ProjectID if empty.

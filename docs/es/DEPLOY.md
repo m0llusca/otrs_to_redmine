@@ -35,7 +35,7 @@ Genere el `.opm`, instálelo en Package Manager y configure SysConfig (o la pant
 
 ## Sincronización (desde 1.0.27)
 
-El correo y las notas del ticket **no** se envían a Redmine tras crear/vincular. Redmine → OTRS requiere Daemon y `Redmine::InboundSync`.
+El correo y las notas del ticket **no** se envían a Redmine tras crear/vincular, y el puente no escribe un comentario al vincular/desvincular. Redmine → OTRS requiere Daemon y `Redmine::InboundSync`.
 
 `Redmine::StatusSync` — una regla por línea, nombre de estado Redmine = estado OTRS:
 

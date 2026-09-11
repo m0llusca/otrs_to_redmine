@@ -201,8 +201,8 @@ sub Data {
             'ID задачи или полный URL. Задача должна уже существовать; новая не создаётся.',
         'I confirm linking this ticket to the existing Redmine issue' =>
             'Подтверждаю привязку этого тикета к существующей задаче Redmine',
-        'Past Redmine comments will not be copied; only new activity will sync. A short note with the OTRS link is added to the Redmine issue.' =>
-            'Старые комментарии Redmine не копируются; синхронизируется только новая активность. В задачу Redmine добавляется короткая заметка со ссылкой на OTRS.',
+        'Past Redmine comments will not be copied; only new activity will sync. No comment is written to the Redmine issue.' =>
+            'Старые комментарии Redmine не копируются; синхронизируется только новая активность. В задачу Redmine комментарий не пишется.',
         'Link Redmine issue' => 'Привязать задачу Redmine',
         'Please confirm linking to the existing issue.' => 'Подтвердите привязку к существующей задаче.',
         'Please enter Redmine issue ID or URL.' => 'Укажите ID или URL задачи Redmine.',

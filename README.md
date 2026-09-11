@@ -8,7 +8,7 @@
 
 OTRS 6 CE / Znuny 7 ↔ Redmine bridge: escalate or link tickets; Redmine status notes sync back to OTRS.
 
-[![Version](https://img.shields.io/badge/version-1.0.27-0B5FFF)](./OTRSRedmineBridge.sopm)
+[![Version](https://img.shields.io/badge/version-1.0.28-0B5FFF)](./OTRSRedmineBridge.sopm)
 [![License: GPL v3](https://img.shields.io/badge/license-GPL--3.0-green)](./LICENSE)
 [![OTRS](https://img.shields.io/badge/OTRS-6.0-informational)](https://community.znuny.org/)
 [![Znuny](https://img.shields.io/badge/Znuny-7.x-informational)](https://www.znuny.org/)
