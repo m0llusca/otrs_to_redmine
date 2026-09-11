@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="utf-8"?>
+<otrs_config version="2.0" init="Application">
+
+    <Setting Name="Redmine::Enabled" Required="0" Valid="1">
+        <Description Translatable="1">Enable OTRS → Redmine bridge.</Description>
+        <Navigation>Core::Redmine</Navigation>
+        <Value><Item ValueType="Checkbox">0</Item></Value>
+    </Setting>
+
+    <Setting Name="Redmine::BaseURL" Required="0" Valid="1">
+        <Description Translatable="1">Redmine base URL without trailing slash (https://…).</Description>
+        <Navigation>Core::Redmine</Navigation>
+        <Value><Item ValueType="String" ValueRegex="^(https?://[^/\s]+(/.*)?)?$"></Item></Value>
+    </Setting>
+
+    <Setting Name="Redmine::OTRSBaseURL" Required="0" Valid="1">
+        <Description Translatable="1">Public OTRS base for links written into Redmine (no trailing slash), e.g. https://otrs.example.org/otrs. Empty = HttpType+FQDN+ScriptAlias (often wrong on copies with hostname FQDN).</Description>
+        <Navigation>Core::Redmine</Navigation>
+        <Value><Item ValueType="String" ValueRegex="^(https?://[^/\s]+(/.*)?)?$"></Item></Value>
+    </Setting>
+
+    <Setting Name="Redmine::APIKey" Required="0" Valid="1">
+        <Description Translatable="1">Redmine REST API key (service account).</Description>
+        <Navigation>Core::Redmine</Navigation>
+        <Value><Item ValueType="Password" ValueRegex=""></Item></Value>
+    </Setting>
+
+    <Setting Name="Redmine::ProjectID" Required="0" Valid="1">
+        <Description Translatable="1">Default Redmine project_id (pre-selected in form).</Description>
+        <Navigation>Core::Redmine</Navigation>
+        <Value><Item ValueType="String" ValueRegex="^(\d+)?$"></Item></Value>
+    </Setting>
+
+    <Setting Name="Redmine::AllowedProjectIDs" Required="0" Valid="1">
+        <Description Translatable="1">Comma/space/newline separated project IDs allowed for Create. Link/relink accepts any project. Empty = only Redmine::ProjectID.</Description>
+        <Navigation>Core::Redmine</Navigation>
+        <Value><Item ValueType="Textarea" ValueRegex=""></Item></Value>
+    </Setting>
+
+    <Setting Name="Redmine::TrackerID" Required="0" Valid="1">
+        <Description Translatable="1">Default Redmine tracker_id (pre-selected in form).</Description>
+        <Navigation>Core::Redmine</Navigation>
+        <Value><Item ValueType="String" ValueRegex="^(\d+)?$"></Item></Value>
+    </Setting>
+
+    <Setting Name="Redmine::PriorityID" Required="0" Valid="1">
+        <Description Translatable="1">Optional Redmine priority_id.</Description>
+        <Navigation>Core::Redmine</Navigation>
+        <Value><Item ValueType="String" ValueRegex="^(\d+)?$"></Item></Value>
+    </Setting>
+
+    <Setting Name="Redmine::DefaultDueDateDays" Required="0" Valid="1">
+        <Description Translatable="1">Days from today for due_date on create (0 = today). Required by some trackers (e.g. Инцидент).</Description>
+        <Navigation>Core::Redmine</Navigation>
+        <Value><Item ValueType="String" ValueRegex="^\d+$">0</Item></Value>
+    </Setting>
+
+    <Setting Name="Redmine::DefaultCustomFields" Required="0" Valid="1">
+        <Description Translatable="1">Default Redmine custom fields on create, one per line: id=value (all trackers) or trackerId:id=value. CF 84 (Массовый инцидент) is applied automatically only for Incident tracker.</Description>
+        <Navigation>Core::Redmine</Navigation>
+        <Value><Item ValueType="Textarea" ValueRegex=""></Item></Value>
+    </Setting>
+
+    <Setting Name="Redmine::IncidentTrackerID" Required="0" Valid="1">
+        <Description Translatable="1">Redmine tracker_id for «Инцидент». Escalation form requires mass-incident Yes/No.</Description>
+        <Navigation>Core::Redmine</Navigation>
+        <Value><Item ValueType="String" ValueRegex="^(\d+)?$">13</Item></Value>
+    </Setting>
+
+    <Setting Name="Redmine::SubjectPrefix" Required="0" Valid="1">
+        <Description Translatable="1">Optional subject prefix. Leave empty in production.</Description>
+        <Navigation>Core::Redmine</Navigation>
+        <Value><Item ValueType="String" ValueRegex=""></Item></Value>
+    </Setting>
+
+    <Setting Name="Redmine::Timeout" Required="0" Valid="1">
+        <Description Translatable="1">HTTP timeout for Daemon/batch calls (seconds).</Description>
+        <Navigation>Core::Redmine</Navigation>
+        <Value><Item ValueType="String" ValueRegex="^\d+$">30</Item></Value>
+    </Setting>
+
+    <Setting Name="Redmine::UITimeout" Required="0" Valid="1">
+        <Description Translatable="1">HTTP timeout for agent popup / Admin interactive calls (seconds). Keep low to avoid pinning Apache workers.</Description>
+        <Navigation>Core::Redmine</Navigation>
+        <Value><Item ValueType="String" ValueRegex="^\d+$">5</Item></Value>
+    </Setting>
+
+    <Setting Name="Redmine::SSLVersion" Required="0" Valid="1">
+        <Description Translatable="1">Perl SSL strategy: auto (TLS 1.2+), or explicit IO::Socket::SSL SSL_version e.g. TLSv1_2.</Description>
+        <Navigation>Core::Redmine</Navigation>
+        <Value><Item ValueType="String" ValueRegex="">auto</Item></Value>
+    </Setting>
+
+    <Setting Name="Redmine::AllowLegacyTLS" Required="0" Valid="1">
+        <Description Translatable="1">Allow TLS strategies weaker than TLS 1.2 (not recommended).</Description>
+        <Navigation>Core::Redmine</Navigation>
+        <Value><Item ValueType="Checkbox">0</Item></Value>
+    </Setting>
+
+    <Setting Name="Redmine::CatalogCacheTTL" Required="0" Valid="1">
+        <Description Translatable="1">Cache TTL (seconds) for Redmine projects/trackers used by the escalate form.</Description>
+        <Navigation>Core::Redmine</Navigation>
+        <Value><Item ValueType="String" ValueRegex="^\d+$">900</Item></Value>
+    </Setting>
+
+    <Setting Name="Redmine::FormLoadAllProjects" Required="0" Valid="1">
+        <Description Translatable="1">If enabled, escalate popup loads the full Redmine project list (slower). If disabled, only the default project and its trackers are loaded (fast).</Description>
+        <Navigation>Core::Redmine</Navigation>
+        <Value><Item ValueType="Checkbox">0</Item></Value>
+    </Setting>
+
+    <Setting Name="Redmine::SyncComments" Required="0" Valid="1">
+        <Description Translatable="1">Sync OTRS articles to Redmine notes and import Redmine journals.</Description>
+        <Navigation>Core::Redmine</Navigation>
+        <Value><Item ValueType="Checkbox">1</Item></Value>
+    </Setting>
+
+    <Setting Name="Redmine::SyncAttachments" Required="0" Valid="1">
+        <Description Translatable="1">Sync attachments both ways (size-limited).</Description>
+        <Navigation>Core::Redmine</Navigation>
+        <Value><Item ValueType="Checkbox">1</Item></Value>
+    </Setting>
+
+    <Setting Name="Redmine::InboundSync" Required="0" Valid="1">
+        <Description Translatable="1">Enable cron polling Redmine → OTRS (status/comments/attachments).</Description>
+        <Navigation>Core::Redmine</Navigation>
+        <Value><Item ValueType="Checkbox">1</Item></Value>
+    </Setting>
+
+    <Setting Name="Redmine::NotifyOnStatusNote" Required="0" Valid="1">
+        <Description Translatable="1">When StatusSync writes an inbound OTRS note (|note), notify the ticket owner and responsible (ForceNotificationToUserID).</Description>
+        <Navigation>Core::Redmine</Navigation>
+        <Value><Item ValueType="Checkbox">1</Item></Value>
+    </Setting>
+
+    <Setting Name="Redmine::AutoRetry" Required="0" Valid="1">
+        <Description Translatable="1">Auto-retry failed escalations (status error, empty RedmineID). Default off until retry payload is verified.</Description>
+        <Navigation>Core::Redmine</Navigation>
+        <Value><Item ValueType="Checkbox">0</Item></Value>
+    </Setting>
+
+    <Setting Name="Redmine::MaxAttachmentBytes" Required="0" Valid="1">
+        <Description Translatable="1">Max attachment size to sync (bytes).</Description>
+        <Navigation>Core::Redmine</Navigation>
+        <Value><Item ValueType="String" ValueRegex="^\d+$">5000000</Item></Value>
+    </Setting>
+
+    <Setting Name="Redmine::SyncBatchLimit" Required="0" Valid="1">
+        <Description Translatable="1">Max tickets per inbound sync cron run.</Description>
+        <Navigation>Core::Redmine</Navigation>
+        <Value><Item ValueType="String" ValueRegex="^\d+$">50</Item></Value>
+    </Setting>
+
+    <Setting Name="Redmine::RetryBatchLimit" Required="0" Valid="1">
+        <Description Translatable="1">Max tickets per auto-retry cron run.</Description>
+        <Navigation>Core::Redmine</Navigation>
+        <Value><Item ValueType="String" ValueRegex="^\d+$">20</Item></Value>
+    </Setting>
+
+    <Setting Name="Redmine::AgentGroup" Required="0" Valid="1">
+        <Description Translatable="1">Optional OTRS group name required to use escalate/link. Empty = any agent with ticket permission.</Description>
+        <Navigation>Core::Redmine</Navigation>
+        <Value><Item ValueType="String" ValueRegex=""></Item></Value>
+    </Setting>
+
+    <Setting Name="Redmine::StatusSync" Required="0" Valid="1">
+        <Description Translatable="1">Per Redmine status: set OTRS state and/or write a note. Value = OTRS state name, optionally with |note (e.g. open|note). |note also imports the Redmine comment from that status-change journal; comments without such a status transition are not copied.</Description>
+        <Navigation>Core::Redmine</Navigation>
+        <Value>
+            <Hash>
+                <Item Key="Проверка решения">open|note</Item>
+            </Hash>
+        </Value>
+    </Setting>
+
+    <Setting Name="Ticket::Frontend::AgentTicketRedmineEscalate###Permission" Required="1" Valid="1">
+        <Description Translatable="1">Required permissions for Redmine escalate action.</Description>
+        <Navigation>Frontend::Agent::View::TicketRedmineEscalate</Navigation>
+        <Value><Item ValueType="String" ValueRegex="">rw</Item></Value>
+    </Setting>
+
+    <Setting Name="Frontend::Module###AgentTicketRedmineEscalate" Required="0" Valid="1">
+        <Description Translatable="1">Frontend module: create Redmine issue.</Description>
+        <Navigation>Frontend::Agent::ModuleRegistration</Navigation>
+        <Value>
+            <Item ValueType="FrontendRegistration">
+                <Hash>
+                    <Item Key="Group"><Array></Array></Item>
+                    <Item Key="GroupRo"><Array></Array></Item>
+                    <Item Key="Description" Translatable="1">Create Redmine issue from ticket.</Item>
+                    <Item Key="Title" Translatable="1">Create Redmine issue</Item>
+                    <Item Key="NavBarName">Ticket</Item>
+                </Hash>
+            </Item>
+        </Value>
+    </Setting>
+
+    <Setting Name="Frontend::Module###AgentTicketRedmineOpen" Required="0" Valid="1">
+        <Description Translatable="1">Frontend module registration for Open in Redmine menu ACL.</Description>
+        <Navigation>Frontend::Agent::ModuleRegistration</Navigation>
+        <Value>
+            <Item ValueType="FrontendRegistration">
+                <Hash>
+                    <Item Key="Group"><Array></Array></Item>
+                    <Item Key="GroupRo"><Array></Array></Item>
+                    <Item Key="Description" Translatable="1">Open linked Redmine issue.</Item>
+                    <Item Key="Title" Translatable="1">Open in Redmine</Item>
+                    <Item Key="NavBarName">Ticket</Item>
+                </Hash>
+            </Item>
+        </Value>
+    </Setting>
+
+    <Setting Name="Ticket::Frontend::MenuModule###315-RedmineEscalate" Required="0" Valid="1">
+        <Description Translatable="1">Misc menu: create Redmine issue, or show link details when already linked.</Description>
+        <Navigation>Frontend::Agent::View::TicketZoom::MenuModule</Navigation>
+        <Value>
+            <Hash>
+                <Item Key="Module">Kernel::Output::HTML::TicketMenu::RedmineEscalate</Item>
+                <Item Key="Name" Translatable="1">Create Redmine issue</Item>
+                <Item Key="Description" Translatable="1">Create a linked Redmine issue for this ticket</Item>
+                <Item Key="Action">AgentTicketRedmineEscalate</Item>
+                <Item Key="Link">Action=AgentTicketRedmineEscalate;TicketID=[% Data.TicketID | uri %]</Item>
+                <Item Key="Target"></Item>
+                <Item Key="PopupType">TicketAction</Item>
+                <Item Key="ClusterName" Translatable="1">Miscellaneous</Item>
+                <Item Key="ClusterPriority">800</Item>
+            </Hash>
+        </Value>
+    </Setting>
+
+    <Setting Name="Ticket::Frontend::MenuModule###316-RedmineOpen" Required="0" Valid="1">
+        <Description Translatable="1">Misc menu: open linked Redmine issue in new tab.</Description>
+        <Navigation>Frontend::Agent::View::TicketZoom::MenuModule</Navigation>
+        <Value>
+            <Hash>
+                <Item Key="Module">Kernel::Output::HTML::TicketMenu::RedmineOpen</Item>
+                <Item Key="Name" Translatable="1">Open in Redmine</Item>
+                <Item Key="Description" Translatable="1">Open linked Redmine issue</Item>
+                <Item Key="Action">AgentTicketRedmineOpen</Item>
+                <Item Key="Target">_blank</Item>
+                <Item Key="PopupType"></Item>
+                <Item Key="ClusterName" Translatable="1">Miscellaneous</Item>
+                <Item Key="ClusterPriority">800</Item>
+            </Hash>
+        </Value>
+    </Setting>
+
+    <Setting Name="Ticket::EventModulePost###5510-RedmineOutbound" Required="0" Valid="1">
+        <Description Translatable="1">Push new OTRS articles to linked Redmine issues.</Description>
+        <Navigation>Core::Event::Ticket</Navigation>
+        <Value>
+            <Hash>
+                <Item Key="Module">Kernel::System::Ticket::Event::RedmineOutbound</Item>
+                <Item Key="Event">ArticleCreate</Item>
+                <Item Key="Transaction">1</Item>
+            </Hash>
+        </Value>
+    </Setting>
+
+    <Setting Name="Daemon::SchedulerCronTaskManager::Task###95-RedmineBridgeSync" Required="0" Valid="1">
+        <Description Translatable="1">Poll Redmine for status/comments/attachments into OTRS.</Description>
+        <Navigation>Daemon::SchedulerCronTaskManager::Task</Navigation>
+        <Value>
+            <Hash>
+                <Item Key="TaskName">RedmineBridgeSync</Item>
+                <Item Key="Schedule">*/5 * * * *</Item>
+                <Item Key="Module">Kernel::System::Redmine</Item>
+                <Item Key="Function">CronSync</Item>
+                <Item Key="MaximumParallelInstances">1</Item>
+                <Item Key="Params"><Array></Array></Item>
+            </Hash>
+        </Value>
+    </Setting>
+
+    <Setting Name="Daemon::SchedulerCronTaskManager::Task###96-RedmineBridgeRetry" Required="0" Valid="1">
+        <Description Translatable="1">Retry failed Redmine escalations.</Description>
+        <Navigation>Daemon::SchedulerCronTaskManager::Task</Navigation>
+        <Value>
+            <Hash>
+                <Item Key="TaskName">RedmineBridgeRetry</Item>
+                <Item Key="Schedule">*/10 * * * *</Item>
+                <Item Key="Module">Kernel::System::Redmine</Item>
+                <Item Key="Function">CronRetry</Item>
+                <Item Key="MaximumParallelInstances">1</Item>
+                <Item Key="Params"><Array></Array></Item>
+            </Hash>
+        </Value>
+    </Setting>
+
+    <Setting Name="Frontend::Module###AdminRedmineBridge" Required="0" Valid="1">
+        <Description Translatable="1">Admin UI for Redmine bridge settings.</Description>
+        <Navigation>Frontend::Admin::ModuleRegistration</Navigation>
+        <Value>
+            <Item ValueType="FrontendRegistration">
+                <Hash>
+                    <Item Key="GroupRo">
+                        <Array>
+                        </Array>
+                    </Item>
+                    <Item Key="Group">
+                        <Array>
+                            <Item>admin</Item>
+                        </Array>
+                    </Item>
+                    <Item Key="Description">Admin</Item>
+                    <Item Key="Title" Translatable="1">OTRS ↔ Redmine Bridge</Item>
+                    <Item Key="NavBarName">Admin</Item>
+                </Hash>
+            </Item>
+        </Value>
+    </Setting>
+
+    <Setting Name="Frontend::NavigationModule###AdminRedmineBridge" Required="0" Valid="1">
+        <Description Translatable="1">Admin overview tile for Redmine bridge.</Description>
+        <Navigation>Frontend::Admin::ModuleRegistration::AdminOverview</Navigation>
+        <Value>
+            <Hash>
+                <Item Key="Group">
+                    <Array>
+                        <Item>admin</Item>
+                    </Array>
+                </Item>
+                <Item Key="GroupRo">
+                    <Array>
+                    </Array>
+                </Item>
+                <Item Key="Module">Kernel::Output::HTML::NavBar::ModuleAdmin</Item>
+                <Item Key="Name" Translatable="1">OTRS ↔ Redmine Bridge</Item>
+                <Item Key="Block">Automation</Item>
+                <Item Key="Description" Translatable="1">Configure Redmine connection, sync and status rules.</Item>
+                <Item Key="IconBig">fa-exchange</Item>
+                <Item Key="IconSmall"></Item>
+            </Hash>
+        </Value>
+    </Setting>
+
+</otrs_config>

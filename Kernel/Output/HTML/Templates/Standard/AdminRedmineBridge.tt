@@ -1,0 +1,525 @@
+# --
+# Copyright (C) 2026 OTRSRedmineBridge
+# --
+<style type="text/css">
+/* Compact Admin polish — keep OTRS TableLike float layout */
+.RedmineAdminBridge fieldset.TableLike {
+    margin: 0 0 0.75em;
+    padding: 0;
+    border: 0;
+}
+.RedmineAdminBridge fieldset.TableLike > legend {
+    margin: 0 0 0.45em;
+    padding: 0 0 0.25em;
+    width: 100%;
+    color: #2f3e4d;
+    font-size: 1em;
+    font-weight: 600;
+    border-bottom: 1px solid #cfd8e3;
+}
+.RedmineAdminBridge fieldset.RedmineAdminAdvanced > legend {
+    text-align: center;
+}
+.RedmineAdminBridge fieldset.RedmineAdminAdvanced > h3.RedmineAdminSectionTitle {
+    clear: both;
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0.85em 0 0.55em;
+    padding: 0.4em 0.75em;
+    color: #334155;
+    font-size: 0.95em;
+    font-weight: 600;
+    text-align: center;
+    letter-spacing: 0.01em;
+    border-top: 1px solid #d7dee6;
+    border-bottom: 1px solid #d7dee6;
+    background: #f3f6f9;
+}
+.RedmineAdminBridge fieldset.TableLike > .Field {
+    padding-bottom: 0.4em;
+}
+.RedmineAdminBridge .FieldExplanation {
+    margin: 0.2em 0 0;
+    max-width: 36em;
+    color: #5b6b7c;
+    font-size: 0.86em;
+    line-height: 1.35;
+}
+.RedmineAdminBridge .Field input[type="text"],
+.RedmineAdminBridge .Field input[type="password"],
+.RedmineAdminBridge .Field textarea,
+.RedmineAdminBridge .Field select {
+    box-sizing: border-box;
+    border: 1px solid #b8c4d0;
+    border-radius: 3px;
+    background: #fff;
+    padding: 4px 8px;
+}
+.RedmineAdminBridge .Field select[multiple] {
+    min-height: 4.5em;
+    max-height: 9em;
+    padding: 0.3em;
+    overflow-y: auto;
+}
+.RedmineAdminBridge .RedmineAdminNarrow input[type="text"] {
+    width: 7.5em;
+    max-width: 7.5em;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+.RedmineAdminBridge .RedmineAdminCheck input[type="checkbox"] {
+    margin-right: 0.4em;
+    vertical-align: middle;
+}
+.RedmineAdminBridge .SidebarColumn .WidgetSimple {
+    border: 1px solid #d7dee6;
+}
+.RedmineAdminBridge pre.FieldExplanation {
+    max-width: 100%;
+    margin-top: 0.35em;
+    border: 1px solid #d7dee6;
+    border-radius: 3px;
+    background: #f7f9fb;
+}
+</style>
+<div class="MainBox ARIARoleMain LayoutFixedSidebar SidebarFirst RedmineAdminBridge">
+    <h1>[% Translate("OTRS ↔ Redmine Bridge") | html %]</h1>
+
+    [% BreadcrumbPath = [
+            {
+                Name => Translate('Administration'),
+                Link => 'Admin',
+            },
+            {
+                Name => Translate('OTRS ↔ Redmine Bridge'),
+            },
+        ]
+    %]
+    [% INCLUDE "Breadcrumb.tt" Path = BreadcrumbPath %]
+
+    <div class="SidebarColumn">
+        <div class="WidgetSimple">
+            <div class="Header">
+                <h2>[% Translate("Actions") | html %]</h2>
+            </div>
+            <div class="Content">
+                <ul class="ActionList">
+                    <li>
+                        <a href="[% Env("Baselink") %]Action=Admin" class="CallForAction Fullsize Center">
+                            <span><i class="fa fa-caret-left"></i> [% Translate("Go to overview") | html %]</span>
+                        </a>
+                    </li>
+                    <li>
+                        <button type="submit" form="AdminRedmineBridgeForm" class="CallForAction Fullsize Center"
+                            onclick="document.getElementById('RedmineSubaction').value='EnableZoomFields';">
+                            <span><i class="fa fa-eye"></i> [% Translate("Show Redmine fields on TicketZoom") | html %]</span>
+                        </button>
+                    </li>
+                    <li>
+                        <button type="submit" form="AdminRedmineBridgeForm" class="CallForAction Fullsize Center"
+                            onclick="document.getElementById('RedmineSubaction').value='RunSyncNow';">
+                            <span><i class="fa fa-refresh"></i> [% Translate("Run sync now") | html %]</span>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="WidgetSimple">
+            <div class="Header">
+                <h2>[% Translate("Daemon health") | html %]</h2>
+            </div>
+            <div class="Content">
+[% IF Data.SyncStale %]
+                <p class="FieldExplanation" style="color:#a00;font-weight:bold;">
+                    [% Translate("Sync looks stale (older than 15 minutes). Check that OTRS Daemon is running.") | html %]
+                </p>
+[% END %]
+[% IF Data.HealthHasData %]
+                <p class="FieldExplanation">
+                    [% Translate("Last sync age") | html %]:
+                    <strong[% IF Data.SyncStale %] style="color:#a00;"[% END %]>[% Data.SyncAgeLabel | html %]</strong>
+[% IF Data.LastSyncOK == 1 %]
+                    — [% Translate("OK") | html %]
+[% ELSIF Data.LastSyncOK == 0 %]
+                    — [% Translate("Failed") | html %]
+[% END %]
+                </p>
+[% IF Data.SyncedCount != '' %]
+                <p class="FieldExplanation">[% Translate("Tickets synced (last run)") | html %]: [% Data.SyncedCount | html %]</p>
+[% END %]
+[% IF Data.LastSyncError %]
+                <p class="FieldExplanation" style="color:#a00;">[% Translate("Last sync error") | html %]: [% Data.LastSyncError | html %]</p>
+[% END %]
+[% ELSE %]
+                <p class="FieldExplanation">[% Translate("No sync health data yet. Daemon writes it after CronSync.") | html %]</p>
+[% END %]
+                <p class="FieldExplanation">[% Translate("OTRS Daemon must be running for Redmine → OTRS sync (every 5 minutes).") | html %]</p>
+            </div>
+        </div>
+
+        <div class="WidgetSimple">
+            <div class="Header">
+                <h2>[% Translate("Hint") | html %]</h2>
+            </div>
+            <div class="Content">
+                <p class="FieldExplanation">
+                    [% Translate("These settings are stored in SysConfig and deployed automatically on save.") | html %]
+                </p>
+                <p class="FieldExplanation">
+                    [% Translate("Projects, trackers and priorities are loaded from Redmine via API — pick from the lists, no need to copy numeric IDs.") | html %]
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="ContentColumn">
+        <div class="WidgetSimple">
+            <div class="Header">
+                <h2>[% Translate("Connection") | html %]</h2>
+            </div>
+            <div class="Content">
+                <form action="[% Env("CGIHandle") %]" method="post" class="Validate PreventMultipleSubmits" id="AdminRedmineBridgeForm">
+                    <input type="hidden" name="Action" value="AdminRedmineBridge"/>
+                    [%# Subaction must stay in a hidden field: PreventMultipleSubmits disables buttons before POST, so name=Subaction on buttons would be lost. %]
+                    <input type="hidden" name="Subaction" id="RedmineSubaction" value="Save"/>
+                    <input type="hidden" name="ChallengeToken" value="[% Env("UserChallengeToken") | html %]"/>
+
+                    <fieldset class="TableLike">
+                        <label for="Enabled">[% Translate("Enable bridge") | html %]:</label>
+                        <div class="Field">
+                            <input type="checkbox" name="Enabled" id="Enabled" value="1" [% IF Data.Enabled %]checked="checked"[% END %]/>
+                            <p class="FieldExplanation">[% Translate("Master switch. When off, create/sync do nothing.") | html %]</p>
+                        </div>
+                        <div class="Clear"></div>
+
+                        <label for="BaseURL" class="Mandatory"><span class="Marker">*</span> [% Translate("Redmine base URL") | html %]:</label>
+                        <div class="Field">
+                            <input type="text" name="BaseURL" id="BaseURL" class="W75pc" value="[% Data.BaseURL | html %]" placeholder="https://redmine.example.gov"/>
+                            <p class="FieldExplanation">[% Translate("Root URL without trailing slash, e.g. https://redmine.example.org") | html %]</p>
+                            <p class="FieldExplanation">[% Translate("Must start with http:// or https://.") | html %]</p>
+                        </div>
+                        <div class="Clear"></div>
+
+                        <label for="OTRSBaseURL" class="Mandatory"><span class="Marker">*</span> [% Translate("Public OTRS URL (for Redmine links)") | html %]:</label>
+                        <div class="Field">
+                            <input type="text" name="OTRSBaseURL" id="OTRSBaseURL" class="W75pc" value="[% Data.OTRSBaseURL | html %]" placeholder="https://otrs.example.org/otrs"/>
+                            <p class="FieldExplanation">[% Translate("Required for correct «OTRS Link» in Redmine. Example: https://otrs.example.org/otrs — then Save. Already created Redmine descriptions are not rewritten.") | html %]</p>
+[% IF Data.OTRSLinkPreview %]
+                            <p class="FieldExplanation"><strong>[% Translate("Link preview") | html %]:</strong> [% Data.OTRSLinkPreview | html %]</p>
+[% END %]
+[% IF !Data.OTRSBaseURL %]
+                            <p class="FieldExplanation" style="color:#a00;">[% Translate("Now empty → links use OTRS FQDN (often the server hostname, e.g. otrs-01).") | html %]</p>
+[% END %]
+                        </div>
+                        <div class="Clear"></div>
+
+                        <label for="APIKey">[% Translate("Redmine API key") | html %]:</label>
+                        <div class="Field">
+                            <input type="password" name="APIKey" id="APIKey" class="W75pc" value="" autocomplete="new-password"/>
+                            <p class="FieldExplanation">[% Translate("Service account key from Redmine → My account → API access key. Prefer a dedicated service user, not a personal key.") | html %]</p>
+                            [% IF Data.APIKeySet %]
+                            <p class="FieldExplanation">[% Translate("(unchanged — enter a new key to replace)") | html %]</p>
+                            [% END %]
+                        </div>
+                        <div class="Clear"></div>
+
+                        <label for="Timeout">[% Translate("HTTP timeout (seconds)") | html %]:</label>
+                        <div class="Field">
+                            <input type="text" name="Timeout" id="Timeout" class="W50pc" value="[% Data.Timeout | html %]"/>
+                            <p class="FieldExplanation">[% Translate("How long OTRS waits for Redmine HTTP responses (create issue, sync).") | html %]</p>
+                            <div class="SpacingTop">
+                                <button class="CallForAction" type="submit" onclick="document.getElementById('RedmineSubaction').value='TestConnection';">
+                                    <span><i class="fa fa-plug"></i> [% Translate("Test connection") | html %]</span>
+                                </button>
+                                <button class="CallForAction" type="submit" onclick="document.getElementById('RedmineSubaction').value='TestTLS';">
+                                    <span><i class="fa fa-lock"></i> [% Translate("TLS diagnostics") | html %]</span>
+                                </button>
+                            </div>
+                            <p class="FieldExplanation">[% Translate("Checks URL + API key via Redmine /users/current.json. Uses the key from the field above, or the saved key if the field is empty.") | html %]</p>
+                            <p class="FieldExplanation">[% Translate("TLS diagnostics: OpenSSL/Perl SSL versions and a TLS handshake to Base URL (no API key). Use this when connection fails with handshake errors.") | html %]</p>
+                            <p class="FieldExplanation">[% Translate("If the test times out, the OTRS server cannot reach Redmine on HTTPS (firewall/DNS). Configure SysConfig WebUserAgent::Proxy when outbound traffic must go through a proxy.") | html %]</p>
+                            [% IF Data.DiagnosticReport %]
+                            <pre class="FieldExplanation" style="white-space:pre-wrap;max-height:24em;overflow:auto;border:1px solid #ccc;padding:0.75em;background:#f7f7f7;">[% Data.DiagnosticReport | html %]</pre>
+                            [% END %]
+                        </div>
+                        <div class="Clear"></div>
+                    </fieldset>
+
+                    <fieldset class="TableLike">
+                        <legend>[% Translate("Defaults for create form") | html %]</legend>
+
+                        <label>[% Translate("Redmine lists") | html %]:</label>
+                        <div class="Field">
+                            <button class="CallForAction" type="submit" id="ReloadCatalogBtn"
+                                onclick="document.getElementById('RedmineSubaction').value='ReloadCatalog';">
+                                <span><i class="fa fa-refresh"></i> [% Translate("Reload lists from Redmine") | html %]</span>
+                            </button>
+[% IF Data.CatalogLoaded %]
+                            <p class="FieldExplanation">[% Translate("Lists below are filled from Redmine (cached). Reload after changing URL/API key or when trackers change.") | html %]</p>
+[% ELSE %]
+                            <p class="FieldExplanation">[% Translate("Could not load lists yet — check connection, then click Reload.") | html %]</p>
+[% END %]
+                        </div>
+                        <div class="Clear"></div>
+
+                        <label for="ProjectID">[% Translate("Default project") | html %]:</label>
+                        <div class="Field">
+                            [% Data.ProjectIDStrg %]
+                            <p class="FieldExplanation">[% Translate("Pre-selected Redmine project in the escalate form.") | html %]</p>
+                            <div class="SpacingTop">
+                                <button class="CallForAction" type="submit" onclick="document.getElementById('RedmineSubaction').value='TestProject';">
+                                    <span><i class="fa fa-folder-open"></i> [% Translate("Test project") | html %]</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="Clear"></div>
+
+                        <label for="TrackerID">[% Translate("Default tracker") | html %]:</label>
+                        <div class="Field">
+                            [% Data.TrackerIDStrg %]
+                            <p class="FieldExplanation">[% Translate("Issue type for new issues. List is filtered by the selected project when possible.") | html %]</p>
+                            <div class="SpacingTop">
+                                <button class="CallForAction" type="submit" onclick="document.getElementById('RedmineSubaction').value='TestTracker';">
+                                    <span><i class="fa fa-tag"></i> [% Translate("Test tracker") | html %]</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="Clear"></div>
+
+                        <label for="PriorityID">[% Translate("Default priority") | html %]:</label>
+                        <div class="Field">
+                            [% Data.PriorityIDStrg %]
+                            <p class="FieldExplanation">[% Translate("Optional. Empty = Redmine default priority.") | html %]</p>
+                        </div>
+                        <div class="Clear"></div>
+
+                        <label for="DefaultDueDateDays">[% Translate("Default due date (days from today)") | html %]:</label>
+                        <div class="Field">
+                            <input type="text" name="DefaultDueDateDays" id="DefaultDueDateDays" class="W50pc" value="[% Data.DefaultDueDateDays | html %]"/>
+                            <p class="FieldExplanation">[% Translate("Days from today for due_date on create (0 = today). Required by some trackers (e.g. Инцидент).") | html %]</p>
+                        </div>
+                        <div class="Clear"></div>
+
+                        <label for="SubjectPrefix">[% Translate("Subject prefix") | html %]:</label>
+                        <div class="Field">
+                            <input type="text" name="SubjectPrefix" id="SubjectPrefix" class="W75pc" value="[% Data.SubjectPrefix | html %]"/>
+                            <p class="FieldExplanation">[% Translate("Optional text prepended to the Redmine issue subject. Leave empty in production; useful only for lab/pilot marking.") | html %]</p>
+                        </div>
+                        <div class="Clear"></div>
+
+                        <label for="FormLoadAllProjects">[% Translate("Load all projects in form") | html %]:</label>
+                        <div class="Field">
+                            <input type="checkbox" name="FormLoadAllProjects" id="FormLoadAllProjects" value="1" [% IF Data.FormLoadAllProjects %]checked="checked"[% END %]/>
+                            <p class="FieldExplanation">[% Translate("When off (recommended): form loads only the default project and its trackers — fast. When on: full project list from Redmine — slower.") | html %]</p>
+                        </div>
+                        <div class="Clear"></div>
+
+                        <label for="CatalogCacheTTL">[% Translate("Catalog cache TTL (seconds)") | html %]:</label>
+                        <div class="Field">
+                            <input type="text" name="CatalogCacheTTL" id="CatalogCacheTTL" class="W50pc" value="[% Data.CatalogCacheTTL | html %]"/>
+                            <p class="FieldExplanation">[% Translate("How long project/tracker lists are cached in OTRS (default 900). Speeds up the escalate popup.") | html %]</p>
+                        </div>
+                        <div class="Clear"></div>
+                    </fieldset>
+
+                    <fieldset class="TableLike">
+                        <legend>[% Translate("Synchronization") | html %]</legend>
+
+                        <label for="SyncComments">[% Translate("Sync comments") | html %]:</label>
+                        <div class="Field">
+                            <input type="checkbox" name="SyncComments" id="SyncComments" value="1" [% IF Data.SyncComments %]checked="checked"[% END %]/>
+                            <p class="FieldExplanation">[% Translate("OTRS → Redmine: new ticket notes are pushed as Redmine journals. Redmine → OTRS: journals become internal notes (via Daemon).") | html %]</p>
+                        </div>
+                        <div class="Clear"></div>
+
+                        <label for="SyncAttachments">[% Translate("Sync attachments") | html %]:</label>
+                        <div class="Field">
+                            <input type="checkbox" name="SyncAttachments" id="SyncAttachments" value="1" [% IF Data.SyncAttachments %]checked="checked"[% END %]/>
+                            <p class="FieldExplanation">[% Translate("Exchange attachments both ways when comments sync. Large files may be skipped; Redmine upload API can return errors.") | html %]</p>
+                        </div>
+                        <div class="Clear"></div>
+
+                        <label for="InboundSync">[% Translate("Inbound sync (Redmine → OTRS)") | html %]:</label>
+                        <div class="Field">
+                            <input type="checkbox" name="InboundSync" id="InboundSync" value="1" [% IF Data.InboundSync %]checked="checked"[% END %]/>
+                            <p class="FieldExplanation">[% Translate("Daemon polls linked issues every 5 minutes for status, comments and attachments. Requires OTRS Daemon running.") | html %]</p>
+                        </div>
+                        <div class="Clear"></div>
+
+                        <label for="NotifyOnStatusNote">[% Translate("Notify on status note") | html %]:</label>
+                        <div class="Field">
+                            <input type="checkbox" name="NotifyOnStatusNote" id="NotifyOnStatusNote" value="1" [% IF Data.NotifyOnStatusNote %]checked="checked"[% END %]/>
+                            <p class="FieldExplanation">[% Translate("When a Redmine status change writes an OTRS note (|note, e.g. Проверка решения), notify the ticket owner and responsible.") | html %]</p>
+                        </div>
+                        <div class="Clear"></div>
+
+                        <label for="StatusSync">[% Translate("Status sync rules") | html %]:</label>
+                        <div class="Field">
+                            <textarea name="StatusSync" id="StatusSync" class="W75pc" rows="8">[% Data.StatusSync | html %]</textarea>
+                            <p class="FieldExplanation">[% Translate("One rule per line: Redmine status name = OTRS state.") | html %]</p>
+                            <p class="FieldExplanation">[% Translate("Add |note to also write an internal OTRS note, e.g. Проверка решения = open|note") | html %]</p>
+                            <p class="FieldExplanation">[% Translate("Use note alone for a note without changing OTRS state. Status names must match Redmine exactly.") | html %]</p>
+                        </div>
+                        <div class="Clear"></div>
+                    </fieldset>
+
+                    <fieldset class="TableLike RedmineAdminAdvanced">
+                        <legend>[% Translate("Advanced") | html %]</legend>
+
+                        <h3 class="RedmineAdminSectionTitle">[% Translate("Timeouts and TLS") | html %]</h3>
+
+                        <label for="UITimeout">[% Translate("UI timeout (seconds)") | html %]:</label>
+                        <div class="Field RedmineAdminNarrow">
+                            <input type="text" name="UITimeout" id="UITimeout" value="[% Data.UITimeout | html %]"/>
+                            <p class="FieldExplanation">[% Translate("Short timeout for escalate popup catalog calls (default 5). Daemon keeps using HTTP timeout above.") | html %]</p>
+                        </div>
+                        <div class="Clear"></div>
+
+                        <label for="AllowLegacyTLS">[% Translate("Allow legacy TLS") | html %]:</label>
+                        <div class="Field RedmineAdminCheck">
+                            <input type="checkbox" name="AllowLegacyTLS" id="AllowLegacyTLS" value="1" [% IF Data.AllowLegacyTLS %]checked="checked"[% END %]/>
+                            <p class="FieldExplanation">[% Translate("Only if Redmine cannot negotiate TLS 1.2+. Prefer fixing the server; leave off in production.") | html %]</p>
+                        </div>
+                        <div class="Clear"></div>
+
+                        <label for="SSLVersion">[% Translate("SSL version strategy") | html %]:</label>
+                        <div class="Field RedmineAdminNarrow">
+                            <input type="text" name="SSLVersion" id="SSLVersion" value="[% Data.SSLVersion | html %]"/>
+                            <p class="FieldExplanation">[% Translate("Perl SSL strategy: auto, or explicit IO::Socket::SSL SSL_version e.g. TLSv1_2.") | html %]</p>
+                        </div>
+                        <div class="Clear"></div>
+
+                        <h3 class="RedmineAdminSectionTitle">[% Translate("Incident and create") | html %]</h3>
+
+                        <label for="IncidentTrackerID">[% Translate("Incident tracker") | html %]:</label>
+                        <div class="Field">
+                            [% Data.IncidentTrackerIDStrg %]
+                            <p class="FieldExplanation">[% Translate("Redmine tracker for «Инцидент». Escalation form requires mass-incident Yes/No for this tracker.") | html %]</p>
+                        </div>
+                        <div class="Clear"></div>
+
+                        <label for="AllowedProjectIDs">[% Translate("Allowed projects (Create)") | html %]:</label>
+                        <div class="Field">
+                            [% Data.AllowedProjectIDsStrg %]
+                            <p class="FieldExplanation">[% Translate("Projects allowed when creating a Redmine issue. Linking an existing issue works from any project. Empty = only the default project.") | html %]</p>
+                        </div>
+                        <div class="Clear"></div>
+
+                        <h3 class="RedmineAdminSectionTitle">[% Translate("Limits") | html %]</h3>
+
+                        <label for="MaxAttachmentBytes">[% Translate("Max attachment bytes") | html %]:</label>
+                        <div class="Field RedmineAdminNarrow">
+                            <input type="text" name="MaxAttachmentBytes" id="MaxAttachmentBytes" value="[% Data.MaxAttachmentBytes | html %]"/>
+                            <p class="FieldExplanation">[% Translate("Max attachment size to sync (bytes). Default 5000000.") | html %]</p>
+                        </div>
+                        <div class="Clear"></div>
+
+                        <label for="SyncBatchLimit">[% Translate("Sync batch limit") | html %]:</label>
+                        <div class="Field RedmineAdminNarrow">
+                            <input type="text" name="SyncBatchLimit" id="SyncBatchLimit" value="[% Data.SyncBatchLimit | html %]"/>
+                            <p class="FieldExplanation">[% Translate("Max tickets per inbound sync cron run.") | html %]</p>
+                        </div>
+                        <div class="Clear"></div>
+
+                        <label for="RetryBatchLimit">[% Translate("Retry batch limit") | html %]:</label>
+                        <div class="Field RedmineAdminNarrow">
+                            <input type="text" name="RetryBatchLimit" id="RetryBatchLimit" value="[% Data.RetryBatchLimit | html %]"/>
+                            <p class="FieldExplanation">[% Translate("Max tickets per auto-retry cron run.") | html %]</p>
+                        </div>
+                        <div class="Clear"></div>
+
+                        <h3 class="RedmineAdminSectionTitle">[% Translate("Access and defaults") | html %]</h3>
+
+                        <label for="AutoRetry">[% Translate("Auto-retry failed escalations") | html %]:</label>
+                        <div class="Field RedmineAdminCheck">
+                            <input type="checkbox" name="AutoRetry" id="AutoRetry" value="1" [% IF Data.AutoRetry %]checked="checked"[% END %]/>
+                            <p class="FieldExplanation">[% Translate("Daemon retries tickets that failed to create a Redmine issue (every 10 minutes).") | html %]</p>
+                        </div>
+                        <div class="Clear"></div>
+
+                        <label for="AgentGroup">[% Translate("Agent group") | html %]:</label>
+                        <div class="Field">
+                            [% Data.AgentGroupStrg %]
+                            <p class="FieldExplanation">[% Translate("If set, only members of this OTRS group may open the escalate dialog. Empty = any agent with ticket permission.") | html %]</p>
+                        </div>
+                        <div class="Clear"></div>
+
+                        <label for="DefaultCustomFields">[% Translate("Default custom fields on create") | html %]:</label>
+                        <div class="Field">
+                            <textarea name="DefaultCustomFields" id="DefaultCustomFields" class="W75pc" rows="3">[% Data.DefaultCustomFields | html %]</textarea>
+                                <p class="FieldExplanation">[% Translate("Default Redmine custom fields on create, one per line: id=value. Example: 84=0 (Массовый инцидент=нет).") | html %]</p>
+                        </div>
+                        <div class="Clear"></div>
+                    </fieldset>
+
+                    <fieldset class="TableLike">
+                        <div class="Field SpacingTop">
+                            <button class="Primary CallForAction" type="submit" onclick="document.getElementById('RedmineSubaction').value='Save';">
+                                <span>[% Translate("Save") | html %]</span>
+                            </button>
+                            [% Translate("or") | html %]
+                            <a href="[% Env("Baselink") %]Action=Admin">[% Translate("Cancel") | html %]</a>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+//<![CDATA[
+Core.Ready(function () {
+    var ChallengeToken = [% Data.ChallengeTokenJSON %];
+    var Baselink = [% Data.BaselinkJSON %];
+
+    function ActivateInputFields(Select) {
+        try {
+            if (window.Core && Core.UI && Core.UI.InputFields && typeof Core.UI.InputFields.Activate === 'function') {
+                Core.UI.InputFields.Activate(jQuery(Select).parent());
+                Core.UI.InputFields.Activate(jQuery(Select));
+            }
+        } catch (e) {}
+    }
+
+    function RebuildSelect(Select, Items, KeepValue) {
+        if (!Select) return;
+        var Keep = KeepValue || jQuery(Select).val();
+        var Html = '<option value="">-</option>';
+        (Items || []).forEach(function (Item) {
+            var Id = Item.Key != null ? Item.Key : Item.id;
+            var Label = Item.Value != null ? Item.Value : ((Item.name || '') + ' (#' + Id + ')');
+            Html += '<option value="' + Id + '">' + jQuery('<div/>').text(Label).html() + '</option>';
+        });
+        jQuery(Select).html(Html);
+        if (Keep) {
+            jQuery(Select).val(String(Keep));
+        }
+        ActivateInputFields(Select);
+    }
+
+    jQuery('#ProjectID').on('change', function () {
+        var ProjectID = jQuery(this).val();
+        if (!ProjectID) return;
+        jQuery.ajax({
+            url: Baselink + 'Action=AdminRedmineBridge;Subaction=AJAXCatalog',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                ChallengeToken: ChallengeToken,
+                ProjectID: ProjectID,
+                BaseURL: jQuery('#BaseURL').val(),
+                APIKey: jQuery('#APIKey').val(),
+                Timeout: jQuery('#Timeout').val(),
+                UITimeout: jQuery('#UITimeout').val()
+            },
+            success: function (Data) {
+                if (!Data || !Data.Success) return;
+                RebuildSelect(document.getElementById('TrackerID'), Data.Trackers || []);
+            }
+        });
+    });
+});
+//]]>
+</script>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<otrs_package version="1.0">
+    <Name>OTRSRedmineBridge</Name>
+    <Version>1.0.25</Version>
+    <Framework>7.3.x</Framework>
+    <Framework>7.2.x</Framework>
+    <Framework>7.1.x</Framework>
+    <Framework>7.0.x</Framework>
+    <Framework>6.5.x</Framework>
+    <Framework>6.0.x</Framework>
+    <Vendor>OTRSRedmineBridge</Vendor>
+    <URL>https://github.com/m0llusca/otrs_to_redmine</URL>
+    <License>GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007</License>
+    <Description Lang="en">OTRS CE ↔ Redmine bridge: escalate/link, bidirectional sync, Admin health, hardened HTTP.</Description>
+    <Description Lang="ru">Мост OTRS CE ↔ Redmine: эскалация/привязка, двусторонний синк, Admin health, hardened HTTP.</Description>
+    <ChangeLog Version="1.0.25" Date="2026-09-11">Remove organization-specific names and hostnames from package metadata, comments, and docs.</ChangeLog>
+    <ChangeLog Version="1.0.24" Date="2026-09-11">Admin/SysConfig hints use generic example.org URLs, not production hostnames.</ChangeLog>
+    <ChangeLog Version="1.0.23" Date="2026-09-10">Link/unlink note stamp: «Служебная запись моста OTRS↔Redmine» (clearer than «Заметка OTRS (мост)»).</ChangeLog>
+    <ChangeLog Version="1.0.22" Date="2026-09-10">Link/unlink Redmine notes: compact Markdown (no Textile/tables/duplicate lines); keep echo stamp.</ChangeLog>
+    <ChangeLog Version="1.0.21" Date="2026-09-10">Already-linked popup: «Закрыть» moved into the centered content column; drop full-width LayoutPopup footer bar.</ChangeLog>
+    <ChangeLog Version="1.0.20" Date="2026-09-10">Already-linked popup: centered column with left-aligned content (not text-align:center).</ChangeLog>
+    <ChangeLog Version="1.0.19" Date="2026-09-10">Admin Advanced: flatten TableLike fields so labels/inputs align like Synchronization (not left-stacked).</ChangeLog>
+    <ChangeLog Version="1.0.18" Date="2026-09-10">Already-linked popup: center content column (titles, actions, unlink/relink, Close).</ChangeLog>
+    <ChangeLog Version="1.0.17" Date="2026-09-10">Already-linked popup uses OTRS LayoutPopup/TableLike (left-aligned); Admin Advanced legend/subheads centered, no nested boxes.</ChangeLog>
+    <ChangeLog Version="1.0.16" Date="2026-09-10">Fix AgentTicketRedmineEscalate compile error (duplicate sibling-list block).</ChangeLog>
+    <ChangeLog Version="1.0.15" Date="2026-09-10">Textile link/unlink Redmine notes; tighter already-linked unlink/relink panels; Admin Advanced field polish.</ChangeLog>
+    <ChangeLog Version="1.0.14" Date="2026-09-10">Link/relink any Redmine project; AllowedProjectIDs gates Create only (form project list filtered).</ChangeLog>
+    <ChangeLog Version="1.0.13" Date="2026-09-10">Already-linked popup: sibling OTRS tickets, unlink/relink with confirm; NotifyOnStatusNote for owner/responsible on StatusSync |note.</ChangeLog>
+    <ChangeLog Version="1.0.12" Date="2026-09-10">Zoom menu: distinct labels — «Redmine #ID» opens issue; «Redmine sync» opens linked details/sync popup.</ChangeLog>
+    <ChangeLog Version="1.0.11" Date="2026-09-10">Zoom menu shows Redmine #ID when linked; already-linked popup adds Sync from Redmine now.</ChangeLog>
+    <ChangeLog Version="1.0.10" Date="2026-09-10">Escalate popup: if ticket already linked, show «Already linked» with Redmine URL and Open/Close instead of silently closing.</ChangeLog>
+    <ChangeLog Version="1.0.9" Date="2026-09-10">Inbound comments from Redmine only when StatusSync has |note on that status change (e.g. Проверка решения); plain journals no longer create OTRS notes.</ChangeLog>
+    <ChangeLog Version="1.0.8" Date="2026-09-09">Stop attachment echo loop: seed LastAttachmentID after escalate/outbound; skip Redmine→OTRS article when only a file was added (no status/comment).</ChangeLog>
+    <ChangeLog Version="1.0.7" Date="2026-09-09">Inbound: one Russian note per sync (status / comments / attachments); outbound Redmine notes on link/sync in Russian; status-only still creates OTRS note when StatusSync has |note.</ChangeLog>
+    <ChangeLog Version="1.0.6" Date="2026-09-09">Fix Malformed UTF-8 on Run sync / API decode; compact Admin layout; Russian labels for defaults block.</ChangeLog>
+    <ChangeLog Version="1.0.5" Date="2026-09-09">Agent escalate: treat Success (not Capitalized Status) so create/link closes popup instead of false error after Redmine already succeeded.</ChangeLog>
+    <ChangeLog Version="1.0.4" Date="2026-09-09">Admin Advanced: Russian copy, sectioned layout, native selects (no Modernize tags), muted field styling.</ChangeLog>
+    <ChangeLog Version="1.0.3" Date="2026-09-09">Incident create: clearer error when API user (e.g. service account without tracker/CF rights) cannot set tracker 13/CF84; default priority; drop Modernize on escalate selects; TestConnection shows project roles.</ChangeLog>
+    <ChangeLog Version="1.0.2" Date="2026-09-09">Fix Admin/Agent templates: OTRS 6 has no TT |js filter (use JSON-encoded literals).</ChangeLog>
+    <ChangeLog Version="1.0.1" Date="2026-09-09">Admin: pick project/tracker/priority/incident/allowed projects from Redmine API lists (no manual IDs); reload button; AgentGroup from OTRS groups.</ChangeLog>
+    <ChangeLog Version="1.0.0" Date="2026-09-09">Modular rewrite: HTTP/Catalog/Issue/Sync/TicketDF; UITimeout+circuit breaker; content_url host allow-list; Link project allow-list; Permission SysConfig; CronRetry payload; AutoRetry off by default; Daemon health; TLS1.2 floor; CF84 only for Инцидент; machine escalation status codes.</ChangeLog>
+    <ChangeLog Version="0.5.10" Date="2026-09-09">Install/upgrade merges Redmine DFs into TicketZoom (keeps Theme); Admin button to enable Zoom fields.</ChangeLog>
+    <ChangeLog Version="0.5.9" Date="2026-09-09">Show Redmine DFs on TicketZoom; on tracker-error still write ID/URL/project/tracker.</ChangeLog>
+    <ChangeLog Version="0.5.8" Date="2026-09-09">Create: mint upload tokens after issue exists; always attach files before tracker-error return.</ChangeLog>
+    <Filelist>
+        <File Permission="644" Location="Kernel/Config/Files/XML/RedmineBridge.xml"/>
+        <File Permission="644" Location="Kernel/Language/de_OTRSRedmineBridge.pm"/>
+        <File Permission="644" Location="Kernel/Language/en_OTRSRedmineBridge.pm"/>
+        <File Permission="644" Location="Kernel/Language/ru_OTRSRedmineBridge.pm"/>
+        <File Permission="644" Location="Kernel/Modules/AdminRedmineBridge.pm"/>
+        <File Permission="644" Location="Kernel/Modules/AgentTicketRedmineEscalate.pm"/>
+        <File Permission="644" Location="Kernel/Output/HTML/Templates/Standard/AdminRedmineBridge.tt"/>
+        <File Permission="644" Location="Kernel/Output/HTML/Templates/Standard/AgentTicketRedmineEscalate.tt"/>
+        <File Permission="644" Location="Kernel/Output/HTML/TicketMenu/RedmineEscalate.pm"/>
+        <File Permission="644" Location="Kernel/Output/HTML/TicketMenu/RedmineOpen.pm"/>
+        <File Permission="644" Location="Kernel/System/Redmine.pm"/>
+        <File Permission="644" Location="Kernel/System/Redmine/HTTP.pm"/>
+        <File Permission="644" Location="Kernel/System/Redmine/Diagnostics.pm"/>
+        <File Permission="644" Location="Kernel/System/Redmine/Catalog.pm"/>
+        <File Permission="644" Location="Kernel/System/Redmine/Issue.pm"/>
+        <File Permission="644" Location="Kernel/System/Redmine/Sync.pm"/>
+        <File Permission="644" Location="Kernel/System/Redmine/TicketDF.pm"/>
+        <File Permission="644" Location="Kernel/System/Ticket/Event/RedmineOutbound.pm"/>
+        <File Permission="644" Location="var/packagesetup/OTRSRedmineBridge.pm"/>
+    </Filelist>
+    <CodeInstall Type="post"><![CDATA[
+        my $Setup = $Kernel::OM->Get('var::packagesetup::OTRSRedmineBridge');
+        $Setup->CodeInstall();
+    ]]></CodeInstall>
+    <CodeReinstall Type="post"><![CDATA[
+        my $Setup = $Kernel::OM->Get('var::packagesetup::OTRSRedmineBridge');
+        $Setup->CodeReinstall();
+    ]]></CodeReinstall>
+    <CodeUpgrade Type="post"><![CDATA[
+        my $Setup = $Kernel::OM->Get('var::packagesetup::OTRSRedmineBridge');
+        $Setup->CodeUpgrade();
+    ]]></CodeUpgrade>
+    <CodeUninstall Type="pre"><![CDATA[
+        my $Setup = $Kernel::OM->Get('var::packagesetup::OTRSRedmineBridge');
+        $Setup->CodeUninstall();
+    ]]></CodeUninstall>
+</otrs_package>

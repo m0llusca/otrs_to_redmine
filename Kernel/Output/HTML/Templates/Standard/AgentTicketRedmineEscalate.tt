@@ -1,0 +1,559 @@
+[%# Popup: create new Redmine issue OR link existing (server Mode=Create|Link) #%]
+<form action="[% Env("CGIHandle") %]" method="post" enctype="multipart/form-data" class="Validate PreventMultipleSubmits" id="RedmineEscalateForm">
+    <input type="hidden" name="Action" value="AgentTicketRedmineEscalate"/>
+    <input type="hidden" name="Subaction" id="RedmineEscalateSubaction" value="[% IF Data.LinkMode %]Link[% ELSE %]Create[% END %]"/>
+    <input type="hidden" name="TicketID" value="[% Data.TicketID | html %]"/>
+    <input type="hidden" name="FormID" id="RedmineFormID" value="[% Data.FormID | html %]"/>
+    <input type="hidden" name="ChallengeToken" value="[% Env("UserChallengeToken") | html %]"/>
+
+    <div class="LayoutPopup ARIARoleMain">
+        <div class="Content">
+[% IF Data.Error %]
+            <div class="MessageBox Error">
+                <p>[% Data.Error | html %]</p>
+            </div>
+[% END %]
+[% IF Data.ProjectsErr %]
+            <div class="MessageBox Warning">
+                <p>[% Translate("Could not load Redmine projects") | html %]: [% Data.ProjectsErr | html %]</p>
+            </div>
+[% END %]
+[% IF Data.EscalationStatusLabel %]
+            <div class="MessageBox Notice">
+                <p>[% Translate("Escalation status") | html %]:
+[% IF Data.EscalationStatus == 'error' %]
+                    [% Translate("error") | html %]
+[% ELSIF Data.EscalationStatus == 'created' %]
+                    [% Translate("created") | html %]
+[% ELSIF Data.EscalationStatus == 'linked' %]
+                    [% Translate("linked") | html %]
+[% ELSIF Data.EscalationStatus == 'pending' %]
+                    [% Translate("pending") | html %]
+[% ELSE %]
+                    [% Data.EscalationStatusLabel | html %]
+[% END %]
+                </p>
+            </div>
+[% END %]
+
+            <p class="AsteriskExplanation">[% Translate("All fields marked with an asterisk (*) are mandatory.") | html %]</p>
+
+            <fieldset class="TableLike FixedLabel">
+                <label>[% Translate("Action") | html %]:</label>
+                <div class="Field">
+                    <a class="CallForAction[% IF !Data.LinkMode %] Active[% END %]"
+                        href="[% Env("Baselink") %]Action=AgentTicketRedmineEscalate;TicketID=[% Data.TicketID | uri %];Mode=Create;FormID=[% Data.FormID | uri %]">
+                        <span>[% Translate("Create new Redmine issue") | html %]</span>
+                    </a>
+                    &nbsp;
+                    <a class="CallForAction[% IF Data.LinkMode %] Active[% END %]"
+                        href="[% Env("Baselink") %]Action=AgentTicketRedmineEscalate;TicketID=[% Data.TicketID | uri %];Mode=Link;FormID=[% Data.FormID | uri %]">
+                        <span>[% Translate("Link existing Redmine issue") | html %]</span>
+                    </a>
+                    <p class="FieldExplanation">[% Translate("Link mode: attach this OTRS ticket to an already created Redmine issue (several tickets can share one issue).") | html %]</p>
+                </div>
+                <div class="Clear"></div>
+            </fieldset>
+
+[% IF !Data.LinkMode %]
+            <div id="RedmineCreateBlock">
+            <fieldset class="TableLike FixedLabel">
+                <label for="ProjectID" class="Mandatory">
+                    <span class="Marker">*</span> [% Translate("Redmine project") | html %]:
+                </label>
+                <div class="Field">
+                    [% Data.ProjectStrg %]
+                    <p class="FieldExplanation">[% Translate("Changing the project reloads available trackers and assignees.") | html %]</p>
+                </div>
+                <div class="Clear"></div>
+
+                <label for="TrackerID" class="Mandatory">
+                    <span class="Marker">*</span> [% Translate("Redmine tracker") | html %]:
+                </label>
+                <div class="Field">
+                    [% Data.TrackerStrg %]
+                    <p class="FieldExplanation">[% Translate("Issue type (tracker) must be enabled for the selected project. Example: Инцидент = 13.") | html %]</p>
+                </div>
+                <div class="Clear"></div>
+
+                <label for="PriorityID">[% Translate("Priority") | html %]:</label>
+                <div class="Field">
+                    [% Data.PriorityStrg %]
+                    <p class="FieldExplanation">[% Translate("Redmine issue priority. Empty = Redmine default (or SysConfig Redmine::PriorityID).") | html %]</p>
+                </div>
+                <div class="Clear"></div>
+
+                <label for="AssignedToID" class="Mandatory">
+                    <span class="Marker">*</span> [% Translate("Assignee") | html %]:
+                </label>
+                <div class="Field">
+                    [% Data.AssigneeStrg %]
+                </div>
+                <div class="Clear"></div>
+
+                <label for="DueDateDay" class="Mandatory">
+                    <span class="Marker">*</span> [% Translate("Due date") | html %]:
+                </label>
+                <div class="Field">
+                    [% Data.DueDateStrg %]
+                </div>
+                <div class="Clear"></div>
+
+                <div class="Row" id="RedmineMassIncidentBlock" [% IF !Data.IsIncidentTracker %]style="display:none"[% END %]>
+                    <label class="Mandatory">
+                        <span class="Marker">*</span> [% Translate("Mass incident") | html %]:
+                    </label>
+                    <div class="Field">
+                        <input type="radio" name="MassIncident" id="MassIncidentYes" value="1"
+                            [% IF Data.MassIncidentSet && Data.MassIncident %]checked="checked"[% END %]/>
+                        <label for="MassIncidentYes">[% Translate("Yes") | html %]</label>
+                        &nbsp;&nbsp;
+                        <input type="radio" name="MassIncident" id="MassIncidentNo" value="0"
+                            [% IF Data.MassIncidentSet && !Data.MassIncident %]checked="checked"[% END %]/>
+                        <label for="MassIncidentNo">[% Translate("No") | html %]</label>
+                        <p class="FieldExplanation">[% Translate("Redmine field «Массовый инцидент».") | html %]</p>
+                    </div>
+                    <div class="Clear"></div>
+                </div>
+
+                <label for="IssueSubject" class="Mandatory">
+                    <span class="Marker">*</span> [% Translate("Issue subject") | html %]:
+                </label>
+                <div class="Field">
+                    <input type="text" name="IssueSubject" id="IssueSubject" class="W75pc"
+                        maxlength="250" value="[% Data.IssueSubject | html %]"/>
+                </div>
+                <div class="Clear"></div>
+
+                <label for="IssueDescription" class="Mandatory">
+                    <span class="Marker">*</span> [% Translate("Issue description") | html %]:
+                </label>
+                <div class="Field">
+                    <textarea name="IssueDescription" id="IssueDescription" class="W75pc" rows="10"
+                        >[% Data.IssueDescription | html %]</textarea>
+                </div>
+                <div class="Clear"></div>
+
+                <label>[% Translate("Attachments") | html %]:</label>
+                <div class="Field" id="RedmineAttachmentsField">
+[% IF Data.HasAttachments %]
+                    <label style="float:none;width:auto;padding:0;font-weight:normal;">
+                        <input type="checkbox" name="IncludeAttachments" id="IncludeAttachments" value="1"
+                            [% IF Data.IncludeAttachments %]checked="checked"[% END %]/>
+                        [% Translate("Include ticket files") | html %]
+                    </label>
+                    <ul id="RedmineAttachList" style="list-style:none;margin:4px 0 0;padding:0;max-height:120px;overflow:auto;">
+[% FOREACH File IN Data.AttachmentList %]
+                        <li class="RedmineAttachItem[% IF File.TooLarge %] RedmineAttachTooLarge[% END %]" style="padding:2px 0;line-height:1.35;">
+                            <label for="Attach_[% File.ArticleID | html %]_[% File.FileID | html %]"
+                                style="float:none;width:auto;padding:0;margin:0;font-weight:normal;display:inline;">
+                                <input type="checkbox" name="AttachmentKey" class="RedmineAttachKey"
+                                    value="[% File.Key | html %]" id="Attach_[% File.ArticleID | html %]_[% File.FileID | html %]"
+                                    [% IF File.Checked && !File.TooLarge && Data.IncludeAttachments %]checked="checked"[% END %]
+                                    [% IF File.TooLarge || !Data.IncludeAttachments %]disabled="disabled"[% END %]/>
+                                [% File.Filename | html %]
+                                <span style="color:#666;">([% File.SizeLabel | html %])</span>
+[% IF File.TooLarge %]
+                                <span style="color:#a33;">— [% Translate("too large") | html %]</span>
+[% END %]
+                            </label>
+                        </li>
+[% END %]
+                    </ul>
+[% END %]
+                    <div id="RedmineDropZone"
+                        style="margin-top:8px;padding:6px 8px;border:1px dashed #9aabbc;background:#f4f7fa;color:#4a5560;cursor:pointer;font-size:12px;">
+                        [% Translate("Drop files here or click to upload") | html %]
+                        <span style="color:#7a8794;"> — [% Translate("extra files go to Redmine only") | html %]</span>
+                        <input type="file" id="RedmineExtraFileInput" multiple="multiple" style="display:none;"/>
+                    </div>
+                    <ul id="RedmineExtraGrid" style="list-style:none;margin:4px 0 0;padding:0;display:[% IF Data.HasExtraFiles %]block[% ELSE %]none[% END %];max-height:120px;overflow:auto;">
+[% FOREACH File IN Data.ExtraFiles %]
+                        <li class="RedmineExtraTile" data-file-id="[% File.FileID | html %]" style="padding:2px 0;line-height:1.35;">
+                            <button type="button" class="RedmineExtraRemove" data-file-id="[% File.FileID | html %]"
+                                title="[% Translate("Remove") | html %]"
+                                style="margin:0 4px 0 0;padding:0 4px;border:1px solid #c5ced8;background:#fff;color:#555;cursor:pointer;font-size:12px;line-height:1.2;">×</button>
+                            [% File.Filename | html %]
+                            <span style="color:#666;">([% File.SizeLabel | html %])</span>
+                        </li>
+[% END %]
+                    </ul>
+                    <p class="FieldExplanation" id="RedmineAttachStatus" style="margin-top:4px;"></p>
+                </div>
+                <div class="Clear"></div>
+
+                <label for="ConfirmCreate" class="Mandatory">
+                    <span class="Marker">*</span> [% Translate("Confirmation") | html %]:
+                </label>
+                <div class="Field">
+                    <input type="checkbox" name="ConfirmCreate" id="ConfirmCreate" value="1"/>
+                    [% Translate("I confirm creating a new Redmine issue for this ticket") | html %]
+                    <p class="FieldExplanation">[% Translate("A Redmine issue will be created and linked to this OTRS ticket. This action cannot be undone from OTRS.") | html %]</p>
+                </div>
+                <div class="Clear"></div>
+            </fieldset>
+            </div>
+[% ELSE %]
+            <div id="RedmineLinkBlock">
+            <fieldset class="TableLike FixedLabel">
+                <label for="ExistingIssueID" class="Mandatory">
+                    <span class="Marker">*</span> [% Translate("Existing Redmine issue") | html %]:
+                </label>
+                <div class="Field">
+                    <input type="text" name="ExistingIssueID" id="ExistingIssueID" class="W75pc"
+                        value="[% Data.ExistingIssueID | html %]" placeholder="12345 or https://redmine.../issues/12345"/>
+                    <p class="FieldExplanation">[% Translate("Issue ID or full URL. The issue must already exist; this ticket will be linked without creating a new one.") | html %]</p>
+                </div>
+                <div class="Clear"></div>
+
+                <label for="ConfirmLink" class="Mandatory">
+                    <span class="Marker">*</span> [% Translate("Confirmation") | html %]:
+                </label>
+                <div class="Field">
+                    <input type="checkbox" name="ConfirmLink" id="ConfirmLink" value="1"/>
+                    [% Translate("I confirm linking this ticket to the existing Redmine issue") | html %]
+                    <p class="FieldExplanation">[% Translate("Past Redmine comments will not be copied; only new activity will sync. A short note with the OTRS link is added to the Redmine issue.") | html %]</p>
+                </div>
+                <div class="Clear"></div>
+            </fieldset>
+            </div>
+[% END %]
+        </div>
+
+        <div class="Footer">
+[% IF Data.LinkMode %]
+            <button class="Primary CallForAction" type="submit"
+                onclick="document.getElementById('RedmineEscalateSubaction').value='Link';">
+                <span>[% Translate("Link Redmine issue") | html %]</span>
+            </button>
+[% ELSE %]
+            <button class="Primary CallForAction" type="submit"
+                onclick="document.getElementById('RedmineEscalateSubaction').value='Create';">
+                <span>[% Translate("Create Redmine issue") | html %]</span>
+            </button>
+[% END %]
+            [% Translate("or") | html %]
+            <a class="CancelClosePopup" href="#">[% Translate("Cancel") | html %]</a>
+        </div>
+    </div>
+</form>
+[% IF !Data.LinkMode %]
+<script type="text/javascript">//<![CDATA[
+(function () {
+    var Form = document.getElementById('RedmineEscalateForm');
+    if (!Form) { return; }
+    var Project = Form.querySelector('[name="ProjectID"]');
+    var Tracker = Form.querySelector('[name="TrackerID"]');
+    var Assignee = Form.querySelector('[name="AssignedToID"]');
+    if (!Project || !Tracker) { return; }
+
+    var TicketID = Form.querySelector('[name="TicketID"]');
+    var Challenge = Form.querySelector('[name="ChallengeToken"]');
+    var DefaultTracker = Tracker.value;
+    var IncidentTrackerID = [% Data.IncidentTrackerIDJSON %];
+    var MassBlock = document.getElementById('RedmineMassIncidentBlock');
+
+    function ToggleMassIncident() {
+        if (!MassBlock) { return; }
+        var IsIncident = String(Tracker.value) === String(IncidentTrackerID);
+        MassBlock.style.display = IsIncident ? '' : 'none';
+        if (!IsIncident) {
+            var Radios = Form.querySelectorAll('input[name="MassIncident"]');
+            for (var i = 0; i < Radios.length; i++) {
+                Radios[i].checked = false;
+            }
+        }
+    }
+
+    function ActivateInputFields(Select) {
+        if (!Select) { return; }
+        if (window.Core && Core.UI && Core.UI.InputFields && typeof Core.UI.InputFields.Activate === 'function') {
+            try {
+                if (window.jQuery) {
+                    Core.UI.InputFields.Activate(jQuery(Select).parent());
+                    Core.UI.InputFields.Activate(jQuery(Select));
+                }
+                else {
+                    Core.UI.InputFields.Activate(Select);
+                }
+            } catch (e) { /* ignore */ }
+        }
+        if (window.jQuery) {
+            try { jQuery(Select).trigger('redraw.InputField'); } catch (e2) { /* ignore */ }
+        }
+    }
+
+    function RebuildSelect(Select, Items, EmptyLabel, KeepValue) {
+        if (!Select) { return; }
+        var Previous = KeepValue || Select.value;
+        while (Select.firstChild) {
+            Select.removeChild(Select.firstChild);
+        }
+        if (EmptyLabel !== null && EmptyLabel !== undefined) {
+            var None = document.createElement('option');
+            None.value = '';
+            None.textContent = EmptyLabel;
+            Select.appendChild(None);
+        }
+        var Found = false;
+        for (var i = 0; i < Items.length; i++) {
+            var Opt = document.createElement('option');
+            Opt.value = String(Items[i].id);
+            Opt.textContent = Items[i].name + ' (#' + Items[i].id + ')';
+            if (String(Items[i].id) === String(Previous)) {
+                Opt.selected = true;
+                Found = true;
+            }
+            Select.appendChild(Opt);
+        }
+        if (!Found && Items.length && EmptyLabel === null) {
+            Select.selectedIndex = 0;
+        }
+        ActivateInputFields(Select);
+        ToggleMassIncident();
+    }
+
+    function LoadProjectMeta() {
+        var ProjectID = Project.value;
+        if (!ProjectID) { return; }
+        var URL = Form.action
+            + '?Action=AgentTicketRedmineEscalate;Subaction=AJAXProjectMeta;TicketID='
+            + encodeURIComponent(TicketID ? TicketID.value : '')
+            + ';ProjectID=' + encodeURIComponent(ProjectID);
+        if (Challenge && Challenge.value) {
+            URL += ';ChallengeToken=' + encodeURIComponent(Challenge.value);
+        }
+        var Req = new XMLHttpRequest();
+        Req.open('GET', URL, true);
+        Req.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+        Req.onreadystatechange = function () {
+            if (Req.readyState !== 4) { return; }
+            if (Req.status < 200 || Req.status > 299) { return; }
+            var Data;
+            try { Data = JSON.parse(Req.responseText); } catch (e) { return; }
+            if (!Data || !Data.Success) { return; }
+            RebuildSelect(Tracker, Data.Trackers || [], null, DefaultTracker);
+            RebuildSelect(Assignee, Data.Assignees || [], '-', '');
+            DefaultTracker = Tracker.value;
+        };
+        Req.send(null);
+    }
+
+    if (Project.addEventListener) {
+        Project.addEventListener('change', LoadProjectMeta, false);
+        Tracker.addEventListener('change', ToggleMassIncident, false);
+    } else if (Project.attachEvent) {
+        Project.attachEvent('onchange', LoadProjectMeta);
+        Tracker.attachEvent('onchange', ToggleMassIncident);
+    }
+    if (window.jQuery) {
+        jQuery(Project).on('change', LoadProjectMeta);
+        jQuery(Tracker).on('change', ToggleMassIncident);
+    }
+    ToggleMassIncident();
+
+    var IncludeAtt = document.getElementById('IncludeAttachments');
+    var AttachList = document.getElementById('RedmineAttachList');
+    function SyncAttachChecks() {
+        if (!AttachList) { return; }
+        var On = IncludeAtt ? !!IncludeAtt.checked : true;
+        var Boxes = AttachList.querySelectorAll('input.RedmineAttachKey');
+        for (var i = 0; i < Boxes.length; i++) {
+            var Item = Boxes[i].parentNode;
+            while (Item && Item !== AttachList && !(Item.className && String(Item.className).indexOf('RedmineAttachItem') >= 0)) {
+                Item = Item.parentNode;
+            }
+            var TooLarge = Item && Item.className && String(Item.className).indexOf('RedmineAttachTooLarge') >= 0;
+            if (TooLarge) {
+                Boxes[i].checked = false;
+                Boxes[i].disabled = true;
+            }
+            else {
+                Boxes[i].disabled = !On;
+                if (!On) {
+                    Boxes[i].checked = false;
+                }
+            }
+        }
+        AttachList.style.opacity = On ? '1' : '0.55';
+    }
+    if (IncludeAtt) {
+        if (IncludeAtt.addEventListener) {
+            IncludeAtt.addEventListener('change', SyncAttachChecks, false);
+        }
+        else if (IncludeAtt.attachEvent) {
+            IncludeAtt.attachEvent('onchange', SyncAttachChecks);
+        }
+        SyncAttachChecks();
+    }
+
+    var DropZone = document.getElementById('RedmineDropZone');
+    var FileInput = document.getElementById('RedmineExtraFileInput');
+    var ExtraGrid = document.getElementById('RedmineExtraGrid');
+    var StatusEl = document.getElementById('RedmineAttachStatus');
+    var FormIDEl = document.getElementById('RedmineFormID');
+    var MaxBytes = parseInt([% Data.MaxAttachmentBytesJSON %], 10) || 5000000;
+    var MsgUploading = [% Data.MsgUploadingJSON %];
+    var MsgReady = [% Data.MsgReadyJSON %];
+    var MsgTooLarge = [% Data.MsgTooLargeJSON %];
+    var MsgUploadFail = [% Data.MsgUploadFailJSON %];
+    var MsgRemove = [% Data.MsgRemoveJSON %];
+
+    function SetStatus(Text, IsError) {
+        if (!StatusEl) { return; }
+        StatusEl.textContent = Text || '';
+        StatusEl.style.color = IsError ? '#a33' : '#5b6b7c';
+    }
+
+    function RenderExtraFiles(Files) {
+        if (!ExtraGrid) { return; }
+        ExtraGrid.innerHTML = '';
+        if (!Files || !Files.length) {
+            ExtraGrid.style.display = 'none';
+            return;
+        }
+        ExtraGrid.style.display = 'block';
+        for (var i = 0; i < Files.length; i++) {
+            var F = Files[i];
+            var Li = document.createElement('li');
+            Li.className = 'RedmineExtraTile';
+            Li.setAttribute('data-file-id', String(F.FileID));
+            Li.style.cssText = 'padding:2px 0;line-height:1.35;';
+
+            var Btn = document.createElement('button');
+            Btn.type = 'button';
+            Btn.className = 'RedmineExtraRemove';
+            Btn.setAttribute('data-file-id', String(F.FileID));
+            Btn.title = MsgRemove;
+            Btn.textContent = '×';
+            Btn.style.cssText = 'margin:0 4px 0 0;padding:0 4px;border:1px solid #c5ced8;background:#fff;color:#555;cursor:pointer;font-size:12px;line-height:1.2;';
+
+            var Name = document.createElement('span');
+            Name.textContent = F.Filename || ('file-' + F.FileID);
+
+            var Size = document.createElement('span');
+            Size.style.color = '#666';
+            Size.textContent = F.SizeLabel ? (' (' + F.SizeLabel + ')') : '';
+
+            Li.appendChild(Btn);
+            Li.appendChild(Name);
+            Li.appendChild(Size);
+            ExtraGrid.appendChild(Li);
+        }
+    }
+
+    function UploadOne(File, Done) {
+        if (!File) { Done(); return; }
+        if (File.size > MaxBytes) {
+            SetStatus(MsgTooLarge + ': ' + File.name, 1);
+            Done();
+            return;
+        }
+        var FD = new FormData();
+        FD.append('Action', 'AgentTicketRedmineEscalate');
+        FD.append('Subaction', 'AJAXUploadExtra');
+        FD.append('TicketID', TicketID ? TicketID.value : '');
+        FD.append('FormID', FormIDEl ? FormIDEl.value : '');
+        if (Challenge && Challenge.value) {
+            FD.append('ChallengeToken', Challenge.value);
+        }
+        FD.append('FileUpload', File, File.name);
+
+        var Req = new XMLHttpRequest();
+        Req.open('POST', Form.action, true);
+        Req.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+        Req.onreadystatechange = function () {
+            if (Req.readyState !== 4) { return; }
+            var Data;
+            try { Data = JSON.parse(Req.responseText); } catch (e) { Data = null; }
+            if (!Data || !Data.Success) {
+                SetStatus((Data && Data.Error) ? Data.Error : MsgUploadFail, 1);
+            }
+            else {
+                RenderExtraFiles(Data.Files || []);
+                SetStatus(MsgReady, 0);
+            }
+            Done();
+        };
+        Req.send(FD);
+    }
+
+    function UploadFiles(FileList) {
+        var Files = [];
+        for (var i = 0; i < FileList.length; i++) {
+            Files.push(FileList[i]);
+        }
+        if (!Files.length) { return; }
+        SetStatus(MsgUploading, 0);
+        var Idx = 0;
+        function Next() {
+            if (Idx >= Files.length) { return; }
+            var F = Files[Idx++];
+            UploadOne(F, Next);
+        }
+        Next();
+    }
+
+    function DeleteExtra(FileID) {
+        if (!FileID) { return; }
+        var FD = new FormData();
+        FD.append('Action', 'AgentTicketRedmineEscalate');
+        FD.append('Subaction', 'AJAXDeleteExtra');
+        FD.append('TicketID', TicketID ? TicketID.value : '');
+        FD.append('FormID', FormIDEl ? FormIDEl.value : '');
+        FD.append('FileID', FileID);
+        if (Challenge && Challenge.value) {
+            FD.append('ChallengeToken', Challenge.value);
+        }
+        var Req = new XMLHttpRequest();
+        Req.open('POST', Form.action, true);
+        Req.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+        Req.onreadystatechange = function () {
+            if (Req.readyState !== 4) { return; }
+            var Data;
+            try { Data = JSON.parse(Req.responseText); } catch (e) { return; }
+            if (Data && Data.Success) {
+                RenderExtraFiles(Data.Files || []);
+                SetStatus(Data.Files && Data.Files.length ? MsgReady : '', 0);
+            }
+        };
+        Req.send(FD);
+    }
+
+    if (DropZone && FileInput) {
+        DropZone.addEventListener('click', function () { FileInput.click(); }, false);
+        FileInput.addEventListener('change', function () {
+            if (FileInput.files && FileInput.files.length) {
+                UploadFiles(FileInput.files);
+                FileInput.value = '';
+            }
+        }, false);
+        DropZone.addEventListener('dragover', function (Ev) {
+            Ev.preventDefault();
+            DropZone.style.background = '#e8eef5';
+        }, false);
+        DropZone.addEventListener('dragleave', function () {
+            DropZone.style.background = '#f4f7fa';
+        }, false);
+        DropZone.addEventListener('drop', function (Ev) {
+            Ev.preventDefault();
+            DropZone.style.background = '#f4f7fa';
+            if (Ev.dataTransfer && Ev.dataTransfer.files) {
+                UploadFiles(Ev.dataTransfer.files);
+            }
+        }, false);
+    }
+    if (ExtraGrid) {
+        ExtraGrid.addEventListener('click', function (Ev) {
+            var T = Ev.target;
+            while (T && T !== ExtraGrid && !(T.className && String(T.className).indexOf('RedmineExtraRemove') >= 0)) {
+                T = T.parentNode;
+            }
+            if (T && T.getAttribute) {
+                DeleteExtra(T.getAttribute('data-file-id'));
+            }
+        }, false);
+    }
+})();
+//]]></script>
+[% END %]

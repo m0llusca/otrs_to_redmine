@@ -1,0 +1,23 @@
+# Agent / IDE / OS
+AGENTS.md
+.cursor/
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Secrets
+.env
+.env.*
+!.env.example
+local-secrets/
+
+# Build artifacts
+*.opm
+dist/
+
+# Lab / one-off helpers (not the package)
+scripts/
