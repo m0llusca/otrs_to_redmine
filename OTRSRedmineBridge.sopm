@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <otrs_package version="1.0">
     <Name>OTRSRedmineBridge</Name>
-    <Version>1.0.28</Version>
+    <Version>1.0.29</Version>
     <Framework>7.3.x</Framework>
     <Framework>7.2.x</Framework>
     <Framework>7.1.x</Framework>
@@ -13,6 +13,7 @@
     <License>GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007</License>
     <Description Lang="en">OTRS CE ↔ Redmine bridge: escalate/link, Redmine status notes into OTRS, Admin health, hardened HTTP.</Description>
     <Description Lang="ru">Мост OTRS CE ↔ Redmine: эскалация/привязка, заметки Redmine при смене статуса в OTRS, Admin health, hardened HTTP.</Description>
+    <ChangeLog Version="1.0.29" Date="2026-09-11">Link/unlink Redmine note is only ticket link + agent (no «Служебная запись моста» stamp).</ChangeLog>
     <ChangeLog Version="1.0.28" Date="2026-09-11">Do not write link/unlink journal comments in Redmine (no «Служебная запись моста»).</ChangeLog>
     <ChangeLog Version="1.0.27" Date="2026-09-11">Stop copying OTRS articles to Redmine; keep create/link and Redmine→OTRS notes on StatusSync |note.</ChangeLog>
     <ChangeLog Version="1.0.26" Date="2026-09-11">Znuny 7 registration: Loader + Admin Frontend::Navigation, TicketZoom MenuModule Prio (same SysConfig 2.0 path as OTRS 6).</ChangeLog>
