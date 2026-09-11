@@ -6,9 +6,9 @@
 
 # OTRSRedmineBridge
 
-Мост OTRS 6 CE / Znuny 7 ↔ Redmine: эскалация или привязка тикетов и двусторонняя синхронизация статуса и заметок.
+Мост OTRS 6 CE / Znuny 7 ↔ Redmine: эскалация или привязка тикетов; заметки Redmine при смене статуса приходят в OTRS.
 
-[![Version](https://img.shields.io/badge/version-1.0.26-0B5FFF)](./OTRSRedmineBridge.sopm)
+[![Version](https://img.shields.io/badge/version-1.0.27-0B5FFF)](./OTRSRedmineBridge.sopm)
 [![License: GPL v3](https://img.shields.io/badge/license-GPL--3.0-green)](./LICENSE)
 [![OTRS](https://img.shields.io/badge/OTRS-6.0-informational)](https://community.znuny.org/)
 [![Znuny](https://img.shields.io/badge/Znuny-7.x-informational)](https://www.znuny.org/)
@@ -18,7 +18,7 @@
 - **Разное → Создать задачу в Redmine** — создание или привязка, проект / трекер / исполнитель / приоритет, подтверждение
 - **Разное → Open in Redmine** — URL из `Redmine::BaseURL`
 - Окно уже привязанного тикета: соседние тикеты, отвязка / перепривязка, синк сейчас
-- Двусторонний синк комментариев, вложений и статуса (Daemon OTRS/Znuny)
+- Redmine → OTRS: статус и комментарии по правилу StatusSync `|note` (Daemon); переписка тикета в Redmine не копируется
 - Admin UI: проверка связи / TLS, таймауты, здоровье Daemon, поля Ticket Zoom
 - Защита: UI-таймаут, circuit breaker, allow-list URL вложений, список проектов только для Create
 
@@ -47,7 +47,7 @@
 Kernel/System/Redmine.pm          фасад
 Kernel/System/Redmine/HTTP.pm     HTTP / TLS
 Kernel/System/Redmine/Issue.pm    создание / привязка / отвязка
-Kernel/System/Redmine/Sync.pm     двусторонний синк
+Kernel/System/Redmine/Sync.pm     синк Redmine → OTRS
 Kernel/System/Redmine/Catalog.pm  проекты / трекеры / пользователи
 Kernel/System/Redmine/TicketDF.pm динамические поля
 Kernel/System/Redmine/Diagnostics.pm  проверки в Admin

@@ -11,6 +11,7 @@ our @ObjectDependencies = (
     'Kernel::System::DynamicField',
     'Kernel::System::Log',
     'Kernel::System::Redmine',
+    'Kernel::System::SysConfig',
     'Kernel::System::Valid',
 );
 
@@ -35,7 +36,58 @@ sub CodeReinstall {
 
 sub CodeUpgrade {
     my ( $Self, %Param ) = @_;
+    $Self->_RemoveObsoleteSettings();
     return $Self->CodeInstall(%Param);
+}
+
+# Drop leftover ArticleCreate → Redmine hook so upgrade does not keep firing a deleted module.
+sub _RemoveObsoleteSettings {
+    my ( $Self, %Param ) = @_;
+
+    my $SysConfigObject = $Kernel::OM->Get('Kernel::System::SysConfig');
+    my $LogObject       = $Kernel::OM->Get('Kernel::System::Log');
+    my @Dirty;
+
+    SETTING:
+    for my $Name (
+        'Ticket::EventModulePost###5510-RedmineOutbound',
+        'Redmine::SyncComments',
+    )
+    {
+        my $Lock = $SysConfigObject->SettingLock(
+            Name   => $Name,
+            Force  => 1,
+            UserID => 1,
+        );
+        next SETTING if !$Lock;
+
+        my %Update = $SysConfigObject->SettingUpdate(
+            Name              => $Name,
+            IsValid           => 0,
+            ExclusiveLockGUID => $Lock,
+            UserID            => 1,
+        );
+        $SysConfigObject->SettingUnlock( Name => $Name );
+        if ( $Update{Success} ) {
+            push @Dirty, $Name;
+        }
+        else {
+            $LogObject->Log(
+                Priority => 'notice',
+                Message  => "OTRSRedmineBridge: obsolete $Name already gone",
+            );
+        }
+    }
+
+    return 1 if !@Dirty;
+
+    $SysConfigObject->ConfigurationDeploy(
+        Comments      => 'OTRSRedmineBridge: disable obsolete outbound article sync',
+        DirtySettings => \@Dirty,
+        Force         => 1,
+        UserID        => 1,
+    );
+    return 1;
 }
 
 sub CodeUninstall {

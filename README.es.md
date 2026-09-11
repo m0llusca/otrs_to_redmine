@@ -6,9 +6,9 @@
 
 # OTRSRedmineBridge
 
-Puente OTRS 6 CE / Znuny 7 ↔ Redmine: escalar o vincular tickets y sincronizar estado y notas en ambos sentidos.
+Puente OTRS 6 CE / Znuny 7 ↔ Redmine: escalar o vincular tickets; las notas de estado de Redmine vuelven a OTRS.
 
-[![Version](https://img.shields.io/badge/version-1.0.26-0B5FFF)](./OTRSRedmineBridge.sopm)
+[![Version](https://img.shields.io/badge/version-1.0.27-0B5FFF)](./OTRSRedmineBridge.sopm)
 [![License: GPL v3](https://img.shields.io/badge/license-GPL--3.0-green)](./LICENSE)
 [![OTRS](https://img.shields.io/badge/OTRS-6.0-informational)](https://community.znuny.org/)
 [![Znuny](https://img.shields.io/badge/Znuny-7.x-informational)](https://www.znuny.org/)
@@ -18,7 +18,7 @@ Puente OTRS 6 CE / Znuny 7 ↔ Redmine: escalar o vincular tickets y sincronizar
 - **Varios → Crear incidencia en Redmine** — crear o vincular, proyecto / tracker / asignado / prioridad, confirmación
 - **Varios → Abrir en Redmine** — usa `Redmine::BaseURL`
 - Ventana de ticket ya vinculado: tickets hermanos, desvincular / volver a vincular, sincronizar ahora
-- Sincronización bidireccional de comentarios, adjuntos y estado (Daemon de OTRS)
+- Redmine → OTRS: estado y comentarios con StatusSync `|note` (Daemon); la correspondencia del ticket no se copia a Redmine
 - Admin UI: conectividad / TLS, timeouts, salud del Daemon, campos de Ticket Zoom
 - Endurecimiento: timeout de UI, circuit breaker, lista de URL de contenido, lista de proyectos solo para Create
 
@@ -47,7 +47,7 @@ Detalles: [docs/es/DEPLOY.md](./docs/es/DEPLOY.md).
 Kernel/System/Redmine.pm          fachada
 Kernel/System/Redmine/HTTP.pm     HTTP / TLS
 Kernel/System/Redmine/Issue.pm    crear / vincular / desvincular
-Kernel/System/Redmine/Sync.pm     sync bidireccional
+Kernel/System/Redmine/Sync.pm     sync Redmine → OTRS
 Kernel/System/Redmine/Catalog.pm  proyectos / trackers / usuarios
 Kernel/System/Redmine/TicketDF.pm campos dinámicos
 Kernel/System/Redmine/Diagnostics.pm  comprobaciones Admin

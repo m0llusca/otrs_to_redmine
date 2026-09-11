@@ -93,6 +93,8 @@ sub Data {
         'Check failed.'                => 'Prüfung fehlgeschlagen.',
         'Synchronization'              => 'Synchronisation',
         'Status sync rules'            => 'Status-Sync-Regeln',
+        'Attach files when creating or linking a Redmine issue, and when a status-change note is imported from Redmine. Ticket correspondence is not copied to Redmine.' =>
+            'Dateien beim Erstellen/Verknüpfen und beim Import einer Statusnotiz aus Redmine anhängen. Ticketkorrespondenz wird nicht nach Redmine kopiert.',
     );
 
     for my $Key ( keys %Trans ) {

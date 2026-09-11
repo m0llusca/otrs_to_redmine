@@ -123,10 +123,8 @@ sub Data {
             'Медленнее. Если выкл. — только проект по умолчанию (с кэшем).',
         'How long project/tracker lists are cached in OTRS (default 900). Speeds up the escalate popup.' =>
             'Как долго списки проектов/трекеров кэшируются в OTRS (по умолчанию 900). Ускоряет всплывающее окно эскалации.',
-        'OTRS → Redmine: new ticket notes are pushed as Redmine journals. Redmine → OTRS: journals become internal notes (via Daemon).' =>
-            'OTRS → Redmine: новые заметки уходят журналами Redmine. Redmine → OTRS: заметка только при смене статуса по правилу с |note (Daemon).',
-        'Exchange attachments both ways when comments sync. Large files may be skipped; Redmine upload API can return errors.' =>
-            'Обмен вложениями в обе стороны при синке комментариев. Большие файлы могут пропускаться; API upload Redmine иногда отвечает ошибкой.',
+        'Attach files when creating or linking a Redmine issue, and when a status-change note is imported from Redmine. Ticket correspondence is not copied to Redmine.' =>
+            'Вложения — при создании или привязке задачи и при импорте заметки со сменой статуса из Redmine. Переписка тикета в Redmine не копируется.',
         'Daemon polls linked issues every 5 minutes for status, comments and attachments. Requires OTRS Daemon running.' =>
             'Daemon каждые 5 минут опрашивает связанные задачи: статус, комментарии, вложения. Нужен запущенный OTRS Daemon.',
         'Daemon retries tickets that failed to create a Redmine issue (every 10 minutes).' =>
@@ -159,7 +157,6 @@ sub Data {
             'Медленнее. Если выкл. — только проект по умолчанию (с кэшем).',
         'Catalog cache TTL (seconds)' => 'TTL кэша каталога (сек.)',
         'Synchronization'             => 'Синхронизация',
-        'Sync comments'               => 'Синхронизировать комментарии',
         'Sync attachments'            => 'Синхронизировать вложения',
         'Inbound sync (Redmine → OTRS)' => 'Входящая синхронизация (Redmine → OTRS)',
         'Auto-retry failed escalations' => 'Автоповтор неудачных эскалаций',

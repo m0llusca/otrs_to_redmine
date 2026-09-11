@@ -327,17 +327,10 @@
                     <fieldset class="TableLike">
                         <legend>[% Translate("Synchronization") | html %]</legend>
 
-                        <label for="SyncComments">[% Translate("Sync comments") | html %]:</label>
-                        <div class="Field">
-                            <input type="checkbox" name="SyncComments" id="SyncComments" value="1" [% IF Data.SyncComments %]checked="checked"[% END %]/>
-                            <p class="FieldExplanation">[% Translate("OTRS → Redmine: new ticket notes are pushed as Redmine journals. Redmine → OTRS: journals become internal notes (via Daemon).") | html %]</p>
-                        </div>
-                        <div class="Clear"></div>
-
                         <label for="SyncAttachments">[% Translate("Sync attachments") | html %]:</label>
                         <div class="Field">
                             <input type="checkbox" name="SyncAttachments" id="SyncAttachments" value="1" [% IF Data.SyncAttachments %]checked="checked"[% END %]/>
-                            <p class="FieldExplanation">[% Translate("Exchange attachments both ways when comments sync. Large files may be skipped; Redmine upload API can return errors.") | html %]</p>
+                            <p class="FieldExplanation">[% Translate("Attach files when creating or linking a Redmine issue, and when a status-change note is imported from Redmine. Ticket correspondence is not copied to Redmine.") | html %]</p>
                         </div>
                         <div class="Clear"></div>
 

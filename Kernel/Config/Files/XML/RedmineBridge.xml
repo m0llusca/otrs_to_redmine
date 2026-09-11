@@ -109,14 +109,8 @@
         <Value><Item ValueType="Checkbox">0</Item></Value>
     </Setting>
 
-    <Setting Name="Redmine::SyncComments" Required="0" Valid="1">
-        <Description Translatable="1">Sync OTRS articles to Redmine notes and import Redmine journals.</Description>
-        <Navigation>Core::Redmine</Navigation>
-        <Value><Item ValueType="Checkbox">1</Item></Value>
-    </Setting>
-
     <Setting Name="Redmine::SyncAttachments" Required="0" Valid="1">
-        <Description Translatable="1">Sync attachments both ways (size-limited).</Description>
+        <Description Translatable="1">Attach files on create/link and when importing a Redmine status note (size-limited).</Description>
         <Navigation>Core::Redmine</Navigation>
         <Value><Item ValueType="Checkbox">1</Item></Value>
     </Setting>
@@ -278,18 +272,6 @@
                 <Item Key="ClusterName" Translatable="1">Miscellaneous</Item>
                 <Item Key="ClusterPriority">800</Item>
                 <Item Key="Prio">316</Item>
-            </Hash>
-        </Value>
-    </Setting>
-
-    <Setting Name="Ticket::EventModulePost###5510-RedmineOutbound" Required="0" Valid="1">
-        <Description Translatable="1">Push new OTRS articles to linked Redmine issues.</Description>
-        <Navigation>Core::Event::Ticket</Navigation>
-        <Value>
-            <Hash>
-                <Item Key="Module">Kernel::System::Ticket::Event::RedmineOutbound</Item>
-                <Item Key="Event">ArticleCreate</Item>
-                <Item Key="Transaction">1</Item>
             </Hash>
         </Value>
     </Setting>

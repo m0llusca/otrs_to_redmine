@@ -2,12 +2,12 @@
 
 # Brief del producto — OTRS ↔ Redmine
 
-Un flujo: escalar o vincular desde el ticket → guardar el ID de Redmine → sincronizar en ambos sentidos.
+Un flujo: escalar o vincular desde el ticket → guardar el ID de Redmine → las notas de estado de Redmine vuelven a OTRS.
 
 | Rol | Decisión |
 |-----|----------|
 | Producto | Menú Varios (no una cola); DF + artículo interno. |
-| Backend | Ticket Event + SysConfig (CE sin Business Invoker). |
+| Backend | Daemon cron + SysConfig (CE sin Business Invoker). |
 | Operador | Clave API de servicio, errores visibles, create/link idempotente. |
 
 Instalación: [DEPLOY.md](./DEPLOY.md).
