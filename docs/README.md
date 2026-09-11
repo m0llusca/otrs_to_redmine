@@ -10,5 +10,5 @@
 
 | Guide | Description |
 |-------|-------------|
-| [Install](./en/DEPLOY.md) | Build the `.opm` and configure the bridge |
-| [Product brief](./en/PRODUCT.md) | Scope and decisions |
+| [Install](./en/DEPLOY.md) | Build the `.opm`, configure the bridge, StatusSync |
+| [Product brief](./en/PRODUCT.md) | Scope, decisions, and what is (not) copied |

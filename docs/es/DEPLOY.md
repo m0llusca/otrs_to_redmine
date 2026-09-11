@@ -33,6 +33,22 @@ Genere el `.opm`, instálelo en Package Manager y configure SysConfig (o la pant
 6. Comprobar: salud del Daemon en Admin → Run sync now; TicketZoom → **Varios** → escalar/Link; el segundo clic no debe duplicar la incidencia.
 7. Luego `Enabled=1` para los agentes que lo necesiten + ACL / `Redmine::AgentGroup` si hace falta.
 
+## Sincronización (desde 1.0.27)
+
+El correo y las notas del ticket **no** se envían a Redmine tras crear/vincular. Redmine → OTRS requiere Daemon y `Redmine::InboundSync`.
+
+`Redmine::StatusSync` — una regla por línea, nombre de estado Redmine = estado OTRS:
+
+| Valor | Efecto |
+|-------|--------|
+| `open` | Solo cambia el estado OTRS |
+| `open\|note` | Estado **y** nota interna (estado + comentario de ese diario) |
+| `note` | Solo nota, sin cambiar el estado |
+
+Ejemplo: `Проверка решения = open|note`. Los comentarios sin ese cambio de estado se quedan en Redmine.
+
+Qué se copia y qué no: [PRODUCT.md](./PRODUCT.md).
+
 ## No hacer
 
 - No commitear la clave API.

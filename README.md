@@ -18,7 +18,8 @@ OTRS 6 CE / Znuny 7 ↔ Redmine bridge: escalate or link tickets; Redmine status
 - **Miscellaneous → Create Redmine issue** — create or link, project / tracker / assignee / priority, confirmation
 - **Miscellaneous → Open in Redmine** — uses `Redmine::BaseURL`
 - Already-linked popup: siblings, unlink / relink, sync now
-- Redmine → OTRS: status and comments on StatusSync `|note` (Daemon); ticket correspondence is not copied to Redmine
+- Redmine → OTRS: status and comments on StatusSync `|note` (Daemon)
+- Ticket mail and notes are **not** copied to Redmine (create/link only)
 - Admin UI: connectivity / TLS checks, timeouts, Daemon health, Ticket Zoom fields
 - Hardening: UI timeout, circuit breaker, content URL allow-list, create-only project allow-list
 
@@ -39,7 +40,7 @@ OTRS 6 CE / Znuny 7 ↔ Redmine bridge: escalate or link tickets; Redmine status
    - `Redmine::Enabled` = `0` until a first check passes
 4. Keep Daemon running. Do not commit API keys.
 
-Details: [docs/en/DEPLOY.md](./docs/en/DEPLOY.md).
+Details: [docs/en/DEPLOY.md](./docs/en/DEPLOY.md). What is copied: [docs/en/PRODUCT.md](./docs/en/PRODUCT.md).
 
 ## Architecture
 

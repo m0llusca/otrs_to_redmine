@@ -10,4 +10,14 @@ One flow: escalate or link from the ticket → store the Redmine ID → Redmine 
 | Backend | Daemon cron + SysConfig (CE without Business Invoker). |
 | Operator | Service API key, visible errors, idempotent create/link. |
 
-See [DEPLOY.md](./DEPLOY.md) for install.
+## What goes where
+
+| Direction | What happens |
+|-----------|----------------|
+| OTRS → Redmine | **Create** a new issue or **link** to an existing one. The bridge writes a short Russian note with the public ticket URL. Optional attachments on create/link. |
+| OTRS → Redmine | Ticket mail, agent notes, and later correspondence are **not** copied. |
+| Redmine → OTRS | Status (and optionally a note) only via `Redmine::StatusSync`. Ordinary Redmine comments are not copied. |
+| Redmine → OTRS | A comment is imported only when that status change has `|note` (e.g. `Проверка решения = open\|note`). Status change + comment become **one** internal OTRS note. |
+| N tickets → 1 issue | Status / `|note` fan out to every linked ticket. Nothing from one OTRS ticket is copied onto sibling tickets. |
+
+Install and StatusSync: [DEPLOY.md](./DEPLOY.md).

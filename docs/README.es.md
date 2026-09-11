@@ -10,5 +10,5 @@
 
 | Guía | Contenido |
 |------|-----------|
-| [Instalación](./es/DEPLOY.md) | Generar el `.opm` y configurar el puente |
-| [Brief del producto](./es/PRODUCT.md) | Alcance y decisiones |
+| [Instalación](./es/DEPLOY.md) | Generar el `.opm`, configurar el puente, StatusSync |
+| [Brief del producto](./es/PRODUCT.md) | Alcance, decisiones y qué se copia (o no) |

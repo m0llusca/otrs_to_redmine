@@ -33,6 +33,22 @@ Build the `.opm`, install it in Package Manager, then set SysConfig (or the Admi
 6. Check: Daemon health in Admin → Run sync now; TicketZoom → **Miscellaneous** → escalate/Link; second click must not create a duplicate issue.
 7. Then `Enabled=1` for the agents who need it + ACL / `Redmine::AgentGroup` if needed.
 
+## Sync (from 1.0.27)
+
+Ticket mail and notes are **not** pushed to Redmine after create/link. Redmine → OTRS needs the Daemon and `Redmine::InboundSync`.
+
+`Redmine::StatusSync` — one rule per line, Redmine status name = OTRS state:
+
+| Value | Effect |
+|-------|--------|
+| `open` | Set the OTRS state only |
+| `open\|note` | Set the state **and** write an internal note (status + that journal comment) |
+| `note` | Internal note only, no state change |
+
+Example: `Проверка решения = open|note`. Comments without such a status transition stay in Redmine.
+
+What is copied and what is not: [PRODUCT.md](./PRODUCT.md).
+
 ## Do not
 
 - Do not commit the API key.

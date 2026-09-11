@@ -18,7 +18,8 @@ Puente OTRS 6 CE / Znuny 7 ↔ Redmine: escalar o vincular tickets; las notas de
 - **Varios → Crear incidencia en Redmine** — crear o vincular, proyecto / tracker / asignado / prioridad, confirmación
 - **Varios → Abrir en Redmine** — usa `Redmine::BaseURL`
 - Ventana de ticket ya vinculado: tickets hermanos, desvincular / volver a vincular, sincronizar ahora
-- Redmine → OTRS: estado y comentarios con StatusSync `|note` (Daemon); la correspondencia del ticket no se copia a Redmine
+- Redmine → OTRS: estado y comentarios con StatusSync `|note` (Daemon)
+- El correo y las notas del ticket **no** se copian a Redmine (solo crear/vincular)
 - Admin UI: conectividad / TLS, timeouts, salud del Daemon, campos de Ticket Zoom
 - Endurecimiento: timeout de UI, circuit breaker, lista de URL de contenido, lista de proyectos solo para Create
 
@@ -39,7 +40,7 @@ Puente OTRS 6 CE / Znuny 7 ↔ Redmine: escalar o vincular tickets; las notas de
    - `Redmine::Enabled` = `0` hasta la primera comprobación
 4. El Daemon debe estar en marcha. No suba claves API al repositorio.
 
-Detalles: [docs/es/DEPLOY.md](./docs/es/DEPLOY.md).
+Detalles: [docs/es/DEPLOY.md](./docs/es/DEPLOY.md). Qué se copia: [docs/es/PRODUCT.md](./docs/es/PRODUCT.md).
 
 ## Arquitectura
 

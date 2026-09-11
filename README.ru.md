@@ -18,7 +18,8 @@
 - **Разное → Создать задачу в Redmine** — создание или привязка, проект / трекер / исполнитель / приоритет, подтверждение
 - **Разное → Open in Redmine** — URL из `Redmine::BaseURL`
 - Окно уже привязанного тикета: соседние тикеты, отвязка / перепривязка, синк сейчас
-- Redmine → OTRS: статус и комментарии по правилу StatusSync `|note` (Daemon); переписка тикета в Redmine не копируется
+- Redmine → OTRS: статус и комментарии по правилу StatusSync `|note` (Daemon)
+- Письма и заметки тикета в Redmine **не** копируются (только создание/привязка)
 - Admin UI: проверка связи / TLS, таймауты, здоровье Daemon, поля Ticket Zoom
 - Защита: UI-таймаут, circuit breaker, allow-list URL вложений, список проектов только для Create
 
@@ -39,7 +40,7 @@
    - `Redmine::Enabled` = `0` до первой проверки
 4. Daemon должен быть запущен. API-ключ не коммитить.
 
-Подробности: [docs/ru/DEPLOY.md](./docs/ru/DEPLOY.md).
+Подробности: [docs/ru/DEPLOY.md](./docs/ru/DEPLOY.md). Что копируется: [docs/ru/PRODUCT.md](./docs/ru/PRODUCT.md).
 
 ## Архитектура
 
