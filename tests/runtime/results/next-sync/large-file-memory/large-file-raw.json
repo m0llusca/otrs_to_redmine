@@ -1,0 +1,866 @@
+[
+  {
+    "variant": "old",
+    "scenario": "large_shared",
+    "repeat": 1,
+    "workers": [
+      {
+        "cache_mode": "backend_only",
+        "cpu_seconds": 1.984926,
+        "cpu_system_seconds": 0.176289,
+        "cpu_user_seconds": 1.808637,
+        "events_flushed": 1,
+        "health": {
+          "LastSyncError": "",
+          "LastSyncOK": 1,
+          "SyncedCount": 10
+        },
+        "loaded_sync": "/bench/.state/release-1.0.30/Kernel/System/Redmine/Sync.pm",
+        "mode": "cron",
+        "peak_rss_kib": 111012,
+        "result": {
+          "Success": 1
+        },
+        "scenario": "large_shared",
+        "sql_queries": 1689,
+        "startup_peak_rss_kib": 57260,
+        "sync_sha256": "0cc33d1479fca6f19bc0d0e5fdc1604c91e5827bbfe6ea9513d8e02cf7ee26a9",
+        "variable_check": "//Kernel/System/VariableCheck.pm",
+        "variant": "old",
+        "wall_seconds": 2.39980411529541,
+        "host_process_wall_seconds": 2.7648867500247434
+      }
+    ],
+    "worker_count": 1,
+    "validation": {
+      "attachment_hashes": [
+        "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef",
+        "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef",
+        "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef",
+        "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef",
+        "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef",
+        "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef",
+        "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef",
+        "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef",
+        "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef",
+        "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef"
+      ],
+      "attachments": 10,
+      "checkpoints": {
+        "RedmineLastAttachmentID": [
+          [
+            "1",
+            10
+          ]
+        ],
+        "RedmineLastJournalID": [
+          [
+            "11",
+            10
+          ]
+        ],
+        "RedmineLastSyncAt": [
+          [
+            "1791814674",
+            5
+          ],
+          [
+            "1791814675",
+            5
+          ]
+        ],
+        "RedmineLastUpdatedOn": [
+          [
+            "2026-01-02T00:00:00Z",
+            10
+          ]
+        ],
+        "RedmineStatus": [
+          [
+            "Проверка решения",
+            10
+          ]
+        ]
+      },
+      "max_notes_per_ticket": 1,
+      "new_notes": 10,
+      "sample_bodies": [
+        "— Статус —\nСтатус Redmine изменён с «New» на «Проверка решения». Состояние тикета OTRS: open. Автор в Redmine: Benchmark engineer.\n\n— Комментарии —\nBenchmark engineer:\nControlled status transition\n\n— Вложения —\n• fixture.bin",
+        "— Статус —\nСтатус Redmine изменён с «New» на «Проверка решения». Состояние тикета OTRS: open. Автор в Redmine: Benchmark engineer.\n\n— Комментарии —\nBenchmark engineer:\nControlled status transition\n\n— Вложения —\n• fixture.bin",
+        "— Статус —\nСтатус Redmine изменён с «New» на «Проверка решения». Состояние тикета OTRS: open. Автор в Redmine: Benchmark engineer.\n\n— Комментарии —\nBenchmark engineer:\nControlled status transition\n\n— Вложения —\n• fixture.bin"
+      ],
+      "states": [
+        [
+          "open",
+          10
+        ]
+      ],
+      "tickets_with_notes": 10,
+      "work": null,
+      "host_process_wall_seconds": 0.561821958021028
+    },
+    "peer": {
+      "config": {
+        "issueIDs": [
+          7001
+        ],
+        "phase": "changed",
+        "attachments": true,
+        "largeBytes": 4194304
+      },
+      "counts": {
+        "GET /issues/7001.json": 1,
+        "GET /issues/7001.json?include=journals,attachments": 1,
+        "GET /attachments/download/1": 1,
+        "GET /enumerations/issue_priorities.json": 1,
+        "GET /projects/1.json?include=trackers": 1,
+        "GET /projects/1/memberships.json?limit=100&offset=0": 1
+      },
+      "connections": 6,
+      "open_connections": 0,
+      "response_bytes": 4195253,
+      "uploaded_bytes": [],
+      "uploaded_hashes": [],
+      "attached": [],
+      "created": null
+    },
+    "cpu_seconds": 1.984926,
+    "cpu_user_seconds": 1.808637,
+    "cpu_system_seconds": 0.176289,
+    "wall_seconds": 2.39980411529541,
+    "sql_queries": 1689,
+    "host_process_wall_seconds": 2.7648867500247434,
+    "peak_rss_kib": 111012,
+    "http_requests": 6,
+    "response_bytes": 4195253,
+    "connections": 6
+  },
+  {
+    "variant": "new",
+    "scenario": "large_shared",
+    "repeat": 1,
+    "workers": [
+      {
+        "cache_mode": "backend_only",
+        "cpu_seconds": 0.072811,
+        "cpu_system_seconds": 0.005987,
+        "cpu_user_seconds": 0.066824,
+        "events_flushed": 1,
+        "health": {
+          "LastSyncError": "",
+          "LastSyncOK": 1,
+          "SyncedCount": null
+        },
+        "loaded_sync": "/opt/otrs/Kernel/System/Redmine/Sync.pm",
+        "mode": "poll",
+        "peak_rss_kib": 71340,
+        "result": {
+          "Success": 1
+        },
+        "scenario": "large_shared",
+        "sql_queries": 13,
+        "startup_peak_rss_kib": 57900,
+        "sync_sha256": "82640402d7475e4d27169c1ba93566d47f3cad12a0cd9d7961d344e5ddf22f57",
+        "variable_check": "//Kernel/System/VariableCheck.pm",
+        "variant": "new",
+        "wall_seconds": 0.074944019317627,
+        "host_process_wall_seconds": 0.437516375008272
+      },
+      {
+        "cache_mode": "backend_only",
+        "cpu_seconds": 1.905412,
+        "cpu_system_seconds": 0.176166,
+        "cpu_user_seconds": 1.729246,
+        "events_flushed": 1,
+        "health": {
+          "LastSyncError": "",
+          "LastSyncOK": 1,
+          "SyncedCount": 10
+        },
+        "loaded_sync": "/opt/otrs/Kernel/System/Redmine/Sync.pm",
+        "mode": "deliver",
+        "peak_rss_kib": 110900,
+        "result": {
+          "Complete": 1,
+          "Error": "",
+          "Processed": 10,
+          "Succeeded": 10,
+          "Success": 1
+        },
+        "scenario": "large_shared",
+        "sql_queries": 1672,
+        "startup_peak_rss_kib": 56952,
+        "sync_sha256": "82640402d7475e4d27169c1ba93566d47f3cad12a0cd9d7961d344e5ddf22f57",
+        "variable_check": "//Kernel/System/VariableCheck.pm",
+        "variant": "new",
+        "wall_seconds": 2.23395395278931,
+        "host_process_wall_seconds": 2.611440374981612
+      }
+    ],
+    "worker_count": 2,
+    "validation": {
+      "attachment_hashes": [
+        "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef",
+        "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef",
+        "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef",
+        "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef",
+        "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef",
+        "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef",
+        "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef",
+        "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef",
+        "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef",
+        "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef"
+      ],
+      "attachments": 10,
+      "checkpoints": {
+        "RedmineLastAttachmentID": [
+          [
+            "1",
+            10
+          ]
+        ],
+        "RedmineLastJournalID": [
+          [
+            "11",
+            10
+          ]
+        ],
+        "RedmineLastSyncAt": [
+          [
+            "0",
+            10
+          ]
+        ],
+        "RedmineLastUpdatedOn": [
+          [
+            "2026-01-02T00:00:00Z",
+            10
+          ]
+        ],
+        "RedmineStatus": [
+          [
+            "Проверка решения",
+            10
+          ]
+        ]
+      },
+      "max_notes_per_ticket": 1,
+      "new_notes": 10,
+      "sample_bodies": [
+        "— Статус —\nСтатус Redmine изменён с «New» на «Проверка решения». Состояние тикета OTRS: open. Автор в Redmine: Benchmark engineer.\n\n— Комментарии —\nBenchmark engineer:\nControlled status transition\n\n— Вложения —\n• fixture.bin",
+        "— Статус —\nСтатус Redmine изменён с «New» на «Проверка решения». Состояние тикета OTRS: open. Автор в Redmine: Benchmark engineer.\n\n— Комментарии —\nBenchmark engineer:\nControlled status transition\n\n— Вложения —\n• fixture.bin",
+        "— Статус —\nСтатус Redmine изменён с «New» на «Проверка решения». Состояние тикета OTRS: open. Автор в Redmine: Benchmark engineer.\n\n— Комментарии —\nBenchmark engineer:\nControlled status transition\n\n— Вложения —\n• fixture.bin"
+      ],
+      "states": [
+        [
+          "open",
+          10
+        ]
+      ],
+      "tickets_with_notes": 10,
+      "work": {
+        "due": 0,
+        "first_issue_key": null,
+        "generations": [
+          {
+            "after_ticket_id": 0,
+            "done_generation": 2,
+            "first_failed_ticket_id": 0,
+            "generation": 2,
+            "issue_id": "7001",
+            "issue_key": "3e81c4bea6f318b0e8ca86f88b19d4e0a1e5ecd8733802bd41e7386210508659",
+            "lease_until": 0,
+            "queued_at": 0,
+            "retry_at": 0,
+            "retry_count": 0,
+            "round_generation": 2
+          }
+        ],
+        "pending": 0,
+        "source_key": "f51a04ff862d0572e80d154605ab65bc6bb1da6caf8fbddc7bb8056e60bb45b1",
+        "total": 1
+      },
+      "host_process_wall_seconds": 0.556771083996864
+    },
+    "peer": {
+      "config": {
+        "issueIDs": [
+          7001
+        ],
+        "phase": "changed",
+        "attachments": true,
+        "largeBytes": 4194304
+      },
+      "counts": {
+        "GET /issues.json?issue_id=7001&status_id=*&limit=100&offset=0": 1,
+        "GET /issues/7001.json?include=journals,attachments": 1,
+        "GET /issue_statuses.json": 1,
+        "GET /attachments/download/1": 1
+      },
+      "connections": 4,
+      "open_connections": 0,
+      "response_bytes": 4195201,
+      "uploaded_bytes": [],
+      "uploaded_hashes": [],
+      "attached": [],
+      "created": null
+    },
+    "cpu_seconds": 1.978223,
+    "cpu_user_seconds": 1.79607,
+    "cpu_system_seconds": 0.18215299999999998,
+    "wall_seconds": 2.308897972106937,
+    "sql_queries": 1685,
+    "host_process_wall_seconds": 3.048956749989884,
+    "peak_rss_kib": 110900,
+    "http_requests": 4,
+    "response_bytes": 4195201,
+    "connections": 4,
+    "replay": {
+      "poll": {
+        "cache_mode": "backend_only",
+        "cpu_seconds": 0.046612,
+        "cpu_system_seconds": 0.002035,
+        "cpu_user_seconds": 0.044577,
+        "events_flushed": 1,
+        "health": {
+          "LastSyncError": "",
+          "LastSyncOK": 1,
+          "SyncedCount": 10
+        },
+        "loaded_sync": "/opt/otrs/Kernel/System/Redmine/Sync.pm",
+        "mode": "poll",
+        "peak_rss_kib": 64568,
+        "result": {
+          "Success": 1
+        },
+        "scenario": "large_shared",
+        "sql_queries": 7,
+        "startup_peak_rss_kib": 57892,
+        "sync_sha256": "82640402d7475e4d27169c1ba93566d47f3cad12a0cd9d7961d344e5ddf22f57",
+        "variable_check": "//Kernel/System/VariableCheck.pm",
+        "variant": "new",
+        "wall_seconds": 0.0483810901641846,
+        "host_process_wall_seconds": 0.42049616598524153
+      },
+      "workers": [],
+      "validation": {
+        "attachment_hashes": [
+          "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef",
+          "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef",
+          "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef",
+          "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef",
+          "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef",
+          "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef",
+          "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef",
+          "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef",
+          "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef",
+          "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef"
+        ],
+        "attachments": 10,
+        "checkpoints": {
+          "RedmineLastAttachmentID": [
+            [
+              "1",
+              10
+            ]
+          ],
+          "RedmineLastJournalID": [
+            [
+              "11",
+              10
+            ]
+          ],
+          "RedmineLastSyncAt": [
+            [
+              "0",
+              10
+            ]
+          ],
+          "RedmineLastUpdatedOn": [
+            [
+              "2026-01-02T00:00:00Z",
+              10
+            ]
+          ],
+          "RedmineStatus": [
+            [
+              "Проверка решения",
+              10
+            ]
+          ]
+        },
+        "max_notes_per_ticket": 1,
+        "new_notes": 10,
+        "sample_bodies": [
+          "— Статус —\nСтатус Redmine изменён с «New» на «Проверка решения». Состояние тикета OTRS: open. Автор в Redmine: Benchmark engineer.\n\n— Комментарии —\nBenchmark engineer:\nControlled status transition\n\n— Вложения —\n• fixture.bin",
+          "— Статус —\nСтатус Redmine изменён с «New» на «Проверка решения». Состояние тикета OTRS: open. Автор в Redmine: Benchmark engineer.\n\n— Комментарии —\nBenchmark engineer:\nControlled status transition\n\n— Вложения —\n• fixture.bin",
+          "— Статус —\nСтатус Redmine изменён с «New» на «Проверка решения». Состояние тикета OTRS: open. Автор в Redmine: Benchmark engineer.\n\n— Комментарии —\nBenchmark engineer:\nControlled status transition\n\n— Вложения —\n• fixture.bin"
+        ],
+        "states": [
+          [
+            "open",
+            10
+          ]
+        ],
+        "tickets_with_notes": 10,
+        "work": {
+          "due": 0,
+          "first_issue_key": null,
+          "generations": [
+            {
+              "after_ticket_id": 0,
+              "done_generation": 2,
+              "first_failed_ticket_id": 0,
+              "generation": 2,
+              "issue_id": "7001",
+              "issue_key": "3e81c4bea6f318b0e8ca86f88b19d4e0a1e5ecd8733802bd41e7386210508659",
+              "lease_until": 0,
+              "queued_at": 0,
+              "retry_at": 0,
+              "retry_count": 0,
+              "round_generation": 2
+            }
+          ],
+          "pending": 0,
+          "source_key": "f51a04ff862d0572e80d154605ab65bc6bb1da6caf8fbddc7bb8056e60bb45b1",
+          "total": 1
+        },
+        "host_process_wall_seconds": 0.5639359170163516
+      }
+    }
+  },
+  {
+    "variant": "new",
+    "scenario": "large_shared",
+    "repeat": 2,
+    "workers": [
+      {
+        "cache_mode": "backend_only",
+        "cpu_seconds": 0.071957,
+        "cpu_system_seconds": 0.005995,
+        "cpu_user_seconds": 0.065962,
+        "events_flushed": 1,
+        "health": {
+          "LastSyncError": "",
+          "LastSyncOK": 1,
+          "SyncedCount": null
+        },
+        "loaded_sync": "/opt/otrs/Kernel/System/Redmine/Sync.pm",
+        "mode": "poll",
+        "peak_rss_kib": 69472,
+        "result": {
+          "Success": 1
+        },
+        "scenario": "large_shared",
+        "sql_queries": 13,
+        "startup_peak_rss_kib": 57888,
+        "sync_sha256": "82640402d7475e4d27169c1ba93566d47f3cad12a0cd9d7961d344e5ddf22f57",
+        "variable_check": "//Kernel/System/VariableCheck.pm",
+        "variant": "new",
+        "wall_seconds": 0.0743668079376221,
+        "host_process_wall_seconds": 0.42589766602031887
+      },
+      {
+        "cache_mode": "backend_only",
+        "cpu_seconds": 1.875997,
+        "cpu_system_seconds": 0.164113,
+        "cpu_user_seconds": 1.711884,
+        "events_flushed": 1,
+        "health": {
+          "LastSyncError": "",
+          "LastSyncOK": 1,
+          "SyncedCount": 10
+        },
+        "loaded_sync": "/opt/otrs/Kernel/System/Redmine/Sync.pm",
+        "mode": "deliver",
+        "peak_rss_kib": 111692,
+        "result": {
+          "Complete": 1,
+          "Error": "",
+          "Processed": 10,
+          "Succeeded": 10,
+          "Success": 1
+        },
+        "scenario": "large_shared",
+        "sql_queries": 1672,
+        "startup_peak_rss_kib": 57892,
+        "sync_sha256": "82640402d7475e4d27169c1ba93566d47f3cad12a0cd9d7961d344e5ddf22f57",
+        "variable_check": "//Kernel/System/VariableCheck.pm",
+        "variant": "new",
+        "wall_seconds": 2.20783400535583,
+        "host_process_wall_seconds": 2.570507500000531
+      }
+    ],
+    "worker_count": 2,
+    "validation": {
+      "attachment_hashes": [
+        "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef",
+        "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef",
+        "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef",
+        "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef",
+        "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef",
+        "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef",
+        "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef",
+        "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef",
+        "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef",
+        "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef"
+      ],
+      "attachments": 10,
+      "checkpoints": {
+        "RedmineLastAttachmentID": [
+          [
+            "1",
+            10
+          ]
+        ],
+        "RedmineLastJournalID": [
+          [
+            "11",
+            10
+          ]
+        ],
+        "RedmineLastSyncAt": [
+          [
+            "0",
+            10
+          ]
+        ],
+        "RedmineLastUpdatedOn": [
+          [
+            "2026-01-02T00:00:00Z",
+            10
+          ]
+        ],
+        "RedmineStatus": [
+          [
+            "Проверка решения",
+            10
+          ]
+        ]
+      },
+      "max_notes_per_ticket": 1,
+      "new_notes": 10,
+      "sample_bodies": [
+        "— Статус —\nСтатус Redmine изменён с «New» на «Проверка решения». Состояние тикета OTRS: open. Автор в Redmine: Benchmark engineer.\n\n— Комментарии —\nBenchmark engineer:\nControlled status transition\n\n— Вложения —\n• fixture.bin",
+        "— Статус —\nСтатус Redmine изменён с «New» на «Проверка решения». Состояние тикета OTRS: open. Автор в Redmine: Benchmark engineer.\n\n— Комментарии —\nBenchmark engineer:\nControlled status transition\n\n— Вложения —\n• fixture.bin",
+        "— Статус —\nСтатус Redmine изменён с «New» на «Проверка решения». Состояние тикета OTRS: open. Автор в Redmine: Benchmark engineer.\n\n— Комментарии —\nBenchmark engineer:\nControlled status transition\n\n— Вложения —\n• fixture.bin"
+      ],
+      "states": [
+        [
+          "open",
+          10
+        ]
+      ],
+      "tickets_with_notes": 10,
+      "work": {
+        "due": 0,
+        "first_issue_key": null,
+        "generations": [
+          {
+            "after_ticket_id": 0,
+            "done_generation": 2,
+            "first_failed_ticket_id": 0,
+            "generation": 2,
+            "issue_id": "7001",
+            "issue_key": "3e81c4bea6f318b0e8ca86f88b19d4e0a1e5ecd8733802bd41e7386210508659",
+            "lease_until": 0,
+            "queued_at": 0,
+            "retry_at": 0,
+            "retry_count": 0,
+            "round_generation": 2
+          }
+        ],
+        "pending": 0,
+        "source_key": "f51a04ff862d0572e80d154605ab65bc6bb1da6caf8fbddc7bb8056e60bb45b1",
+        "total": 1
+      },
+      "host_process_wall_seconds": 0.5662101250200067
+    },
+    "peer": {
+      "config": {
+        "issueIDs": [
+          7001
+        ],
+        "phase": "changed",
+        "attachments": true,
+        "largeBytes": 4194304
+      },
+      "counts": {
+        "GET /issues.json?issue_id=7001&status_id=*&limit=100&offset=0": 1,
+        "GET /issues/7001.json?include=journals,attachments": 1,
+        "GET /issue_statuses.json": 1,
+        "GET /attachments/download/1": 1
+      },
+      "connections": 4,
+      "open_connections": 0,
+      "response_bytes": 4195201,
+      "uploaded_bytes": [],
+      "uploaded_hashes": [],
+      "attached": [],
+      "created": null
+    },
+    "cpu_seconds": 1.947954,
+    "cpu_user_seconds": 1.777846,
+    "cpu_system_seconds": 0.170108,
+    "wall_seconds": 2.282200813293452,
+    "sql_queries": 1685,
+    "host_process_wall_seconds": 2.9964051660208497,
+    "peak_rss_kib": 111692,
+    "http_requests": 4,
+    "response_bytes": 4195201,
+    "connections": 4,
+    "replay": {
+      "poll": {
+        "cache_mode": "backend_only",
+        "cpu_seconds": 0.049173,
+        "cpu_system_seconds": 0.003009,
+        "cpu_user_seconds": 0.046164,
+        "events_flushed": 1,
+        "health": {
+          "LastSyncError": "",
+          "LastSyncOK": 1,
+          "SyncedCount": 10
+        },
+        "loaded_sync": "/opt/otrs/Kernel/System/Redmine/Sync.pm",
+        "mode": "poll",
+        "peak_rss_kib": 64432,
+        "result": {
+          "Success": 1
+        },
+        "scenario": "large_shared",
+        "sql_queries": 7,
+        "startup_peak_rss_kib": 56988,
+        "sync_sha256": "82640402d7475e4d27169c1ba93566d47f3cad12a0cd9d7961d344e5ddf22f57",
+        "variable_check": "//Kernel/System/VariableCheck.pm",
+        "variant": "new",
+        "wall_seconds": 0.0504069328308105,
+        "host_process_wall_seconds": 0.41376120800850913
+      },
+      "workers": [],
+      "validation": {
+        "attachment_hashes": [
+          "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef",
+          "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef",
+          "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef",
+          "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef",
+          "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef",
+          "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef",
+          "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef",
+          "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef",
+          "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef",
+          "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef"
+        ],
+        "attachments": 10,
+        "checkpoints": {
+          "RedmineLastAttachmentID": [
+            [
+              "1",
+              10
+            ]
+          ],
+          "RedmineLastJournalID": [
+            [
+              "11",
+              10
+            ]
+          ],
+          "RedmineLastSyncAt": [
+            [
+              "0",
+              10
+            ]
+          ],
+          "RedmineLastUpdatedOn": [
+            [
+              "2026-01-02T00:00:00Z",
+              10
+            ]
+          ],
+          "RedmineStatus": [
+            [
+              "Проверка решения",
+              10
+            ]
+          ]
+        },
+        "max_notes_per_ticket": 1,
+        "new_notes": 10,
+        "sample_bodies": [
+          "— Статус —\nСтатус Redmine изменён с «New» на «Проверка решения». Состояние тикета OTRS: open. Автор в Redmine: Benchmark engineer.\n\n— Комментарии —\nBenchmark engineer:\nControlled status transition\n\n— Вложения —\n• fixture.bin",
+          "— Статус —\nСтатус Redmine изменён с «New» на «Проверка решения». Состояние тикета OTRS: open. Автор в Redmine: Benchmark engineer.\n\n— Комментарии —\nBenchmark engineer:\nControlled status transition\n\n— Вложения —\n• fixture.bin",
+          "— Статус —\nСтатус Redmine изменён с «New» на «Проверка решения». Состояние тикета OTRS: open. Автор в Redmine: Benchmark engineer.\n\n— Комментарии —\nBenchmark engineer:\nControlled status transition\n\n— Вложения —\n• fixture.bin"
+        ],
+        "states": [
+          [
+            "open",
+            10
+          ]
+        ],
+        "tickets_with_notes": 10,
+        "work": {
+          "due": 0,
+          "first_issue_key": null,
+          "generations": [
+            {
+              "after_ticket_id": 0,
+              "done_generation": 2,
+              "first_failed_ticket_id": 0,
+              "generation": 2,
+              "issue_id": "7001",
+              "issue_key": "3e81c4bea6f318b0e8ca86f88b19d4e0a1e5ecd8733802bd41e7386210508659",
+              "lease_until": 0,
+              "queued_at": 0,
+              "retry_at": 0,
+              "retry_count": 0,
+              "round_generation": 2
+            }
+          ],
+          "pending": 0,
+          "source_key": "f51a04ff862d0572e80d154605ab65bc6bb1da6caf8fbddc7bb8056e60bb45b1",
+          "total": 1
+        },
+        "host_process_wall_seconds": 0.5532496670202818
+      }
+    }
+  },
+  {
+    "variant": "old",
+    "scenario": "large_shared",
+    "repeat": 2,
+    "workers": [
+      {
+        "cache_mode": "backend_only",
+        "cpu_seconds": 2.273375,
+        "cpu_system_seconds": 0.210505,
+        "cpu_user_seconds": 2.06287,
+        "events_flushed": 1,
+        "health": {
+          "LastSyncError": "",
+          "LastSyncOK": 1,
+          "SyncedCount": 10
+        },
+        "loaded_sync": "/bench/.state/release-1.0.30/Kernel/System/Redmine/Sync.pm",
+        "mode": "cron",
+        "peak_rss_kib": 110220,
+        "result": {
+          "Success": 1
+        },
+        "scenario": "large_shared",
+        "sql_queries": 1689,
+        "startup_peak_rss_kib": 56240,
+        "sync_sha256": "0cc33d1479fca6f19bc0d0e5fdc1604c91e5827bbfe6ea9513d8e02cf7ee26a9",
+        "variable_check": "//Kernel/System/VariableCheck.pm",
+        "variant": "old",
+        "wall_seconds": 2.73696708679199,
+        "host_process_wall_seconds": 3.161861000000499
+      }
+    ],
+    "worker_count": 1,
+    "validation": {
+      "attachment_hashes": [
+        "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef",
+        "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef",
+        "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef",
+        "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef",
+        "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef",
+        "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef",
+        "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef",
+        "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef",
+        "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef",
+        "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef"
+      ],
+      "attachments": 10,
+      "checkpoints": {
+        "RedmineLastAttachmentID": [
+          [
+            "1",
+            10
+          ]
+        ],
+        "RedmineLastJournalID": [
+          [
+            "11",
+            10
+          ]
+        ],
+        "RedmineLastSyncAt": [
+          [
+            "1791814693",
+            2
+          ],
+          [
+            "1791814694",
+            6
+          ],
+          [
+            "1791814695",
+            2
+          ]
+        ],
+        "RedmineLastUpdatedOn": [
+          [
+            "2026-01-02T00:00:00Z",
+            10
+          ]
+        ],
+        "RedmineStatus": [
+          [
+            "Проверка решения",
+            10
+          ]
+        ]
+      },
+      "max_notes_per_ticket": 1,
+      "new_notes": 10,
+      "sample_bodies": [
+        "— Статус —\nСтатус Redmine изменён с «New» на «Проверка решения». Состояние тикета OTRS: open. Автор в Redmine: Benchmark engineer.\n\n— Комментарии —\nBenchmark engineer:\nControlled status transition\n\n— Вложения —\n• fixture.bin",
+        "— Статус —\nСтатус Redmine изменён с «New» на «Проверка решения». Состояние тикета OTRS: open. Автор в Redmine: Benchmark engineer.\n\n— Комментарии —\nBenchmark engineer:\nControlled status transition\n\n— Вложения —\n• fixture.bin",
+        "— Статус —\nСтатус Redmine изменён с «New» на «Проверка решения». Состояние тикета OTRS: open. Автор в Redmine: Benchmark engineer.\n\n— Комментарии —\nBenchmark engineer:\nControlled status transition\n\n— Вложения —\n• fixture.bin"
+      ],
+      "states": [
+        [
+          "open",
+          10
+        ]
+      ],
+      "tickets_with_notes": 10,
+      "work": null,
+      "host_process_wall_seconds": 0.5786797500040848
+    },
+    "peer": {
+      "config": {
+        "issueIDs": [
+          7001
+        ],
+        "phase": "changed",
+        "attachments": true,
+        "largeBytes": 4194304
+      },
+      "counts": {
+        "GET /issues/7001.json": 1,
+        "GET /issues/7001.json?include=journals,attachments": 1,
+        "GET /attachments/download/1": 1,
+        "GET /enumerations/issue_priorities.json": 1,
+        "GET /projects/1.json?include=trackers": 1,
+        "GET /projects/1/memberships.json?limit=100&offset=0": 1
+      },
+      "connections": 6,
+      "open_connections": 0,
+      "response_bytes": 4195253,
+      "uploaded_bytes": [],
+      "uploaded_hashes": [],
+      "attached": [],
+      "created": null
+    },
+    "cpu_seconds": 2.273375,
+    "cpu_user_seconds": 2.06287,
+    "cpu_system_seconds": 0.210505,
+    "wall_seconds": 2.73696708679199,
+    "sql_queries": 1689,
+    "host_process_wall_seconds": 3.161861000000499,
+    "peak_rss_kib": 110220,
+    "http_requests": 6,
+    "response_bytes": 4195253,
+    "connections": 6
+  }
+]

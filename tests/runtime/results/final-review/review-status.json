@@ -1,0 +1,8 @@
+{
+  "baseline_commit": "acc9175b793f405a3ce5431f382ae2da477cbf10",
+  "version": "1.0.30",
+  "remaining_blocking_findings": 0,
+  "independent_reviewers": 2,
+  "package_sha256": "a1319bdf76fe4ca09a532708c829b668590279de3a210b58ed36e82a695cac7e",
+  "no_server_deployment": true
+}

@@ -1,0 +1,24 @@
+{
+  "fs_upload": {
+    "checks": {
+      "new_notes": 1,
+      "operation_success": 1,
+      "stored_attachments": 0
+    },
+    "cpu_system_seconds": 0.039555,
+    "cpu_user_seconds": 0.198383,
+    "loaded_sync": "/opt/otrs/Kernel/System/Redmine/Sync.pm",
+    "peak_rss_kib": 82336,
+    "scenario": "extra",
+    "sql_queries": 109,
+    "startup_peak_rss_kib": 55864,
+    "variable_check": "//Kernel/System/VariableCheck.pm",
+    "variant": "installed",
+    "wall_seconds": 0.25504207611084
+  },
+  "fs_hashes_and_tokens_verified": true,
+  "links": {
+    "link_relink_unlink": true,
+    "stream_cursor_cleared": true
+  }
+}

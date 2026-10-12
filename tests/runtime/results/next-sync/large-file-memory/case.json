@@ -1,0 +1,11 @@
+{
+  "scenario": "large_shared",
+  "tickets": 10,
+  "file_bytes": 4194304,
+  "file_sha256": "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef",
+  "repeats": 2,
+  "private_seed_directory": "/Users/dubrsky/Projects/OTRSRedmineBridge/tests/runtime/.state/next-sync-large-3b6a26020018",
+  "metrics": "worker CPU/SQL/wall sums; peak RSS maximum before validation; bootstrap excluded; events included",
+  "old_work": "one CronSync, up to 50 tickets, actual fixture has ten links",
+  "new_work": "one PollSync then bounded ProcessSyncBatch workers; real steady warmup excluded"
+}

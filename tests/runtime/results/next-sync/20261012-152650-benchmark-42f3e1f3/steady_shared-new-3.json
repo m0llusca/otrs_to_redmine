@@ -1,0 +1,131 @@
+{
+  "variant": "new",
+  "scenario": "steady_shared",
+  "repeat": 3,
+  "workers": [
+    {
+      "cache_mode": "backend_only",
+      "cpu_seconds": 0.089233,
+      "cpu_system_seconds": 0.018151,
+      "cpu_user_seconds": 0.071082,
+      "events_flushed": 1,
+      "health": {
+        "LastSyncError": "",
+        "LastSyncOK": 1,
+        "SyncedCount": null
+      },
+      "loaded_sync": "/opt/otrs/Kernel/System/Redmine/Sync.pm",
+      "mode": "poll",
+      "peak_rss_kib": 69368,
+      "result": {
+        "Success": 1
+      },
+      "scenario": "steady_shared",
+      "sql_queries": 13,
+      "startup_peak_rss_kib": 57036,
+      "sync_sha256": "410bcd4465b0a71cdc115aa48c856e2ad66784c33e5180d12d92bb8017b3b758",
+      "variable_check": "//Kernel/System/VariableCheck.pm",
+      "variant": "new",
+      "wall_seconds": 0.0935440063476562,
+      "host_process_wall_seconds": 0.5034722090058494
+    }
+  ],
+  "worker_count": 1,
+  "host_orchestration_wall_seconds": 0.5035108749871142,
+  "peer": {
+    "config": {
+      "issueIDs": [
+        7001
+      ],
+      "phase": "steady",
+      "attachments": false
+    },
+    "counts": {
+      "GET /issues.json?issue_id=7001&status_id=*&limit=100&offset=0": 1
+    },
+    "connections": 1,
+    "open_connections": 0,
+    "response_bytes": 201,
+    "uploaded_bytes": [],
+    "uploaded_hashes": [],
+    "attached": [],
+    "created": null
+  },
+  "validation": {
+    "attachment_hashes": [],
+    "attachments": 0,
+    "checkpoints": {
+      "RedmineLastAttachmentID": [
+        [
+          "0",
+          1000
+        ]
+      ],
+      "RedmineLastJournalID": [
+        [
+          "10",
+          1000
+        ]
+      ],
+      "RedmineLastSyncAt": [
+        [
+          "0",
+          1000
+        ]
+      ],
+      "RedmineLastUpdatedOn": [
+        [
+          "2026-01-01T00:00:00Z",
+          1000
+        ]
+      ],
+      "RedmineStatus": [
+        [
+          "New",
+          1000
+        ]
+      ]
+    },
+    "max_notes_per_ticket": 0,
+    "new_notes": 0,
+    "sample_bodies": [],
+    "states": [
+      [
+        "closed successful",
+        1000
+      ]
+    ],
+    "tickets_with_notes": 0,
+    "work": {
+      "due": 0,
+      "first_issue_key": null,
+      "generations": [
+        {
+          "after_ticket_id": 0,
+          "done_generation": 1,
+          "generation": 1,
+          "issue_id": "7001",
+          "issue_key": "3e81c4bea6f318b0e8ca86f88b19d4e0a1e5ecd8733802bd41e7386210508659",
+          "lease_until": 0,
+          "queued_at": 0,
+          "retry_at": 0,
+          "retry_count": 0
+        }
+      ],
+      "pending": 0,
+      "source_key": "f51a04ff862d0572e80d154605ab65bc6bb1da6caf8fbddc7bb8056e60bb45b1",
+      "total": 1
+    },
+    "host_process_wall_seconds": 0.371973583009094
+  },
+  "cpu_seconds": 0.089233,
+  "cpu_user_seconds": 0.071082,
+  "cpu_system_seconds": 0.018151,
+  "wall_seconds": 0.0935440063476562,
+  "sql_queries": 13,
+  "host_process_wall_seconds": 0.5034722090058494,
+  "peak_rss_kib": 69368,
+  "http_requests": 1,
+  "connections": 1,
+  "response_bytes": 201
+}

@@ -1,0 +1,65 @@
+{
+  "before": {
+    "Kernel/Language/ru_OTRSRedmineBridge.pm": "4ccbec4543a9046cd3afff3612aa81bb9fd896e24eeaf64ac34a26869926b451",
+    "Kernel/Language/en_OTRSRedmineBridge.pm": "2f97b4a13fc7e8f95873fdb85ede3058d4c6ab52569d2b6c3208e97f6131ee86",
+    "Kernel/Language/de_OTRSRedmineBridge.pm": "280cef48fe1ca724d83c3a9bec3289fa93990aa4f35075a1cabaed88eaa157c4",
+    "Kernel/System/Redmine.pm": "705dd462795e19c05ebf904a38b8b5ffda43c39bdd6415872c382e48e6228e00",
+    "Kernel/Modules/AdminRedmineBridge.pm": "02613db046c8dc53355a10d114ddd01a7a249393d470ca8c84c423381df25518",
+    "Kernel/Modules/AgentTicketRedmineEscalate.pm": "6b16410e826bb06315ae2fac9f5eb18227affe9c42595b98ec73ce4d236d460b",
+    "Kernel/System/Redmine/Sync.pm": "4c47df9d6870c9781ed38904ae6901d4cd86645aee9d7d87c0e15d1c79f18d00",
+    "Kernel/System/Redmine/Catalog.pm": "1e084845e849dd6df4cd56fc47760afc546194b28e8c3020579f796b8e4c0712",
+    "Kernel/System/Redmine/Diagnostics.pm": "a1a182c79496ec17239df6d23e81033fa95c24cdccb95c0d0533ed7398f6b3d8",
+    "Kernel/System/Redmine/TicketDF.pm": "917057cc1cb9a284814ea09a319c48874d516442e78d19b82bf7b3d33ad2f95e",
+    "Kernel/System/Redmine/HTTP.pm": "7ee44e62228e1e3c8fa18aae1f0cf09cd9e6020f8e91d23285f0ae3494451eb3",
+    "Kernel/System/Redmine/Issue.pm": "28b103fa16e89edd720b0b20aced60231ac84a48440393eaf34d39fc85acec47",
+    "Kernel/Output/HTML/TicketMenu/RedmineEscalate.pm": "a46c28cafd88da07a72a2c7c99ecb50926655139c394684a7476f25cd5a7b5e3",
+    "Kernel/Output/HTML/TicketMenu/RedmineOpen.pm": "a60549550c09dabe076a30f52e4e9b39127bd2f4f4586500b4ea5eb618de6a3a",
+    "Kernel/Output/HTML/Templates/Standard/AgentTicketRedmineEscalate.tt": "889c0069262a7970b15eabde17e5009b265a79559382394dcee1dfd738081d51",
+    "Kernel/Output/HTML/Templates/Standard/AdminRedmineBridge.tt": "b20a2af6ddc2fb34283e00bed8233b9f80d6ebe6347bc7cc7c3adc53d4e5c6c6",
+    "Kernel/Config/Files/XML/RedmineBridge.xml": "f96b638f00be3e6af8a46570a7ad5f9d7d1375b21f8ea1ba7e8ac9954960583a",
+    "var/packagesetup/OTRSRedmineBridge.pm": "cd8a6707a80b56c6e52574b4afdffadd52d2af50131cf196f8229e3981b3e0b2"
+  },
+  "after": {
+    "Kernel/Language/ru_OTRSRedmineBridge.pm": "fb235ffa7ec90744de84d1f21ab17c1add67e6d6cb23a279987866a02bea5f3b",
+    "Kernel/Language/en_OTRSRedmineBridge.pm": "2f97b4a13fc7e8f95873fdb85ede3058d4c6ab52569d2b6c3208e97f6131ee86",
+    "Kernel/Language/de_OTRSRedmineBridge.pm": "280cef48fe1ca724d83c3a9bec3289fa93990aa4f35075a1cabaed88eaa157c4",
+    "Kernel/System/Redmine.pm": "f54e36fe2333131d71a2aed898f05f81ab0894b408b849117d46c91949e2dd22",
+    "Kernel/Modules/AdminRedmineBridge.pm": "02613db046c8dc53355a10d114ddd01a7a249393d470ca8c84c423381df25518",
+    "Kernel/Modules/AgentTicketRedmineEscalate.pm": "6b16410e826bb06315ae2fac9f5eb18227affe9c42595b98ec73ce4d236d460b",
+    "Kernel/System/Redmine/Sync.pm": "f264b74eb3e74d264b3efc3cde6e58cf97088758006190581927095ca8f6a498",
+    "Kernel/System/Redmine/Catalog.pm": "1e084845e849dd6df4cd56fc47760afc546194b28e8c3020579f796b8e4c0712",
+    "Kernel/System/Redmine/Diagnostics.pm": "a1a182c79496ec17239df6d23e81033fa95c24cdccb95c0d0533ed7398f6b3d8",
+    "Kernel/System/Redmine/TicketDF.pm": "917057cc1cb9a284814ea09a319c48874d516442e78d19b82bf7b3d33ad2f95e",
+    "Kernel/System/Redmine/HTTP.pm": "29a9bc5f69625f13b8166334c493e6f1d6aa3973c41ac4fb017b6497a03f6091",
+    "Kernel/System/Redmine/Issue.pm": "1e58ff3796544d664c6a6590bdb69e6d07dd6ba950e914434e3259b29a443fdc",
+    "Kernel/Output/HTML/TicketMenu/RedmineEscalate.pm": "a46c28cafd88da07a72a2c7c99ecb50926655139c394684a7476f25cd5a7b5e3",
+    "Kernel/Output/HTML/TicketMenu/RedmineOpen.pm": "a60549550c09dabe076a30f52e4e9b39127bd2f4f4586500b4ea5eb618de6a3a",
+    "Kernel/Output/HTML/Templates/Standard/AgentTicketRedmineEscalate.tt": "889c0069262a7970b15eabde17e5009b265a79559382394dcee1dfd738081d51",
+    "Kernel/Output/HTML/Templates/Standard/AdminRedmineBridge.tt": "b20a2af6ddc2fb34283e00bed8233b9f80d6ebe6347bc7cc7c3adc53d4e5c6c6",
+    "Kernel/Config/Files/XML/RedmineBridge.xml": "1fe414d54fc7383387c6cd0d5f3ad8fc0656ffd9884e5b39024c655554ffa9f9",
+    "var/packagesetup/OTRSRedmineBridge.pm": "cd8a6707a80b56c6e52574b4afdffadd52d2af50131cf196f8229e3981b3e0b2"
+  },
+  "measurement_harness": {
+    "runner.pl": "a61e5501f9c88cb06a67c5c2587f277299c547818cdeeb0e1486730c669dd900",
+    "run.py": "21d1ea200fb06f4d8cd2285d31c683f70a99ba0d14e481c094d8e683afa3268d",
+    "redmine.mjs": "bc2db792cef804a1b002282cd98619c1800c102e2458c7eebe704cd841356d8e",
+    "init.sh": "a016883498d14e682f10a882bccea3f0e4ea935312fd9559a4a41b29ea743a1d",
+    "compose.yaml": "17c4e83ed80174fd4aab9cd66959ffb6d690f589f8a1395eb654cab2a1b62995"
+  },
+  "images": {
+    "juanluisbaptiste/otrs:6.0.10": [
+      "juanluisbaptiste/otrs@sha256:798ae101d2b5b42746b4d1307cf03de64ee47d9f5958d78958e83cb33e8cc408"
+    ],
+    "mariadb:10.11": [
+      "mariadb@sha256:7db29378d4fdab73f8123bbc2b48905c90d1a4b00cf848b028f1e81e623257f2"
+    ],
+    "node:24-bookworm-slim": [
+      "node@sha256:d6aa754f16b3197301076f047b5def2f02ea1dbbc2ca920407d46d7ec7f87b20"
+    ]
+  },
+  "functional_harness": {
+    "runner.pl": "c08faf5dac2074d655aeff29d141d6ddd13105f13596eda337516fc708e7df35",
+    "verify.py": "b846851557a2a885921b85b7bef4a816e1ad074b0dff2dfbd277c2e012c3e4b3",
+    "redmine.mjs": "c8bf3ebd39088101919f8554bb24451c8f95e0467a8f6a069b2f6c8b67647b0d"
+  }
+}

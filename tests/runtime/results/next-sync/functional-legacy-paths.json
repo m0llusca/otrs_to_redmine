@@ -1,0 +1,378 @@
+{
+  "installed_version": "1.0.31",
+  "installed_sync_sha256": "82640402d7475e4d27169c1ba93566d47f3cad12a0cd9d7961d344e5ddf22f57",
+  "seed": "/Users/dubrsky/Projects/OTRSRedmineBridge/tests/runtime/.state/next-sync-seed.sql",
+  "seed_sha256": "f0ce33ce373b209f2f8965ebf1ef7cfddfc0050887d85e4d49c89c6ed4e9e546",
+  "started_at_utc": "2026-10-12T14:29:51Z",
+  "targets": {
+    "otrs": "bridge-perf-local-otrs-1",
+    "db": "bridge-perf-local-mariadb-1",
+    "fake_peer": "bridge-perf-local-redmine-1"
+  },
+  "scope": "actual installed OTRS core + original runner.pl; controlled legacy peer only; functional checks, not benchmark comparisons",
+  "cases": [
+    {
+      "name": "outbound_16x1MiB",
+      "prepared": {
+        "prepared": true
+      },
+      "upload_cache": null,
+      "extra_setup": null,
+      "worker": {
+        "checks": {
+          "new_notes": 1,
+          "operation_success": 1,
+          "stored_attachments": 0
+        },
+        "cpu_system_seconds": 0.039348,
+        "cpu_user_seconds": 0.22615,
+        "loaded_sync": "/opt/otrs/Kernel/System/Redmine/Sync.pm",
+        "peak_rss_kib": 91124,
+        "scenario": "outbound",
+        "sql_queries": 210,
+        "startup_peak_rss_kib": 57584,
+        "variable_check": "//Kernel/System/VariableCheck.pm",
+        "variant": "installed",
+        "wall_seconds": 0.335753917694092
+      },
+      "peer": {
+        "scenario": "outbound",
+        "counts": {
+          "GET /projects/1.json?include=trackers": 1,
+          "POST /issues.json": 1,
+          "GET /issues/900.json": 1,
+          "POST /uploads.json?filename=outgoing-1.bin": 1,
+          "POST /uploads.json?filename=outgoing-10.bin": 1,
+          "POST /uploads.json?filename=outgoing-11.bin": 1,
+          "POST /uploads.json?filename=outgoing-12.bin": 1,
+          "POST /uploads.json?filename=outgoing-13.bin": 1,
+          "POST /uploads.json?filename=outgoing-14.bin": 1,
+          "POST /uploads.json?filename=outgoing-15.bin": 1,
+          "POST /uploads.json?filename=outgoing-16.bin": 1,
+          "POST /uploads.json?filename=outgoing-2.bin": 1,
+          "POST /uploads.json?filename=outgoing-3.bin": 1,
+          "POST /uploads.json?filename=outgoing-4.bin": 1,
+          "POST /uploads.json?filename=outgoing-5.bin": 1,
+          "POST /uploads.json?filename=outgoing-6.bin": 1,
+          "POST /uploads.json?filename=outgoing-7.bin": 1,
+          "POST /uploads.json?filename=outgoing-8.bin": 1,
+          "POST /uploads.json?filename=outgoing-9.bin": 1,
+          "PUT /issues/900.json": 1,
+          "GET /issues/900.json?include=journals": 1,
+          "GET /issues/900.json?include=attachments": 1
+        },
+        "data_connections": 1,
+        "open_data_connections": 0,
+        "uploaded_bytes": [
+          1048576,
+          1048576,
+          1048576,
+          1048576,
+          1048576,
+          1048576,
+          1048576,
+          1048576,
+          1048576,
+          1048576,
+          1048576,
+          1048576,
+          1048576,
+          1048576,
+          1048576,
+          1048576
+        ],
+        "uploaded_hashes": [
+          "4e29ad18ab9f42d7c233500771a39d7c852b200baf328fd00fbbe3fecea1eb56",
+          "4e29ad18ab9f42d7c233500771a39d7c852b200baf328fd00fbbe3fecea1eb56",
+          "4e29ad18ab9f42d7c233500771a39d7c852b200baf328fd00fbbe3fecea1eb56",
+          "4e29ad18ab9f42d7c233500771a39d7c852b200baf328fd00fbbe3fecea1eb56",
+          "4e29ad18ab9f42d7c233500771a39d7c852b200baf328fd00fbbe3fecea1eb56",
+          "4e29ad18ab9f42d7c233500771a39d7c852b200baf328fd00fbbe3fecea1eb56",
+          "4e29ad18ab9f42d7c233500771a39d7c852b200baf328fd00fbbe3fecea1eb56",
+          "4e29ad18ab9f42d7c233500771a39d7c852b200baf328fd00fbbe3fecea1eb56",
+          "4e29ad18ab9f42d7c233500771a39d7c852b200baf328fd00fbbe3fecea1eb56",
+          "4e29ad18ab9f42d7c233500771a39d7c852b200baf328fd00fbbe3fecea1eb56",
+          "4e29ad18ab9f42d7c233500771a39d7c852b200baf328fd00fbbe3fecea1eb56",
+          "4e29ad18ab9f42d7c233500771a39d7c852b200baf328fd00fbbe3fecea1eb56",
+          "4e29ad18ab9f42d7c233500771a39d7c852b200baf328fd00fbbe3fecea1eb56",
+          "4e29ad18ab9f42d7c233500771a39d7c852b200baf328fd00fbbe3fecea1eb56",
+          "4e29ad18ab9f42d7c233500771a39d7c852b200baf328fd00fbbe3fecea1eb56",
+          "4e29ad18ab9f42d7c233500771a39d7c852b200baf328fd00fbbe3fecea1eb56"
+        ],
+        "attached": [
+          {
+            "content_type": "application/octet-stream",
+            "filename": "outgoing-1.bin",
+            "token": "bench-1"
+          },
+          {
+            "content_type": "application/octet-stream",
+            "filename": "outgoing-10.bin",
+            "token": "bench-2"
+          },
+          {
+            "content_type": "application/octet-stream",
+            "filename": "outgoing-11.bin",
+            "token": "bench-3"
+          },
+          {
+            "content_type": "application/octet-stream",
+            "filename": "outgoing-12.bin",
+            "token": "bench-4"
+          },
+          {
+            "content_type": "application/octet-stream",
+            "filename": "outgoing-13.bin",
+            "token": "bench-5"
+          },
+          {
+            "content_type": "application/octet-stream",
+            "filename": "outgoing-14.bin",
+            "token": "bench-6"
+          },
+          {
+            "content_type": "application/octet-stream",
+            "filename": "outgoing-15.bin",
+            "token": "bench-7"
+          },
+          {
+            "content_type": "application/octet-stream",
+            "filename": "outgoing-16.bin",
+            "token": "bench-8"
+          },
+          {
+            "content_type": "application/octet-stream",
+            "filename": "outgoing-2.bin",
+            "token": "bench-9"
+          },
+          {
+            "content_type": "application/octet-stream",
+            "filename": "outgoing-3.bin",
+            "token": "bench-10"
+          },
+          {
+            "content_type": "application/octet-stream",
+            "filename": "outgoing-4.bin",
+            "token": "bench-11"
+          },
+          {
+            "content_type": "application/octet-stream",
+            "filename": "outgoing-5.bin",
+            "token": "bench-12"
+          },
+          {
+            "content_type": "application/octet-stream",
+            "filename": "outgoing-6.bin",
+            "token": "bench-13"
+          },
+          {
+            "content_type": "application/octet-stream",
+            "filename": "outgoing-7.bin",
+            "token": "bench-14"
+          },
+          {
+            "content_type": "application/octet-stream",
+            "filename": "outgoing-8.bin",
+            "token": "bench-15"
+          },
+          {
+            "content_type": "application/octet-stream",
+            "filename": "outgoing-9.bin",
+            "token": "bench-16"
+          }
+        ],
+        "created": {
+          "due_date": "2026-12-01",
+          "assigned_to_id": 2,
+          "subject": "Benchmark create",
+          "description": "Fixed description",
+          "priority_id": 2,
+          "tracker_id": 2,
+          "project_id": 1
+        }
+      },
+      "assertions": {
+        "files": 16,
+        "bytes_per_file": 1048576,
+        "sha256": "4e29ad18ab9f42d7c233500771a39d7c852b200baf328fd00fbbe3fecea1eb56",
+        "tokens_attached_once": true,
+        "description_priority_assignee_due_date": true
+      }
+    },
+    {
+      "name": "form_extra_DB",
+      "prepared": {
+        "prepared": true
+      },
+      "upload_cache": {
+        "configured": "Kernel::System::Web::UploadCache::DB",
+        "loaded": "//Kernel/System/Web/UploadCache/DB.pm",
+        "requested": "DB"
+      },
+      "extra_setup": {
+        "extra_uploaded": 524288
+      },
+      "worker": {
+        "checks": {
+          "new_notes": 1,
+          "operation_success": 1,
+          "stored_attachments": 0
+        },
+        "cpu_system_seconds": 0.047973,
+        "cpu_user_seconds": 0.198753,
+        "loaded_sync": "/opt/otrs/Kernel/System/Redmine/Sync.pm",
+        "peak_rss_kib": 83616,
+        "scenario": "extra",
+        "sql_queries": 130,
+        "startup_peak_rss_kib": 56604,
+        "variable_check": "//Kernel/System/VariableCheck.pm",
+        "variant": "installed",
+        "wall_seconds": 0.270072937011719
+      },
+      "peer": {
+        "scenario": "extra",
+        "counts": {
+          "GET /projects/1.json?include=trackers": 1,
+          "POST /issues.json": 1,
+          "GET /issues/900.json": 1,
+          "POST /uploads.json?filename=extra.bin": 1,
+          "PUT /issues/900.json": 1,
+          "GET /issues/900.json?include=journals": 1,
+          "GET /issues/900.json?include=attachments": 1
+        },
+        "data_connections": 1,
+        "open_data_connections": 0,
+        "uploaded_bytes": [
+          524288
+        ],
+        "uploaded_hashes": [
+          "6166f0b4f9f52c4ab2fcb0825d86a538bd871248dbfe3d692f804c0c7a2454d4"
+        ],
+        "attached": [
+          {
+            "content_type": "application/octet-stream",
+            "filename": "extra.bin",
+            "token": "bench-1"
+          }
+        ],
+        "created": {
+          "due_date": "2026-12-01",
+          "assigned_to_id": 2,
+          "subject": "Benchmark create",
+          "description": "Fixed description",
+          "priority_id": 2,
+          "tracker_id": 2,
+          "project_id": 1
+        }
+      },
+      "assertions": {
+        "files": 1,
+        "bytes_per_file": 524288,
+        "sha256": "6166f0b4f9f52c4ab2fcb0825d86a538bd871248dbfe3d692f804c0c7a2454d4",
+        "tokens_attached_once": true,
+        "description_priority_assignee_due_date": true
+      }
+    },
+    {
+      "name": "form_extra_FS",
+      "prepared": {
+        "prepared": true
+      },
+      "upload_cache": {
+        "configured": "Kernel::System::Web::UploadCache::FS",
+        "loaded": "//Kernel/System/Web/UploadCache/FS.pm",
+        "requested": "FS"
+      },
+      "extra_setup": {
+        "extra_uploaded": 524288
+      },
+      "worker": {
+        "checks": {
+          "new_notes": 1,
+          "operation_success": 1,
+          "stored_attachments": 0
+        },
+        "cpu_system_seconds": 0.048918,
+        "cpu_user_seconds": 0.246367,
+        "loaded_sync": "/opt/otrs/Kernel/System/Redmine/Sync.pm",
+        "peak_rss_kib": 83740,
+        "scenario": "extra",
+        "sql_queries": 128,
+        "startup_peak_rss_kib": 56604,
+        "variable_check": "//Kernel/System/VariableCheck.pm",
+        "variant": "installed",
+        "wall_seconds": 0.337230920791626
+      },
+      "peer": {
+        "scenario": "extra",
+        "counts": {
+          "GET /projects/1.json?include=trackers": 1,
+          "POST /issues.json": 1,
+          "GET /issues/900.json": 1,
+          "POST /uploads.json?filename=extra.bin": 1,
+          "PUT /issues/900.json": 1,
+          "GET /issues/900.json?include=journals": 1,
+          "GET /issues/900.json?include=attachments": 1
+        },
+        "data_connections": 1,
+        "open_data_connections": 0,
+        "uploaded_bytes": [
+          524288
+        ],
+        "uploaded_hashes": [
+          "6166f0b4f9f52c4ab2fcb0825d86a538bd871248dbfe3d692f804c0c7a2454d4"
+        ],
+        "attached": [
+          {
+            "content_type": "application/octet-stream",
+            "filename": "extra.bin",
+            "token": "bench-1"
+          }
+        ],
+        "created": {
+          "due_date": "2026-12-01",
+          "assigned_to_id": 2,
+          "subject": "Benchmark create",
+          "description": "Fixed description",
+          "priority_id": 2,
+          "tracker_id": 2,
+          "project_id": 1
+        }
+      },
+      "assertions": {
+        "files": 1,
+        "bytes_per_file": 524288,
+        "sha256": "6166f0b4f9f52c4ab2fcb0825d86a538bd871248dbfe3d692f804c0c7a2454d4",
+        "tokens_attached_once": true,
+        "description_priority_assignee_due_date": true
+      }
+    },
+    {
+      "name": "link_relink_unlink",
+      "prepared": {
+        "prepared": true
+      },
+      "worker": {
+        "link_relink_unlink": true,
+        "stream_cursor_cleared": true
+      },
+      "peer": {
+        "scenario": "unchanged",
+        "counts": {
+          "GET /issues/900.json?include=journals,attachments": 1,
+          "PUT /issues/900.json": 2,
+          "GET /issues/901.json?include=journals,attachments": 1,
+          "PUT /issues/901.json": 2
+        },
+        "data_connections": 6,
+        "open_data_connections": 0,
+        "uploaded_bytes": [],
+        "uploaded_hashes": [],
+        "attached": [],
+        "created": null
+      }
+    }
+  ],
+  "complete": true,
+  "finished_at_utc": "2026-10-12T14:30:04Z"
+}

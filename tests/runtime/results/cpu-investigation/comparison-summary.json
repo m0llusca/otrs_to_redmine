@@ -1,0 +1,47 @@
+{
+  "repeats_per_variant": 15,
+  "summary": {
+    "before": {
+      "cpu_seconds": 0.267818,
+      "wall_seconds": 0.304062843322754,
+      "peak_rss_kib": 102956,
+      "sql_queries": 158,
+      "http_requests": 22,
+      "connections": 22,
+      "cpu_range": [
+        0.252088,
+        0.619367
+      ]
+    },
+    "pre_cpu": {
+      "cpu_seconds": 0.259147,
+      "wall_seconds": 0.301844120025635,
+      "peak_rss_kib": 87848,
+      "sql_queries": 159,
+      "http_requests": 22,
+      "connections": 22,
+      "cpu_range": [
+        0.244613,
+        0.69115
+      ]
+    },
+    "after": {
+      "cpu_seconds": 0.245331,
+      "wall_seconds": 0.279643058776855,
+      "peak_rss_kib": 87736,
+      "sql_queries": 159,
+      "http_requests": 22,
+      "connections": 1,
+      "cpu_range": [
+        0.23281300000000002,
+        0.42959400000000003
+      ]
+    }
+  },
+  "paired_median_cpu_reduction": 0.058148463999197375,
+  "paired_bootstrap_95_interval": [
+    0.032874701001569084,
+    0.3398841444110674
+  ],
+  "scope": "OTRS 6.0.10, Perl5.16.3, amd64 emulated on arm64; one-worker CPU/RSS; controlled local HTTP peer"
+}

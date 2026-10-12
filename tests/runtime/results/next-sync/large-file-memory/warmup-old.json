@@ -1,0 +1,74 @@
+{
+  "fixture": {
+    "baseline_article_id": "2",
+    "issue_ids": [
+      7001
+    ],
+    "loaded_sync": "/bench/.state/release-1.0.30/Kernel/System/Redmine/Sync.pm",
+    "prepared": 10,
+    "sync_sha256": "0cc33d1479fca6f19bc0d0e5fdc1604c91e5827bbfe6ea9513d8e02cf7ee26a9",
+    "ticket_ids": [
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8",
+      "9",
+      "10",
+      "11"
+    ],
+    "host_process_wall_seconds": 0.421254749991931
+  },
+  "workers": [],
+  "validation": {
+    "attachment_hashes": [],
+    "attachments": 0,
+    "checkpoints": {
+      "RedmineLastAttachmentID": [
+        [
+          "0",
+          10
+        ]
+      ],
+      "RedmineLastJournalID": [
+        [
+          "10",
+          10
+        ]
+      ],
+      "RedmineLastSyncAt": [
+        [
+          "0",
+          10
+        ]
+      ],
+      "RedmineLastUpdatedOn": [
+        [
+          "2026-01-01T00:00:00Z",
+          10
+        ]
+      ],
+      "RedmineStatus": [
+        [
+          "New",
+          10
+        ]
+      ]
+    },
+    "max_notes_per_ticket": 0,
+    "new_notes": 0,
+    "sample_bodies": [],
+    "states": [
+      [
+        "closed successful",
+        10
+      ]
+    ],
+    "tickets_with_notes": 0,
+    "work": null,
+    "host_process_wall_seconds": 0.3909601670166012
+  },
+  "seed_sha256": "ef8be95b8234ad50adf40a98547c1ebaf50a53dd16fb889d7338a61efc2af7d0"
+}

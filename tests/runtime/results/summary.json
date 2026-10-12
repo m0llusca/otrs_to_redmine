@@ -1,0 +1,122 @@
+{
+  "baseline_commit": "acc9175b793f405a3ce5431f382ae2da477cbf10",
+  "otrs": "6.0.10 CE",
+  "perl": "5.16.3",
+  "database": "MariaDB 10.11",
+  "host": "Apple Silicon arm64; OTRS image amd64 under emulation",
+  "process_metrics": "BSD::Resource getrusage RUSAGE_SELF; Linux peak RSS in KiB; CPU delta around bridge operation, excluding bootstrap and validation",
+  "memory_scope": "OTRS Perl worker peak RSS includes bootstrap; database and HTTP peer excluded",
+  "repeats": 5,
+  "warmups_excluded": 6,
+  "network": "internal Docker bridge; no published ports; no production access",
+  "summary": {
+    "unchanged": {
+      "before": {
+        "cpu_seconds": 0.389031,
+        "wall_seconds": 0.450937986373901,
+        "peak_rss_kib": 80188,
+        "sql_queries": 433,
+        "http_requests": 53,
+        "issue_gets": 50,
+        "file_downloads": 0,
+        "cpu_range": [
+          0.37501,
+          0.42565
+        ],
+        "rss_range_kib": [
+          80116,
+          80304
+        ]
+      },
+      "after": {
+        "cpu_seconds": 0.23095100000000002,
+        "wall_seconds": 0.262395858764648,
+        "peak_rss_kib": 73188,
+        "sql_queries": 327,
+        "http_requests": 4,
+        "issue_gets": 1,
+        "file_downloads": 0,
+        "cpu_range": [
+          0.226114,
+          0.243805
+        ],
+        "rss_range_kib": [
+          73128,
+          73360
+        ]
+      }
+    },
+    "inbound": {
+      "before": {
+        "cpu_seconds": 1.944518,
+        "wall_seconds": 2.16326785087585,
+        "peak_rss_kib": 94716,
+        "sql_queries": 681,
+        "http_requests": 43,
+        "issue_gets": 20,
+        "file_downloads": 20,
+        "cpu_range": [
+          1.890205,
+          2.324985
+        ],
+        "rss_range_kib": [
+          94556,
+          96908
+        ]
+      },
+      "after": {
+        "cpu_seconds": 1.236902,
+        "wall_seconds": 1.425448179245,
+        "peak_rss_kib": 86904,
+        "sql_queries": 617,
+        "http_requests": 7,
+        "issue_gets": 2,
+        "file_downloads": 2,
+        "cpu_range": [
+          1.219203,
+          1.29213
+        ],
+        "rss_range_kib": [
+          86812,
+          86988
+        ]
+      }
+    },
+    "outbound": {
+      "before": {
+        "cpu_seconds": 0.260512,
+        "wall_seconds": 0.319890022277832,
+        "peak_rss_kib": 102896,
+        "sql_queries": 160,
+        "http_requests": 22,
+        "issue_gets": 3,
+        "file_downloads": 0,
+        "cpu_range": [
+          0.258399,
+          0.296448
+        ],
+        "rss_range_kib": [
+          102812,
+          102956
+        ]
+      },
+      "after": {
+        "cpu_seconds": 0.304009,
+        "wall_seconds": 0.429068088531494,
+        "peak_rss_kib": 87844,
+        "sql_queries": 161,
+        "http_requests": 22,
+        "issue_gets": 3,
+        "file_downloads": 0,
+        "cpu_range": [
+          0.24814899999999998,
+          0.533814
+        ],
+        "rss_range_kib": [
+          87588,
+          88116
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "pages_installed": {
+    "batches": [
+      50,
+      50,
+      25
+    ],
+    "visited": 125
+  },
+  "state_and_notes_installed": {
+    "checks": {
+      "comment_present": 1,
+      "new_notes": 10,
+      "operation_success": 1,
+      "stored_attachments": 20
+    },
+    "replay": {
+      "duplicate_notes": 0,
+      "tickets_checked": 10
+    }
+  },
+  "binary_installed": {
+    "comment_present": 1,
+    "new_notes": 10,
+    "operation_success": 1,
+    "stored_attachments": 10
+  },
+  "upload_outbound": {
+    "checks": {
+      "new_notes": 1,
+      "operation_success": 1,
+      "stored_attachments": 0
+    },
+    "files": 16,
+    "bytes_each": 1048576,
+    "hashes_verified": true,
+    "tokens_attached": true
+  },
+  "upload_extra": {
+    "checks": {
+      "new_notes": 1,
+      "operation_success": 1,
+      "stored_attachments": 0
+    },
+    "files": 1,
+    "bytes_each": 524288,
+    "hashes_verified": true,
+    "tokens_attached": true
+  }
+}

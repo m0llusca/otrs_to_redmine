@@ -1,0 +1,47 @@
+{
+  "complete": true,
+  "native_delivery_and_replay_pass": true,
+  "source_receipt": "native-daemon.json",
+  "source_receipt_sha256": "8b685ed0810c6f629940da43d41fb8629d99814a57cbe29dd59eb395fc196678",
+  "cleanup_recovery": {
+    "native_tree_exited": true,
+    "remaining_exited_zombies": 1,
+    "original_config_restored": true,
+    "override_removed_and_config_rebuilt": true
+  },
+  "reason": "The original cleanup waited for PID 1 to reap an already exited zombie; tail is the isolated container init. No live daemon remained. The harness now treats state Z as exited. No delivery/source changes or repeated delivery were required.",
+  "memory": {
+    "peak_process_rss_kib_by_role": {
+      "supervisor": 40484,
+      "poller": 68932,
+      "scheduler_manager": 54580,
+      "delivery_worker": 115696,
+      "other": 39728
+    },
+    "peak_whole_daemon_rss_sum_kib": 275892,
+    "peak_whole_daemon_pss_sum_kib": 195081,
+    "idle_poller_median_rss_kib": 67752,
+    "idle_poller_peak_rss_kib": 67800,
+    "idle_poller_median_pss_kib": 49847,
+    "idle_whole_daemon_median_rss_sum_kib": 162728,
+    "idle_whole_daemon_median_pss_sum_kib": 108350,
+    "distinct_native_delivery_processes_observed": 166,
+    "poller_pids_observed": [
+      12489,
+      13384,
+      14309,
+      15153,
+      16025,
+      16929,
+      17789,
+      18638,
+      19532
+    ],
+    "sampled_process_cpu_seconds_lower_bound": 173.94,
+    "rss_boundary": "RSS sums count shared fork pages repeatedly; PSS sum apportions shared pages. Persistent poller memory is additional to the per-worker benchmark peak, not included in that peak.",
+    "cpu_boundary": "Sampled /proc CPU ticks can miss short-lived workers and worker tail CPU; do not use as before/after CPU comparison."
+  },
+  "drain_wall_seconds": 481.57459258302697,
+  "first_note_observed_seconds": 1.4388937500189058,
+  "finished_at_utc": "2026-10-12T14:29:24Z"
+}

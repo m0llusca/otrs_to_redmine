@@ -1,0 +1,136 @@
+{
+  "variant": "old",
+  "scenario": "large_shared",
+  "repeat": 1,
+  "workers": [
+    {
+      "cache_mode": "backend_only",
+      "cpu_seconds": 1.984926,
+      "cpu_system_seconds": 0.176289,
+      "cpu_user_seconds": 1.808637,
+      "events_flushed": 1,
+      "health": {
+        "LastSyncError": "",
+        "LastSyncOK": 1,
+        "SyncedCount": 10
+      },
+      "loaded_sync": "/bench/.state/release-1.0.30/Kernel/System/Redmine/Sync.pm",
+      "mode": "cron",
+      "peak_rss_kib": 111012,
+      "result": {
+        "Success": 1
+      },
+      "scenario": "large_shared",
+      "sql_queries": 1689,
+      "startup_peak_rss_kib": 57260,
+      "sync_sha256": "0cc33d1479fca6f19bc0d0e5fdc1604c91e5827bbfe6ea9513d8e02cf7ee26a9",
+      "variable_check": "//Kernel/System/VariableCheck.pm",
+      "variant": "old",
+      "wall_seconds": 2.39980411529541,
+      "host_process_wall_seconds": 2.7648867500247434
+    }
+  ],
+  "worker_count": 1,
+  "validation": {
+    "attachment_hashes": [
+      "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef",
+      "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef",
+      "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef",
+      "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef",
+      "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef",
+      "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef",
+      "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef",
+      "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef",
+      "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef",
+      "342928e7f6607489ad263aa27da11204fabc837f9a545cdf2cf7c3679ae900ef"
+    ],
+    "attachments": 10,
+    "checkpoints": {
+      "RedmineLastAttachmentID": [
+        [
+          "1",
+          10
+        ]
+      ],
+      "RedmineLastJournalID": [
+        [
+          "11",
+          10
+        ]
+      ],
+      "RedmineLastSyncAt": [
+        [
+          "1791814674",
+          5
+        ],
+        [
+          "1791814675",
+          5
+        ]
+      ],
+      "RedmineLastUpdatedOn": [
+        [
+          "2026-01-02T00:00:00Z",
+          10
+        ]
+      ],
+      "RedmineStatus": [
+        [
+          "Проверка решения",
+          10
+        ]
+      ]
+    },
+    "max_notes_per_ticket": 1,
+    "new_notes": 10,
+    "sample_bodies": [
+      "— Статус —\nСтатус Redmine изменён с «New» на «Проверка решения». Состояние тикета OTRS: open. Автор в Redmine: Benchmark engineer.\n\n— Комментарии —\nBenchmark engineer:\nControlled status transition\n\n— Вложения —\n• fixture.bin",
+      "— Статус —\nСтатус Redmine изменён с «New» на «Проверка решения». Состояние тикета OTRS: open. Автор в Redmine: Benchmark engineer.\n\n— Комментарии —\nBenchmark engineer:\nControlled status transition\n\n— Вложения —\n• fixture.bin",
+      "— Статус —\nСтатус Redmine изменён с «New» на «Проверка решения». Состояние тикета OTRS: open. Автор в Redmine: Benchmark engineer.\n\n— Комментарии —\nBenchmark engineer:\nControlled status transition\n\n— Вложения —\n• fixture.bin"
+    ],
+    "states": [
+      [
+        "open",
+        10
+      ]
+    ],
+    "tickets_with_notes": 10,
+    "work": null,
+    "host_process_wall_seconds": 0.561821958021028
+  },
+  "peer": {
+    "config": {
+      "issueIDs": [
+        7001
+      ],
+      "phase": "changed",
+      "attachments": true,
+      "largeBytes": 4194304
+    },
+    "counts": {
+      "GET /issues/7001.json": 1,
+      "GET /issues/7001.json?include=journals,attachments": 1,
+      "GET /attachments/download/1": 1,
+      "GET /enumerations/issue_priorities.json": 1,
+      "GET /projects/1.json?include=trackers": 1,
+      "GET /projects/1/memberships.json?limit=100&offset=0": 1
+    },
+    "connections": 6,
+    "open_connections": 0,
+    "response_bytes": 4195253,
+    "uploaded_bytes": [],
+    "uploaded_hashes": [],
+    "attached": [],
+    "created": null
+  },
+  "cpu_seconds": 1.984926,
+  "cpu_user_seconds": 1.808637,
+  "cpu_system_seconds": 0.176289,
+  "wall_seconds": 2.39980411529541,
+  "sql_queries": 1689,
+  "host_process_wall_seconds": 2.7648867500247434,
+  "peak_rss_kib": 111012,
+  "http_requests": 6,
+  "response_bytes": 4195253,
+  "connections": 6
+}

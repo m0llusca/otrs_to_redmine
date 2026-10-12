@@ -1,0 +1,30 @@
+{
+  "workers": [
+    {
+      "cache_mode": "backend_only",
+      "cpu_seconds": 0.144023,
+      "cpu_system_seconds": 0.009791,
+      "cpu_user_seconds": 0.134232,
+      "events_flushed": 1,
+      "health": {
+        "LastSyncError": "",
+        "LastSyncOK": 1,
+        "SyncedCount": null
+      },
+      "loaded_sync": "/opt/otrs/Kernel/System/Redmine/Sync.pm",
+      "mode": "poll",
+      "peak_rss_kib": 74464,
+      "result": {
+        "Success": 1
+      },
+      "scenario": "steady_unique",
+      "sql_queries": 22,
+      "startup_peak_rss_kib": 57120,
+      "sync_sha256": "82640402d7475e4d27169c1ba93566d47f3cad12a0cd9d7961d344e5ddf22f57",
+      "variable_check": "//Kernel/System/VariableCheck.pm",
+      "variant": "new",
+      "wall_seconds": 0.15208888053894,
+      "host_process_wall_seconds": 0.5060532909992617
+    }
+  ]
+}

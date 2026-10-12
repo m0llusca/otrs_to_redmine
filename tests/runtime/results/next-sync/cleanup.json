@@ -1,0 +1,39 @@
+{
+  "complete": true,
+  "project": "bridge-perf-local",
+  "containers_removed": [
+    "bridge-perf-local-redmine-1",
+    "bridge-perf-local-otrs-1",
+    "bridge-perf-local-mariadb-1"
+  ],
+  "resources_removed": {
+    "volume": [
+      "bridge-perf-local_database"
+    ],
+    "network": [
+      "1e7a7b78c23f"
+    ]
+  },
+  "other_containers_preserved": true,
+  "temporary_files_removed": [
+    "tests/runtime/.state/next-sync-seed.sql",
+    "tests/runtime/.state/seed.sql",
+    "tests/runtime/.state/next-sync-large-3b6a26020018/new.sql",
+    "tests/runtime/.state/next-sync-large-3b6a26020018/old.sql",
+    "tests/runtime/results/next-sync/20261012-152650-benchmark-42f3e1f3/warm-new-steady_shared.sql",
+    "tests/runtime/results/next-sync/20261012-152650-benchmark-42f3e1f3/warm-old-steady_unique.sql",
+    "tests/runtime/results/next-sync/20261012-152650-benchmark-42f3e1f3/warm-new-steady_unique.sql",
+    "tests/runtime/results/next-sync/20261012-152650-benchmark-42f3e1f3/warm-old-steady_shared.sql",
+    "tests/runtime/results/next-sync/20261012-170957-final-package-94bfde4f/warm-new-steady_shared.sql",
+    "tests/runtime/results/next-sync/20261012-170957-final-package-94bfde4f/warm-new-steady_unique.sql",
+    "tests/runtime/results/next-sync/20261012-155354-final-package-8cc89bd2/warm-new-steady_shared.sql",
+    "tests/runtime/results/next-sync/20261012-155354-final-package-8cc89bd2/warm-new-steady_unique.sql",
+    "tests/runtime/results/next-sync/20261012-162902-final-package-ec432b0e/warm-new-steady_shared.sql",
+    "tests/runtime/results/next-sync/20261012-162902-final-package-ec432b0e/warm-new-steady_unique.sql",
+    "tests/runtime/results/next-sync/20261012-152440-benchmark-aa4c27b2/warm-old-steady_shared.sql",
+    "tests/runtime/.env",
+    "tests/runtime/.state/sync-audit-compose.json"
+  ],
+  "production_deployed": false,
+  "completed_at_utc": "2026-10-12T14:31:53Z"
+}

@@ -1,0 +1,12 @@
+{
+  "groups": {
+    "tests/http.t": 14,
+    "tests/sync.t": 26,
+    "tests/coordinator.t": 28,
+    "tests/attachments.t": 15,
+    "tests/store.t": 21
+  },
+  "total": 104,
+  "full_suite_log": "unit-final.log",
+  "full_suite_exit_code": 0
+}

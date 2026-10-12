@@ -1,0 +1,20 @@
+{
+  "complete": true,
+  "version": "1.0.31",
+  "production_deployed": false,
+  "unit_groups": 104,
+  "unit_pass": true,
+  "integration_cases": 10,
+  "integration_pass": true,
+  "functional_cases": 4,
+  "functional_pass": true,
+  "native_1000_delivery_and_replay_pass": true,
+  "large_file_repeats_per_variant": 2,
+  "package_install_reinstall_and_upgrade_pass": true,
+  "baseline_version": "1.0.30",
+  "performance_summary": "20261012-170957-final-package-94bfde4f/summary.json",
+  "native_receipt": "20261012-171939-native-daemon-d3a8b61d/native-daemon-verified.json",
+  "package_sha256": "81c276b80899edc56668337b38de4d1ae36f4cdc700fb9f722b46f387d682552",
+  "cleanup_complete": true,
+  "boundary": "Actual OTRS 6.0.10 and MariaDB 10.11; controlled Redmine HTTP simulator; amd64 emulation on Apple Silicon. Real Redmine CPU/SQL and Znuny 7 not measured. Persistent poller adds memory; lower whole-service memory is not proven."
+}

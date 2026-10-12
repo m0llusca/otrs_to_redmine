@@ -1,0 +1,10 @@
+{
+  "fresh_install": true,
+  "upgrade_from": "1.0.29",
+  "upgrade_to": "1.0.30",
+  "reinstall": true,
+  "package_sha256": "a1319bdf76fe4ca09a532708c829b668590279de3a210b58ed36e82a695cac7e",
+  "unsigned_local_package": true,
+  "cloud_services_disabled": true,
+  "no_published_ports": true
+}

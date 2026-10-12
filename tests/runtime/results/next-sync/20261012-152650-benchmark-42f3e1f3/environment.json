@@ -1,0 +1,18 @@
+{
+  "seed": "/Users/dubrsky/Projects/OTRSRedmineBridge/tests/runtime/.state/next-sync-seed.sql",
+  "seed_sha256": "1ff520888304c05811feadb8c0f7b1cb63914ed01001a3ac54a3e38ef558321d",
+  "old_version": "1.0.30",
+  "old_sync_sha256": "0cc33d1479fca6f19bc0d0e5fdc1604c91e5827bbfe6ea9513d8e02cf7ee26a9",
+  "new_version": "1.0.31",
+  "new_sync_sha256": "410bcd4465b0a71cdc115aa48c856e2ad66784c33e5180d12d92bb8017b3b758",
+  "targets": {
+    "otrs": "bridge-perf-local-otrs-1",
+    "db": "bridge-perf-local-mariadb-1",
+    "fake_peer": "bridge-perf-local-redmine-1"
+  },
+  "measurement": "fresh daemon-style worker per call; bootstrap excluded; ObjectEventsHandle included; RSS captured before validation",
+  "aggregation": "CPU/wall/SQL sums; peak RSS max; peer HTTP/connections/response bytes over complete sweep",
+  "validation": "separate processes after measured workers; no SQL wrappers or TicketGet instrumentation",
+  "database": "actual OTRS MariaDB connection SHOW SESSION Questions includes raw DBI store queries",
+  "cache": "process memory disabled, shared backend enabled; cache cleared once after each SQL restoration"
+}

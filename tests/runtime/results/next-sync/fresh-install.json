@@ -1,0 +1,11 @@
+{
+  "fresh_install": true,
+  "reinstall": true,
+  "fields": 13,
+  "IDs_preserved_on_reinstall": true,
+  "tables_created": [
+    "redmine_sync_issue",
+    "redmine_sync_lock"
+  ],
+  "issue_column_count": 21
+}

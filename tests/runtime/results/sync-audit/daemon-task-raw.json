@@ -1,0 +1,1065 @@
+[
+  {
+    "articles_after": 0,
+    "count": {
+      "events": {
+        "HistoryAdd": 100,
+        "TicketDynamicFieldUpdate_RedmineLastSyncAt": 100
+      },
+      "field_sets": {
+        "RedmineLastSyncAt": 50
+      },
+      "history_add": 50,
+      "html_to_ascii": 0,
+      "request_calls": 4,
+      "sql_do": 500,
+      "sql_prepare": 532,
+      "sql_writes": {
+        "DELETE FROM dynamic_field_value": 50,
+        "INSERT INTO dynamic_field_value": 50,
+        "INSERT INTO scheduler_task": 50,
+        "INSERT INTO ticket_history": 50,
+        "UPDATE scheduler_task": 50,
+        "UPDATE ticket": 250
+      },
+      "ticket_get": 300
+    },
+    "cpu_seconds": 2.312502,
+    "cycles": 1,
+    "health": {
+      "LastSyncError": "",
+      "LastSyncOK": 1,
+      "SyncedCount": 50
+    },
+    "loaded_sync": "/opt/otrs/Kernel/System/Redmine/Sync.pm",
+    "peak_rss_kib": 81324,
+    "run_mode": "daemon_task",
+    "scenario": "shared_50",
+    "sql_queries": 1030,
+    "sql_templates": [
+      {
+        "count": 100,
+        "sql": "SELECT DISTINCT(nei.notification_id) FROM notification_event ne, notification_event_item nei WHERE ne.id = nei.notification_id AND ne.valid_id IN ( ? ) AND nei.event_key = ? AND nei.event_value = ? ORDER BY nei.notification_id ASC"
+      },
+      {
+        "count": 100,
+        "sql": "SELECT id, value_text, value_date, value_int, field_id FROM dynamic_field_value WHERE object_id = ? ORDER BY id"
+      },
+      {
+        "count": 100,
+        "sql": "SELECT st.id, st.queue_id, st.ticket_state_id, st.ticket_lock_id, st.ticket_priority_id, st.create_time, st.create_time, st.tn, st.customer_id, st.customer_user_id, st.user_id, st.responsible_user_id, st.until_time, st.change_time, st.title, st.escalation_update_time, st.timeout, st.type_id, st.service_id, st.sla_id, st.escalation_response_time, st.escalation_solution_time, st.escalation_time, st.archive_flag, st.create_by, st.change_by FROM ticket st WHERE st.id = ?"
+      },
+      {
+        "count": 100,
+        "sql": "SELECT tn FROM ticket WHERE id = ?"
+      },
+      {
+        "count": 50,
+        "sql": "DELETE FROM dynamic_field_value WHERE field_id = ? AND object_id = ?"
+      },
+      {
+        "count": 50,
+        "sql": "INSERT INTO dynamic_field_value (field_id, object_id, value_text, value_date, value_int) VALUES (?, ?, ?, ?, ?)"
+      },
+      {
+        "count": 50,
+        "sql": "INSERT INTO scheduler_task (ident, name, task_type, task_data, attempts, lock_key, create_time) VALUES (?, ?, ?, ?, ?, ?, current_timestamp)"
+      },
+      {
+        "count": 50,
+        "sql": "INSERT INTO ticket_history (name, history_type_id, ticket_id, article_id, queue_id, owner_id, priority_id, state_id, type_id, create_time, create_by, change_time, change_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, current_timestamp, ?, current_timestamp, ?)"
+      },
+      {
+        "count": 50,
+        "sql": "SELECT id FROM scheduler_task WHERE ident = ?"
+      },
+      {
+        "count": 50,
+        "sql": "SELECT id FROM ticket_history_type WHERE name = ?"
+      },
+      {
+        "count": 50,
+        "sql": "UPDATE scheduler_task SET lock_key = ? WHERE lock_key = ? AND id = ?"
+      },
+      {
+        "count": 50,
+        "sql": "UPDATE ticket SET change_time = current_timestamp, change_by = ? WHERE id = ?"
+      },
+      {
+        "count": 50,
+        "sql": "UPDATE ticket SET escalation_response_time = ?, change_time = current_timestamp, change_by = ? WHERE id = ?"
+      },
+      {
+        "count": 50,
+        "sql": "UPDATE ticket SET escalation_solution_time = ?, change_time = current_timestamp, change_by = ? WHERE id = ?"
+      },
+      {
+        "count": 50,
+        "sql": "UPDATE ticket SET escalation_time = ?, change_time = current_timestamp, change_by = ? WHERE id = ?"
+      },
+      {
+        "count": 50,
+        "sql": "UPDATE ticket SET escalation_update_time = ?, change_time = current_timestamp, change_by = ? WHERE id = ?"
+      },
+      {
+        "count": 16,
+        "sql": "SELECT id, internal_field, name, label, field_order, field_type, object_type, config, valid_id, create_time, change_time FROM dynamic_field WHERE id = ?"
+      },
+      {
+        "count": 2,
+        "sql": "SELECT id, internal_field, name, label, field_order, field_type, object_type, config, valid_id, create_time, change_time FROM dynamic_field WHERE name = ?"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT COUNT(*) FROM article WHERE ticket_id IN (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT DISTINCT(job_name) FROM generic_agent_jobs"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT id, name FROM gi_webservice_config WHERE valid_id IN (?)"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT id, name FROM ticket_lock_type"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT id, name FROM ticket_priority"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT id, name FROM ticket_type"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT id, name FROM valid"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT id, name, field_order FROM dynamic_field WHERE valid_id IN (?) AND object_type = ? ORDER BY field_order, id"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT id, name, field_order FROM dynamic_field WHERE valid_id IN (?) AND object_type IN (?) ORDER BY field_order, id"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT login FROM users WHERE id = ?"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT q.name, q.group_id, q.unlock_timeout, q.system_address_id, q.salutation_id, q.signature_id, q.comments, q.valid_id, q.first_response_time, q.first_response_notify, q.update_time, q.update_notify, q.solution_time, q.solution_notify, q.follow_up_id, q.follow_up_lock, sa.value0, sa.value1, q.id, q.default_sign_key, q.calendar_name, q.create_time, q.change_time FROM queue q, system_address sa WHERE q.system_address_id = sa.id AND q.id = ?"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT t.id, v.value_text FROM ticket t INNER JOIN dynamic_field_value v ON v.object_id = t.id WHERE v.field_id = ? AND t.id > ? AND v.value_text IS NOT NULL AND v.value_text <> ? ORDER BY t.id"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT ts.id, ts.name, ts.valid_id, ts.comments, ts.type_id, tst.name, ts.change_time, ts.create_time FROM ticket_state ts, ticket_state_type tst WHERE ts.type_id = tst.id AND ts.id = ?"
+      },
+      {
+        "count": 1,
+        "sql": "SHOW SESSION STATUS LIKE ?"
+      }
+    ],
+    "variant": "current",
+    "wall_seconds": 2.98703002929688,
+    "peer": {
+      "counts": {
+        "GET /issues/7001.json": 1,
+        "GET /enumerations/issue_priorities.json": 1,
+        "GET /projects/1.json?include=trackers": 1,
+        "GET /projects/1/memberships.json?limit=100&offset=0": 1
+      },
+      "connections": 4,
+      "open_connections": 0,
+      "response_bytes": 344
+    }
+  },
+  {
+    "articles_after": 0,
+    "count": {
+      "events": {},
+      "field_sets": {},
+      "history_add": 0,
+      "html_to_ascii": 0,
+      "request_calls": 4,
+      "sql_do": 0,
+      "sql_prepare": 128,
+      "sql_writes": {},
+      "ticket_get": 50
+    },
+    "cpu_seconds": 0.703985,
+    "cycles": 1,
+    "health": {
+      "LastSyncError": "",
+      "LastSyncOK": 1,
+      "SyncedCount": 50
+    },
+    "loaded_sync": "/opt/otrs/Kernel/System/Redmine/Sync.pm",
+    "peak_rss_kib": 74192,
+    "run_mode": "daemon_task",
+    "scenario": "shared_50",
+    "sql_queries": 126,
+    "sql_templates": [
+      {
+        "count": 50,
+        "sql": "SELECT id, value_text, value_date, value_int, field_id FROM dynamic_field_value WHERE object_id = ? ORDER BY id"
+      },
+      {
+        "count": 50,
+        "sql": "SELECT st.id, st.queue_id, st.ticket_state_id, st.ticket_lock_id, st.ticket_priority_id, st.create_time, st.create_time, st.tn, st.customer_id, st.customer_user_id, st.user_id, st.responsible_user_id, st.until_time, st.change_time, st.title, st.escalation_update_time, st.timeout, st.type_id, st.service_id, st.sla_id, st.escalation_response_time, st.escalation_solution_time, st.escalation_time, st.archive_flag, st.create_by, st.change_by FROM ticket st WHERE st.id = ?"
+      },
+      {
+        "count": 16,
+        "sql": "SELECT id, internal_field, name, label, field_order, field_type, object_type, config, valid_id, create_time, change_time FROM dynamic_field WHERE id = ?"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT COUNT(*) FROM article WHERE ticket_id IN (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT id, internal_field, name, label, field_order, field_type, object_type, config, valid_id, create_time, change_time FROM dynamic_field WHERE name = ?"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT id, name FROM ticket_lock_type"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT id, name FROM ticket_priority"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT id, name FROM ticket_type"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT id, name FROM valid"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT id, name, field_order FROM dynamic_field WHERE valid_id IN (?) AND object_type = ? ORDER BY field_order, id"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT login FROM users WHERE id = ?"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT q.name, q.group_id, q.unlock_timeout, q.system_address_id, q.salutation_id, q.signature_id, q.comments, q.valid_id, q.first_response_time, q.first_response_notify, q.update_time, q.update_notify, q.solution_time, q.solution_notify, q.follow_up_id, q.follow_up_lock, sa.value0, sa.value1, q.id, q.default_sign_key, q.calendar_name, q.create_time, q.change_time FROM queue q, system_address sa WHERE q.system_address_id = sa.id AND q.id = ?"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT t.id, v.value_text FROM ticket t INNER JOIN dynamic_field_value v ON v.object_id = t.id WHERE v.field_id = ? AND t.id > ? AND v.value_text IS NOT NULL AND v.value_text <> ? ORDER BY t.id"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT ts.id, ts.name, ts.valid_id, ts.comments, ts.type_id, tst.name, ts.change_time, ts.create_time FROM ticket_state ts, ticket_state_type tst WHERE ts.type_id = tst.id AND ts.id = ?"
+      },
+      {
+        "count": 1,
+        "sql": "SHOW SESSION STATUS LIKE ?"
+      }
+    ],
+    "variant": "skip_check_timestamp",
+    "wall_seconds": 0.807029962539673,
+    "peer": {
+      "counts": {
+        "GET /issues/7001.json": 1,
+        "GET /enumerations/issue_priorities.json": 1,
+        "GET /projects/1.json?include=trackers": 1,
+        "GET /projects/1/memberships.json?limit=100&offset=0": 1
+      },
+      "connections": 4,
+      "open_connections": 0,
+      "response_bytes": 344
+    }
+  },
+  {
+    "articles_after": 0,
+    "count": {
+      "events": {
+        "HistoryAdd": 100,
+        "TicketDynamicFieldUpdate_RedmineLastSyncAt": 100
+      },
+      "field_sets": {
+        "RedmineLastSyncAt": 50
+      },
+      "history_add": 50,
+      "html_to_ascii": 0,
+      "request_calls": 53,
+      "sql_do": 500,
+      "sql_prepare": 532,
+      "sql_writes": {
+        "DELETE FROM dynamic_field_value": 50,
+        "INSERT INTO dynamic_field_value": 50,
+        "INSERT INTO scheduler_task": 50,
+        "INSERT INTO ticket_history": 50,
+        "UPDATE scheduler_task": 50,
+        "UPDATE ticket": 250
+      },
+      "ticket_get": 300
+    },
+    "cpu_seconds": 3.023385,
+    "cycles": 1,
+    "health": {
+      "LastSyncError": "",
+      "LastSyncOK": 1,
+      "SyncedCount": 50
+    },
+    "loaded_sync": "/opt/otrs/Kernel/System/Redmine/Sync.pm",
+    "peak_rss_kib": 81228,
+    "run_mode": "daemon_task",
+    "scenario": "unique_50",
+    "sql_queries": 1030,
+    "sql_templates": [
+      {
+        "count": 100,
+        "sql": "SELECT DISTINCT(nei.notification_id) FROM notification_event ne, notification_event_item nei WHERE ne.id = nei.notification_id AND ne.valid_id IN ( ? ) AND nei.event_key = ? AND nei.event_value = ? ORDER BY nei.notification_id ASC"
+      },
+      {
+        "count": 100,
+        "sql": "SELECT id, value_text, value_date, value_int, field_id FROM dynamic_field_value WHERE object_id = ? ORDER BY id"
+      },
+      {
+        "count": 100,
+        "sql": "SELECT st.id, st.queue_id, st.ticket_state_id, st.ticket_lock_id, st.ticket_priority_id, st.create_time, st.create_time, st.tn, st.customer_id, st.customer_user_id, st.user_id, st.responsible_user_id, st.until_time, st.change_time, st.title, st.escalation_update_time, st.timeout, st.type_id, st.service_id, st.sla_id, st.escalation_response_time, st.escalation_solution_time, st.escalation_time, st.archive_flag, st.create_by, st.change_by FROM ticket st WHERE st.id = ?"
+      },
+      {
+        "count": 100,
+        "sql": "SELECT tn FROM ticket WHERE id = ?"
+      },
+      {
+        "count": 50,
+        "sql": "DELETE FROM dynamic_field_value WHERE field_id = ? AND object_id = ?"
+      },
+      {
+        "count": 50,
+        "sql": "INSERT INTO dynamic_field_value (field_id, object_id, value_text, value_date, value_int) VALUES (?, ?, ?, ?, ?)"
+      },
+      {
+        "count": 50,
+        "sql": "INSERT INTO scheduler_task (ident, name, task_type, task_data, attempts, lock_key, create_time) VALUES (?, ?, ?, ?, ?, ?, current_timestamp)"
+      },
+      {
+        "count": 50,
+        "sql": "INSERT INTO ticket_history (name, history_type_id, ticket_id, article_id, queue_id, owner_id, priority_id, state_id, type_id, create_time, create_by, change_time, change_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, current_timestamp, ?, current_timestamp, ?)"
+      },
+      {
+        "count": 50,
+        "sql": "SELECT id FROM scheduler_task WHERE ident = ?"
+      },
+      {
+        "count": 50,
+        "sql": "SELECT id FROM ticket_history_type WHERE name = ?"
+      },
+      {
+        "count": 50,
+        "sql": "UPDATE scheduler_task SET lock_key = ? WHERE lock_key = ? AND id = ?"
+      },
+      {
+        "count": 50,
+        "sql": "UPDATE ticket SET change_time = current_timestamp, change_by = ? WHERE id = ?"
+      },
+      {
+        "count": 50,
+        "sql": "UPDATE ticket SET escalation_response_time = ?, change_time = current_timestamp, change_by = ? WHERE id = ?"
+      },
+      {
+        "count": 50,
+        "sql": "UPDATE ticket SET escalation_solution_time = ?, change_time = current_timestamp, change_by = ? WHERE id = ?"
+      },
+      {
+        "count": 50,
+        "sql": "UPDATE ticket SET escalation_time = ?, change_time = current_timestamp, change_by = ? WHERE id = ?"
+      },
+      {
+        "count": 50,
+        "sql": "UPDATE ticket SET escalation_update_time = ?, change_time = current_timestamp, change_by = ? WHERE id = ?"
+      },
+      {
+        "count": 16,
+        "sql": "SELECT id, internal_field, name, label, field_order, field_type, object_type, config, valid_id, create_time, change_time FROM dynamic_field WHERE id = ?"
+      },
+      {
+        "count": 2,
+        "sql": "SELECT id, internal_field, name, label, field_order, field_type, object_type, config, valid_id, create_time, change_time FROM dynamic_field WHERE name = ?"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT COUNT(*) FROM article WHERE ticket_id IN (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT DISTINCT(job_name) FROM generic_agent_jobs"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT id, name FROM gi_webservice_config WHERE valid_id IN (?)"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT id, name FROM ticket_lock_type"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT id, name FROM ticket_priority"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT id, name FROM ticket_type"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT id, name FROM valid"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT id, name, field_order FROM dynamic_field WHERE valid_id IN (?) AND object_type = ? ORDER BY field_order, id"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT id, name, field_order FROM dynamic_field WHERE valid_id IN (?) AND object_type IN (?) ORDER BY field_order, id"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT login FROM users WHERE id = ?"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT q.name, q.group_id, q.unlock_timeout, q.system_address_id, q.salutation_id, q.signature_id, q.comments, q.valid_id, q.first_response_time, q.first_response_notify, q.update_time, q.update_notify, q.solution_time, q.solution_notify, q.follow_up_id, q.follow_up_lock, sa.value0, sa.value1, q.id, q.default_sign_key, q.calendar_name, q.create_time, q.change_time FROM queue q, system_address sa WHERE q.system_address_id = sa.id AND q.id = ?"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT t.id, v.value_text FROM ticket t INNER JOIN dynamic_field_value v ON v.object_id = t.id WHERE v.field_id = ? AND t.id > ? AND v.value_text IS NOT NULL AND v.value_text <> ? ORDER BY t.id"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT ts.id, ts.name, ts.valid_id, ts.comments, ts.type_id, tst.name, ts.change_time, ts.create_time FROM ticket_state ts, ticket_state_type tst WHERE ts.type_id = tst.id AND ts.id = ?"
+      },
+      {
+        "count": 1,
+        "sql": "SHOW SESSION STATUS LIKE ?"
+      }
+    ],
+    "variant": "current",
+    "wall_seconds": 4.00906991958618,
+    "peer": {
+      "counts": {
+        "GET /issues/7002.json": 1,
+        "GET /issues/7003.json": 1,
+        "GET /issues/7004.json": 1,
+        "GET /issues/7005.json": 1,
+        "GET /issues/7006.json": 1,
+        "GET /issues/7007.json": 1,
+        "GET /issues/7008.json": 1,
+        "GET /issues/7009.json": 1,
+        "GET /issues/7010.json": 1,
+        "GET /issues/7011.json": 1,
+        "GET /issues/7012.json": 1,
+        "GET /issues/7013.json": 1,
+        "GET /issues/7014.json": 1,
+        "GET /issues/7015.json": 1,
+        "GET /issues/7016.json": 1,
+        "GET /issues/7017.json": 1,
+        "GET /issues/7018.json": 1,
+        "GET /issues/7019.json": 1,
+        "GET /issues/7020.json": 1,
+        "GET /issues/7021.json": 1,
+        "GET /issues/7022.json": 1,
+        "GET /issues/7023.json": 1,
+        "GET /issues/7024.json": 1,
+        "GET /issues/7025.json": 1,
+        "GET /issues/7026.json": 1,
+        "GET /issues/7027.json": 1,
+        "GET /issues/7028.json": 1,
+        "GET /issues/7029.json": 1,
+        "GET /issues/7030.json": 1,
+        "GET /issues/7031.json": 1,
+        "GET /issues/7032.json": 1,
+        "GET /issues/7033.json": 1,
+        "GET /issues/7034.json": 1,
+        "GET /issues/7035.json": 1,
+        "GET /issues/7036.json": 1,
+        "GET /issues/7037.json": 1,
+        "GET /issues/7038.json": 1,
+        "GET /issues/7039.json": 1,
+        "GET /issues/7040.json": 1,
+        "GET /issues/7041.json": 1,
+        "GET /issues/7042.json": 1,
+        "GET /issues/7043.json": 1,
+        "GET /issues/7044.json": 1,
+        "GET /issues/7045.json": 1,
+        "GET /issues/7046.json": 1,
+        "GET /issues/7047.json": 1,
+        "GET /issues/7048.json": 1,
+        "GET /issues/7049.json": 1,
+        "GET /issues/7050.json": 1,
+        "GET /issues/7051.json": 1,
+        "GET /enumerations/issue_priorities.json": 1,
+        "GET /projects/1.json?include=trackers": 1,
+        "GET /projects/1/memberships.json?limit=100&offset=0": 1
+      },
+      "connections": 53,
+      "open_connections": 0,
+      "response_bytes": 6175
+    }
+  },
+  {
+    "articles_after": 0,
+    "count": {
+      "events": {
+        "HistoryAdd": 100,
+        "TicketDynamicFieldUpdate_RedmineLastSyncAt": 100
+      },
+      "field_sets": {
+        "RedmineLastSyncAt": 50
+      },
+      "history_add": 50,
+      "html_to_ascii": 0,
+      "request_calls": 53,
+      "sql_do": 500,
+      "sql_prepare": 532,
+      "sql_writes": {
+        "DELETE FROM dynamic_field_value": 50,
+        "INSERT INTO dynamic_field_value": 50,
+        "INSERT INTO scheduler_task": 50,
+        "INSERT INTO ticket_history": 50,
+        "UPDATE scheduler_task": 50,
+        "UPDATE ticket": 250
+      },
+      "ticket_get": 300
+    },
+    "cpu_seconds": 3.296878,
+    "cycles": 1,
+    "health": {
+      "LastSyncError": "",
+      "LastSyncOK": 1,
+      "SyncedCount": 50
+    },
+    "loaded_sync": "/opt/otrs/Kernel/System/Redmine/Sync.pm",
+    "peak_rss_kib": 81072,
+    "run_mode": "daemon_task",
+    "scenario": "unique_50",
+    "sql_queries": 1030,
+    "sql_templates": [
+      {
+        "count": 100,
+        "sql": "SELECT DISTINCT(nei.notification_id) FROM notification_event ne, notification_event_item nei WHERE ne.id = nei.notification_id AND ne.valid_id IN ( ? ) AND nei.event_key = ? AND nei.event_value = ? ORDER BY nei.notification_id ASC"
+      },
+      {
+        "count": 100,
+        "sql": "SELECT id, value_text, value_date, value_int, field_id FROM dynamic_field_value WHERE object_id = ? ORDER BY id"
+      },
+      {
+        "count": 100,
+        "sql": "SELECT st.id, st.queue_id, st.ticket_state_id, st.ticket_lock_id, st.ticket_priority_id, st.create_time, st.create_time, st.tn, st.customer_id, st.customer_user_id, st.user_id, st.responsible_user_id, st.until_time, st.change_time, st.title, st.escalation_update_time, st.timeout, st.type_id, st.service_id, st.sla_id, st.escalation_response_time, st.escalation_solution_time, st.escalation_time, st.archive_flag, st.create_by, st.change_by FROM ticket st WHERE st.id = ?"
+      },
+      {
+        "count": 100,
+        "sql": "SELECT tn FROM ticket WHERE id = ?"
+      },
+      {
+        "count": 50,
+        "sql": "DELETE FROM dynamic_field_value WHERE field_id = ? AND object_id = ?"
+      },
+      {
+        "count": 50,
+        "sql": "INSERT INTO dynamic_field_value (field_id, object_id, value_text, value_date, value_int) VALUES (?, ?, ?, ?, ?)"
+      },
+      {
+        "count": 50,
+        "sql": "INSERT INTO scheduler_task (ident, name, task_type, task_data, attempts, lock_key, create_time) VALUES (?, ?, ?, ?, ?, ?, current_timestamp)"
+      },
+      {
+        "count": 50,
+        "sql": "INSERT INTO ticket_history (name, history_type_id, ticket_id, article_id, queue_id, owner_id, priority_id, state_id, type_id, create_time, create_by, change_time, change_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, current_timestamp, ?, current_timestamp, ?)"
+      },
+      {
+        "count": 50,
+        "sql": "SELECT id FROM scheduler_task WHERE ident = ?"
+      },
+      {
+        "count": 50,
+        "sql": "SELECT id FROM ticket_history_type WHERE name = ?"
+      },
+      {
+        "count": 50,
+        "sql": "UPDATE scheduler_task SET lock_key = ? WHERE lock_key = ? AND id = ?"
+      },
+      {
+        "count": 50,
+        "sql": "UPDATE ticket SET change_time = current_timestamp, change_by = ? WHERE id = ?"
+      },
+      {
+        "count": 50,
+        "sql": "UPDATE ticket SET escalation_response_time = ?, change_time = current_timestamp, change_by = ? WHERE id = ?"
+      },
+      {
+        "count": 50,
+        "sql": "UPDATE ticket SET escalation_solution_time = ?, change_time = current_timestamp, change_by = ? WHERE id = ?"
+      },
+      {
+        "count": 50,
+        "sql": "UPDATE ticket SET escalation_time = ?, change_time = current_timestamp, change_by = ? WHERE id = ?"
+      },
+      {
+        "count": 50,
+        "sql": "UPDATE ticket SET escalation_update_time = ?, change_time = current_timestamp, change_by = ? WHERE id = ?"
+      },
+      {
+        "count": 16,
+        "sql": "SELECT id, internal_field, name, label, field_order, field_type, object_type, config, valid_id, create_time, change_time FROM dynamic_field WHERE id = ?"
+      },
+      {
+        "count": 2,
+        "sql": "SELECT id, internal_field, name, label, field_order, field_type, object_type, config, valid_id, create_time, change_time FROM dynamic_field WHERE name = ?"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT COUNT(*) FROM article WHERE ticket_id IN (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT DISTINCT(job_name) FROM generic_agent_jobs"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT id, name FROM gi_webservice_config WHERE valid_id IN (?)"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT id, name FROM ticket_lock_type"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT id, name FROM ticket_priority"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT id, name FROM ticket_type"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT id, name FROM valid"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT id, name, field_order FROM dynamic_field WHERE valid_id IN (?) AND object_type = ? ORDER BY field_order, id"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT id, name, field_order FROM dynamic_field WHERE valid_id IN (?) AND object_type IN (?) ORDER BY field_order, id"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT login FROM users WHERE id = ?"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT q.name, q.group_id, q.unlock_timeout, q.system_address_id, q.salutation_id, q.signature_id, q.comments, q.valid_id, q.first_response_time, q.first_response_notify, q.update_time, q.update_notify, q.solution_time, q.solution_notify, q.follow_up_id, q.follow_up_lock, sa.value0, sa.value1, q.id, q.default_sign_key, q.calendar_name, q.create_time, q.change_time FROM queue q, system_address sa WHERE q.system_address_id = sa.id AND q.id = ?"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT t.id, v.value_text FROM ticket t INNER JOIN dynamic_field_value v ON v.object_id = t.id WHERE v.field_id = ? AND t.id > ? AND v.value_text IS NOT NULL AND v.value_text <> ? ORDER BY t.id"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT ts.id, ts.name, ts.valid_id, ts.comments, ts.type_id, tst.name, ts.change_time, ts.create_time FROM ticket_state ts, ticket_state_type tst WHERE ts.type_id = tst.id AND ts.id = ?"
+      },
+      {
+        "count": 1,
+        "sql": "SHOW SESSION STATUS LIKE ?"
+      }
+    ],
+    "variant": "scoped_http",
+    "wall_seconds": 4.61336708068848,
+    "peer": {
+      "counts": {
+        "GET /issues/7002.json": 1,
+        "GET /issues/7003.json": 1,
+        "GET /issues/7004.json": 1,
+        "GET /issues/7005.json": 1,
+        "GET /issues/7006.json": 1,
+        "GET /issues/7007.json": 1,
+        "GET /issues/7008.json": 1,
+        "GET /issues/7009.json": 1,
+        "GET /issues/7010.json": 1,
+        "GET /issues/7011.json": 1,
+        "GET /issues/7012.json": 1,
+        "GET /issues/7013.json": 1,
+        "GET /issues/7014.json": 1,
+        "GET /issues/7015.json": 1,
+        "GET /issues/7016.json": 1,
+        "GET /issues/7017.json": 1,
+        "GET /issues/7018.json": 1,
+        "GET /issues/7019.json": 1,
+        "GET /issues/7020.json": 1,
+        "GET /issues/7021.json": 1,
+        "GET /issues/7022.json": 1,
+        "GET /issues/7023.json": 1,
+        "GET /issues/7024.json": 1,
+        "GET /issues/7025.json": 1,
+        "GET /issues/7026.json": 1,
+        "GET /issues/7027.json": 1,
+        "GET /issues/7028.json": 1,
+        "GET /issues/7029.json": 1,
+        "GET /issues/7030.json": 1,
+        "GET /issues/7031.json": 1,
+        "GET /issues/7032.json": 1,
+        "GET /issues/7033.json": 1,
+        "GET /issues/7034.json": 1,
+        "GET /issues/7035.json": 1,
+        "GET /issues/7036.json": 1,
+        "GET /issues/7037.json": 1,
+        "GET /issues/7038.json": 1,
+        "GET /issues/7039.json": 1,
+        "GET /issues/7040.json": 1,
+        "GET /issues/7041.json": 1,
+        "GET /issues/7042.json": 1,
+        "GET /issues/7043.json": 1,
+        "GET /issues/7044.json": 1,
+        "GET /issues/7045.json": 1,
+        "GET /issues/7046.json": 1,
+        "GET /issues/7047.json": 1,
+        "GET /issues/7048.json": 1,
+        "GET /issues/7049.json": 1,
+        "GET /issues/7050.json": 1,
+        "GET /issues/7051.json": 1,
+        "GET /enumerations/issue_priorities.json": 1,
+        "GET /projects/1.json?include=trackers": 1,
+        "GET /projects/1/memberships.json?limit=100&offset=0": 1
+      },
+      "connections": 1,
+      "open_connections": 0,
+      "response_bytes": 6175
+    }
+  },
+  {
+    "articles_after": 50,
+    "count": {
+      "events": {
+        "HistoryAdd": 700,
+        "TicketDynamicFieldUpdate_RedmineLastAttachmentSyncOn": 100,
+        "TicketDynamicFieldUpdate_RedmineLastJournalID": 100,
+        "TicketDynamicFieldUpdate_RedmineLastSyncAt": 100,
+        "TicketDynamicFieldUpdate_RedmineLastUpdatedOn": 100,
+        "TicketDynamicFieldUpdate_RedmineStatus": 100,
+        "TicketFlagSet": 100,
+        "TicketUnlockTimeoutUpdate": 100
+      },
+      "field_sets": {
+        "RedmineLastAttachmentSyncOn": 50,
+        "RedmineLastJournalID": 50,
+        "RedmineLastSyncAt": 50,
+        "RedmineLastUpdatedOn": 50,
+        "RedmineStatus": 50
+      },
+      "history_add": 350,
+      "html_to_ascii": 50,
+      "request_calls": 5,
+      "sql_do": 2950,
+      "sql_prepare": 3747,
+      "sql_writes": {
+        "DELETE FROM article_flag": 50,
+        "DELETE FROM article_search_index": 50,
+        "DELETE FROM dynamic_field_value": 250,
+        "DELETE FROM ticket_flag": 100,
+        "INSERT INTO article": 50,
+        "INSERT INTO article_data_mime": 50,
+        "INSERT INTO article_flag": 50,
+        "INSERT INTO article_search_index": 50,
+        "INSERT INTO dynamic_field_value": 250,
+        "INSERT INTO scheduler_task": 50,
+        "INSERT INTO ticket_flag": 50,
+        "INSERT INTO ticket_history": 350,
+        "UPDATE article_data_mime": 50,
+        "UPDATE scheduler_task": 50,
+        "UPDATE ticket": 1500
+      },
+      "ticket_get": 2100
+    },
+    "cpu_seconds": 9.836718,
+    "cycles": 1,
+    "health": {
+      "LastSyncError": "",
+      "LastSyncOK": 1,
+      "SyncedCount": 50
+    },
+    "loaded_sync": "/opt/otrs/Kernel/System/Redmine/Sync.pm",
+    "peak_rss_kib": 112080,
+    "run_mode": "daemon_task",
+    "scenario": "mass_transition_50",
+    "sql_queries": 6695,
+    "sql_templates": [
+      {
+        "count": 850,
+        "sql": "SELECT DISTINCT(nei.notification_id) FROM notification_event ne, notification_event_item nei WHERE ne.id = nei.notification_id AND ne.valid_id IN ( ? ) AND nei.event_key = ? AND nei.event_value = ? ORDER BY nei.notification_id ASC"
+      },
+      {
+        "count": 850,
+        "sql": "SELECT tn FROM ticket WHERE id = ?"
+      },
+      {
+        "count": 650,
+        "sql": "SELECT st.id, st.queue_id, st.ticket_state_id, st.ticket_lock_id, st.ticket_priority_id, st.create_time, st.create_time, st.tn, st.customer_id, st.customer_user_id, st.user_id, st.responsible_user_id, st.until_time, st.change_time, st.title, st.escalation_update_time, st.timeout, st.type_id, st.service_id, st.sla_id, st.escalation_response_time, st.escalation_solution_time, st.escalation_time, st.archive_flag, st.create_by, st.change_by FROM ticket st WHERE st.id = ?"
+      },
+      {
+        "count": 350,
+        "sql": "INSERT INTO ticket_history (name, history_type_id, ticket_id, article_id, queue_id, owner_id, priority_id, state_id, type_id, create_time, create_by, change_time, change_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, current_timestamp, ?, current_timestamp, ?)"
+      },
+      {
+        "count": 350,
+        "sql": "SELECT id FROM ticket_history_type WHERE name = ?"
+      },
+      {
+        "count": 300,
+        "sql": "SELECT id, value_text, value_date, value_int, field_id FROM dynamic_field_value WHERE object_id = ? ORDER BY id"
+      },
+      {
+        "count": 300,
+        "sql": "UPDATE ticket SET escalation_response_time = ?, change_time = current_timestamp, change_by = ? WHERE id = ?"
+      },
+      {
+        "count": 300,
+        "sql": "UPDATE ticket SET escalation_solution_time = ?, change_time = current_timestamp, change_by = ? WHERE id = ?"
+      },
+      {
+        "count": 300,
+        "sql": "UPDATE ticket SET escalation_time = ?, change_time = current_timestamp, change_by = ? WHERE id = ?"
+      },
+      {
+        "count": 300,
+        "sql": "UPDATE ticket SET escalation_update_time = ?, change_time = current_timestamp, change_by = ? WHERE id = ?"
+      },
+      {
+        "count": 250,
+        "sql": "DELETE FROM dynamic_field_value WHERE field_id = ? AND object_id = ?"
+      },
+      {
+        "count": 250,
+        "sql": "INSERT INTO dynamic_field_value (field_id, object_id, value_text, value_date, value_int) VALUES (?, ?, ?, ?, ?)"
+      },
+      {
+        "count": 250,
+        "sql": "UPDATE ticket SET change_time = current_timestamp, change_by = ? WHERE id = ?"
+      },
+      {
+        "count": 100,
+        "sql": "SELECT create_by, ticket_key, ticket_value FROM ticket_flag WHERE ticket_id = ?"
+      },
+      {
+        "count": 100,
+        "sql": "SELECT id, ticket_id, communication_channel_id, article_sender_type_id, is_visible_for_customer, create_by, create_time, change_by, change_time FROM article WHERE ticket_id = ? ORDER BY id ASC"
+      },
+      {
+        "count": 50,
+        "sql": "DELETE FROM article_flag WHERE article_id = ? AND article_key = ? AND create_by = ?"
+      },
+      {
+        "count": 50,
+        "sql": "DELETE FROM article_search_index WHERE article_id = ?"
+      },
+      {
+        "count": 50,
+        "sql": "DELETE FROM ticket_flag WHERE ticket_id = ? AND ticket_key = ?"
+      },
+      {
+        "count": 50,
+        "sql": "DELETE FROM ticket_flag WHERE ticket_id = ? AND ticket_key = ? AND create_by = ?"
+      },
+      {
+        "count": 50,
+        "sql": "INSERT INTO article (ticket_id, article_sender_type_id, is_visible_for_customer, communication_channel_id, insert_fingerprint, create_time, create_by, change_time, change_by) VALUES (?, ?, ?, ?, ?, current_timestamp, ?, current_timestamp, ?)"
+      },
+      {
+        "count": 50,
+        "sql": "INSERT INTO article_data_mime ( article_id, a_from, a_reply_to, a_to, a_cc, a_bcc, a_subject, a_message_id, a_message_id_md5, a_in_reply_to, a_references, a_content_type, a_body, incoming_time, content_path, create_time, create_by, change_time, change_by) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, current_timestamp, ?, current_timestamp, ? )"
+      },
+      {
+        "count": 50,
+        "sql": "INSERT INTO article_flag (article_id, article_key, article_value, create_time, create_by) VALUES (?, ?, ?, current_timestamp, ?)"
+      },
+      {
+        "count": 50,
+        "sql": "INSERT INTO article_search_index (ticket_id, article_id, article_key, article_value) VALUES (?, ?, ?, ?) , (?, ?, ?, ?)"
+      },
+      {
+        "count": 50,
+        "sql": "INSERT INTO scheduler_task (ident, name, task_type, task_data, attempts, lock_key, create_time) VALUES (?, ?, ?, ?, ?, ?, current_timestamp)"
+      },
+      {
+        "count": 50,
+        "sql": "INSERT INTO ticket_flag (ticket_id, ticket_key, ticket_value, create_time, create_by) VALUES (?, ?, ?, current_timestamp, ?)"
+      },
+      {
+        "count": 50,
+        "sql": "SELECT article.id, article_flag.article_key, article_flag.article_value FROM article_flag, article WHERE article.id = article_flag.article_id AND article.ticket_id = ? AND article_flag.create_by = ?"
+      },
+      {
+        "count": 50,
+        "sql": "SELECT article_key, article_value FROM article_flag WHERE article_id = ? AND create_by = ?"
+      },
+      {
+        "count": 50,
+        "sql": "SELECT event_key, event_value FROM notification_event_item WHERE notification_id = ? ORDER BY event_key, event_value ASC"
+      },
+      {
+        "count": 50,
+        "sql": "SELECT filename, content_type, content_size, content_id, content_alternative, disposition FROM article_data_mime_attachment WHERE article_id = ? ORDER BY filename, id"
+      },
+      {
+        "count": 50,
+        "sql": "SELECT id FROM article WHERE ticket_id = ? AND insert_fingerprint = ? ORDER BY id DESC"
+      },
+      {
+        "count": 50,
+        "sql": "SELECT id FROM article_data_mime WHERE article_id = ? AND a_message_id = ? AND incoming_time = ? ORDER BY id DESC"
+      },
+      {
+        "count": 50,
+        "sql": "SELECT id FROM scheduler_task WHERE ident = ?"
+      },
+      {
+        "count": 50,
+        "sql": "SELECT id, name, valid_id, comments, create_time, create_by, change_time, change_by FROM notification_event WHERE id = ?"
+      },
+      {
+        "count": 50,
+        "sql": "SELECT sadm.a_from, sadm.a_reply_to, sadm.a_to, sadm.a_cc, sadm.a_bcc, sadm.a_subject, sadm.a_message_id, sadm.a_in_reply_to, sadm.a_references, sadm.a_content_type, sadm.a_body, sadm.incoming_time FROM article_data_mime sadm WHERE sadm.article_id = ?"
+      },
+      {
+        "count": 50,
+        "sql": "SELECT subject, text, content_type, language FROM notification_event_message WHERE notification_id = ?"
+      },
+      {
+        "count": 50,
+        "sql": "UPDATE article_data_mime SET a_message_id = ? WHERE id = ?"
+      },
+      {
+        "count": 50,
+        "sql": "UPDATE scheduler_task SET lock_key = ? WHERE lock_key = ? AND id = ?"
+      },
+      {
+        "count": 50,
+        "sql": "UPDATE ticket SET timeout = ?, change_time = current_timestamp, change_by = ? WHERE id = ?"
+      },
+      {
+        "count": 16,
+        "sql": "SELECT id, internal_field, name, label, field_order, field_type, object_type, config, valid_id, create_time, change_time FROM dynamic_field WHERE id = ?"
+      },
+      {
+        "count": 6,
+        "sql": "SELECT id, internal_field, name, label, field_order, field_type, object_type, config, valid_id, create_time, change_time FROM dynamic_field WHERE name = ?"
+      },
+      {
+        "count": 4,
+        "sql": "SELECT id, name, module, package_name, channel_data, valid_id, create_time, create_by, change_time, change_by FROM communication_channel WHERE name = ?"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT COUNT(*) FROM article WHERE ticket_id IN (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT DISTINCT(job_name) FROM generic_agent_jobs"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT id, login FROM users WHERE valid_id IN ( ? )"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT id, login, title, first_name, last_name, pw, valid_id, create_time, change_time FROM users WHERE id = ?"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT id, name FROM article_sender_type WHERE valid_id IN (?)"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT id, name FROM gi_webservice_config WHERE valid_id IN (?)"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT id, name FROM ticket_lock_type"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT id, name FROM ticket_priority"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT id, name FROM ticket_type"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT id, name FROM valid"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT id, name, field_order FROM dynamic_field WHERE valid_id IN (?) AND object_type = ? ORDER BY field_order, id"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT id, name, field_order FROM dynamic_field WHERE valid_id IN (?) AND object_type IN (?) ORDER BY field_order, id"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT id, name, module, package_name, channel_data, valid_id, create_time, create_by, change_time, change_by FROM communication_channel WHERE id = ?"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT id, name, module, package_name, channel_data, valid_id, create_time, create_by, change_time, change_by FROM communication_channel WHERE valid_id = ? ORDER BY name ASC"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT login FROM users WHERE id = ?"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT preferences_key, preferences_value FROM user_preferences WHERE user_id = ?"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT q.name, q.group_id, q.unlock_timeout, q.system_address_id, q.salutation_id, q.signature_id, q.comments, q.valid_id, q.first_response_time, q.first_response_notify, q.update_time, q.update_notify, q.solution_time, q.solution_notify, q.follow_up_id, q.follow_up_lock, sa.value0, sa.value1, q.id, q.default_sign_key, q.calendar_name, q.create_time, q.change_time FROM queue q, system_address sa WHERE q.system_address_id = sa.id AND q.id = ?"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT t.id, v.value_text FROM ticket t INNER JOIN dynamic_field_value v ON v.object_id = t.id WHERE v.field_id = ? AND t.id > ? AND v.value_text IS NOT NULL AND v.value_text <> ? ORDER BY t.id"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT ts.id, ts.name, ts.valid_id, ts.comments, ts.type_id, tst.name, ts.change_time, ts.create_time FROM ticket_state ts, ticket_state_type tst WHERE ts.type_id = tst.id AND ts.id = ?"
+      },
+      {
+        "count": 1,
+        "sql": "SELECT ts.id, ts.name, ts.valid_id, ts.comments, ts.type_id, tst.name, ts.change_time, ts.create_time FROM ticket_state ts, ticket_state_type tst WHERE ts.type_id = tst.id AND ts.name = ?"
+      },
+      {
+        "count": 1,
+        "sql": "SHOW SESSION STATUS LIKE ?"
+      }
+    ],
+    "variant": "current",
+    "wall_seconds": 10.8550579547882,
+    "peer": {
+      "counts": {
+        "GET /issues/7001.json": 1,
+        "GET /issues/7001.json?include=journals,attachments": 1,
+        "GET /enumerations/issue_priorities.json": 1,
+        "GET /projects/1.json?include=trackers": 1,
+        "GET /projects/1/memberships.json?limit=100&offset=0": 1
+      },
+      "connections": 5,
+      "open_connections": 0,
+      "response_bytes": 709
+    }
+  }
+]

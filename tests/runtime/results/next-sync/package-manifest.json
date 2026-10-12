@@ -1,0 +1,29 @@
+{
+  "version": "1.0.31",
+  "package_sha256": "81c276b80899edc56668337b38de4d1ae36f4cdc700fb9f722b46f387d682552",
+  "sources": {
+    "Kernel/Config/Files/XML/RedmineBridge.xml": "118b3c0d4c5901354c942f21bd8b58c47a09e68056ea6ec5983a75df003f907c",
+    "Kernel/Language/de_OTRSRedmineBridge.pm": "280cef48fe1ca724d83c3a9bec3289fa93990aa4f35075a1cabaed88eaa157c4",
+    "Kernel/Language/en_OTRSRedmineBridge.pm": "2f97b4a13fc7e8f95873fdb85ede3058d4c6ab52569d2b6c3208e97f6131ee86",
+    "Kernel/Language/ru_OTRSRedmineBridge.pm": "1eb5cbf79db769674db720caed5e551b03fd0ffbd356d9f7a34807bc18cfd8e2",
+    "Kernel/Modules/AdminRedmineBridge.pm": "02613db046c8dc53355a10d114ddd01a7a249393d470ca8c84c423381df25518",
+    "Kernel/Modules/AgentTicketRedmineEscalate.pm": "6b16410e826bb06315ae2fac9f5eb18227affe9c42595b98ec73ce4d236d460b",
+    "Kernel/Output/HTML/Templates/Standard/AdminRedmineBridge.tt": "5396408d15fcc2f9fcfae097ae3427ec4239a9387bc0afa8d95111c94bd9bae8",
+    "Kernel/Output/HTML/Templates/Standard/AgentTicketRedmineEscalate.tt": "889c0069262a7970b15eabde17e5009b265a79559382394dcee1dfd738081d51",
+    "Kernel/Output/HTML/TicketMenu/RedmineEscalate.pm": "a46c28cafd88da07a72a2c7c99ecb50926655139c394684a7476f25cd5a7b5e3",
+    "Kernel/Output/HTML/TicketMenu/RedmineOpen.pm": "a60549550c09dabe076a30f52e4e9b39127bd2f4f4586500b4ea5eb618de6a3a",
+    "Kernel/System/Redmine.pm": "7d04ac00276f1f6529285198aee7bb38543d5c40694aa0f0683464d4c540daaa",
+    "Kernel/System/Redmine/HTTP.pm": "b1a4b2500ef5c2fb8bf48228266afab00b4de613efde6637e3b4ffea1ffccb16",
+    "Kernel/System/Redmine/Diagnostics.pm": "a1a182c79496ec17239df6d23e81033fa95c24cdccb95c0d0533ed7398f6b3d8",
+    "Kernel/System/Redmine/Catalog.pm": "1e084845e849dd6df4cd56fc47760afc546194b28e8c3020579f796b8e4c0712",
+    "Kernel/System/Redmine/Issue.pm": "a11bf2d6d9de39783875033bd57483beaf30ba4c8df6c771aaad921fc32b6da3",
+    "Kernel/System/Redmine/Sync.pm": "82640402d7475e4d27169c1ba93566d47f3cad12a0cd9d7961d344e5ddf22f57",
+    "Kernel/System/Redmine/TicketDF.pm": "917057cc1cb9a284814ea09a319c48874d516442e78d19b82bf7b3d33ad2f95e",
+    "var/packagesetup/OTRSRedmineBridge.pm": "dcbbc68d66b16846254f77c8aaf960a81bcfd526dbdd65a08d6c94acb4c485eb",
+    "Kernel/System/Redmine/SyncStore.pm": "6b12316894af308b837bc17ffda45f6af4ac3a0f54fdcbd483263c62109b289b",
+    "Kernel/System/Redmine/SyncCoordinator.pm": "d9ddc8278f4bc5e9ba0fea9b4ebabfbd4755caf5634e6f9432bdaff2ecdee033",
+    "Kernel/System/Daemon/DaemonModules/RedmineBridgePoller.pm": "c8779ea408978969075e9a8dec17e80bf0e3e442d6ab81bf185f671f0eb9d229"
+  },
+  "file_count": 21,
+  "payload_source_installed_match": true
+}

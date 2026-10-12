@@ -1,0 +1,20 @@
+{
+  "Kernel/Language/ru_OTRSRedmineBridge.pm": "fb235ffa7ec90744de84d1f21ab17c1add67e6d6cb23a279987866a02bea5f3b",
+  "Kernel/Language/en_OTRSRedmineBridge.pm": "2f97b4a13fc7e8f95873fdb85ede3058d4c6ab52569d2b6c3208e97f6131ee86",
+  "Kernel/Language/de_OTRSRedmineBridge.pm": "280cef48fe1ca724d83c3a9bec3289fa93990aa4f35075a1cabaed88eaa157c4",
+  "Kernel/System/Redmine.pm": "f54e36fe2333131d71a2aed898f05f81ab0894b408b849117d46c91949e2dd22",
+  "Kernel/Modules/AdminRedmineBridge.pm": "02613db046c8dc53355a10d114ddd01a7a249393d470ca8c84c423381df25518",
+  "Kernel/Modules/AgentTicketRedmineEscalate.pm": "6b16410e826bb06315ae2fac9f5eb18227affe9c42595b98ec73ce4d236d460b",
+  "Kernel/System/Redmine/Sync.pm": "f264b74eb3e74d264b3efc3cde6e58cf97088758006190581927095ca8f6a498",
+  "Kernel/System/Redmine/Catalog.pm": "1e084845e849dd6df4cd56fc47760afc546194b28e8c3020579f796b8e4c0712",
+  "Kernel/System/Redmine/Diagnostics.pm": "a1a182c79496ec17239df6d23e81033fa95c24cdccb95c0d0533ed7398f6b3d8",
+  "Kernel/System/Redmine/TicketDF.pm": "917057cc1cb9a284814ea09a319c48874d516442e78d19b82bf7b3d33ad2f95e",
+  "Kernel/System/Redmine/HTTP.pm": "29a9bc5f69625f13b8166334c493e6f1d6aa3973c41ac4fb017b6497a03f6091",
+  "Kernel/System/Redmine/Issue.pm": "1e58ff3796544d664c6a6590bdb69e6d07dd6ba950e914434e3259b29a443fdc",
+  "Kernel/Output/HTML/TicketMenu/RedmineEscalate.pm": "a46c28cafd88da07a72a2c7c99ecb50926655139c394684a7476f25cd5a7b5e3",
+  "Kernel/Output/HTML/TicketMenu/RedmineOpen.pm": "a60549550c09dabe076a30f52e4e9b39127bd2f4f4586500b4ea5eb618de6a3a",
+  "Kernel/Output/HTML/Templates/Standard/AgentTicketRedmineEscalate.tt": "889c0069262a7970b15eabde17e5009b265a79559382394dcee1dfd738081d51",
+  "Kernel/Output/HTML/Templates/Standard/AdminRedmineBridge.tt": "b20a2af6ddc2fb34283e00bed8233b9f80d6ebe6347bc7cc7c3adc53d4e5c6c6",
+  "Kernel/Config/Files/XML/RedmineBridge.xml": "1fe414d54fc7383387c6cd0d5f3ad8fc0656ffd9884e5b39024c655554ffa9f9",
+  "var/packagesetup/OTRSRedmineBridge.pm": "cd8a6707a80b56c6e52574b4afdffadd52d2af50131cf196f8229e3981b3e0b2"
+}

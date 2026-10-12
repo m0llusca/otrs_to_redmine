@@ -1,0 +1,77 @@
+[
+  {
+    "file": "Kernel/Language/de_OTRSRedmineBridge.pm",
+    "exit_code": 0,
+    "output": "/opt/otrs/Kernel/Language/de_OTRSRedmineBridge.pm syntax OK"
+  },
+  {
+    "file": "Kernel/Language/en_OTRSRedmineBridge.pm",
+    "exit_code": 0,
+    "output": "/opt/otrs/Kernel/Language/en_OTRSRedmineBridge.pm syntax OK"
+  },
+  {
+    "file": "Kernel/Language/ru_OTRSRedmineBridge.pm",
+    "exit_code": 0,
+    "output": "/opt/otrs/Kernel/Language/ru_OTRSRedmineBridge.pm syntax OK"
+  },
+  {
+    "file": "Kernel/Modules/AdminRedmineBridge.pm",
+    "exit_code": 0,
+    "output": "/opt/otrs/Kernel/Modules/AdminRedmineBridge.pm syntax OK"
+  },
+  {
+    "file": "Kernel/Modules/AgentTicketRedmineEscalate.pm",
+    "exit_code": 0,
+    "output": "/opt/otrs/Kernel/Modules/AgentTicketRedmineEscalate.pm syntax OK"
+  },
+  {
+    "file": "Kernel/Output/HTML/TicketMenu/RedmineEscalate.pm",
+    "exit_code": 0,
+    "output": "/opt/otrs/Kernel/Output/HTML/TicketMenu/RedmineEscalate.pm syntax OK"
+  },
+  {
+    "file": "Kernel/Output/HTML/TicketMenu/RedmineOpen.pm",
+    "exit_code": 0,
+    "output": "/opt/otrs/Kernel/Output/HTML/TicketMenu/RedmineOpen.pm syntax OK"
+  },
+  {
+    "file": "Kernel/System/Redmine.pm",
+    "exit_code": 0,
+    "output": "/opt/otrs/Kernel/System/Redmine.pm syntax OK"
+  },
+  {
+    "file": "Kernel/System/Redmine/HTTP.pm",
+    "exit_code": 0,
+    "output": "Name \"IO::Socket::SSL::SSL_ERROR\" used only once: possible typo at /opt/otrs/Kernel/System/Redmine/HTTP.pm line 219.\n/opt/otrs/Kernel/System/Redmine/HTTP.pm syntax OK"
+  },
+  {
+    "file": "Kernel/System/Redmine/Diagnostics.pm",
+    "exit_code": 0,
+    "output": "/opt/otrs/Kernel/System/Redmine/Diagnostics.pm syntax OK"
+  },
+  {
+    "file": "Kernel/System/Redmine/Catalog.pm",
+    "exit_code": 0,
+    "output": "/opt/otrs/Kernel/System/Redmine/Catalog.pm syntax OK"
+  },
+  {
+    "file": "Kernel/System/Redmine/Issue.pm",
+    "exit_code": 0,
+    "output": "/opt/otrs/Kernel/System/Redmine/Issue.pm syntax OK"
+  },
+  {
+    "file": "Kernel/System/Redmine/Sync.pm",
+    "exit_code": 0,
+    "output": "/opt/otrs/Kernel/System/Redmine/Sync.pm syntax OK"
+  },
+  {
+    "file": "Kernel/System/Redmine/TicketDF.pm",
+    "exit_code": 0,
+    "output": "/opt/otrs/Kernel/System/Redmine/TicketDF.pm syntax OK"
+  },
+  {
+    "file": "var/packagesetup/OTRSRedmineBridge.pm",
+    "exit_code": 0,
+    "output": "/opt/otrs/var/packagesetup/OTRSRedmineBridge.pm syntax OK"
+  }
+]

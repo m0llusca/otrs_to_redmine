@@ -1,0 +1,19 @@
+{
+  "bridge_field_count": 14,
+  "field_ids": {
+    "RedmineEscalationStatus": "5",
+    "RedmineID": "3",
+    "RedmineLastAttachmentID": "11",
+    "RedmineLastAttachmentSyncOn": "16",
+    "RedmineLastError": "6",
+    "RedmineLastJournalID": "10",
+    "RedmineLastSyncAt": "15",
+    "RedmineLastUpdatedOn": "14",
+    "RedmineProjectID": "8",
+    "RedmineRetryCount": "13",
+    "RedmineRetryPayload": "12",
+    "RedmineStatus": "7",
+    "RedmineTrackerID": "9",
+    "RedmineURL": "4"
+  }
+}

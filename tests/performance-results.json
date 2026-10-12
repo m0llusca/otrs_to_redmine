@@ -1,0 +1,18 @@
+{
+  "scope": "Local deterministic fixture, real bridge implementation; OTRS boundary doubles; no measured production CPU/RSS",
+  "baseline_commit": "acc9175b793f405a3ce5431f382ae2da477cbf10",
+  "before": {
+    "processed_tickets": 50,
+    "redmine_requests": 50,
+    "scenario": "125 linked tickets, one unchanged Redmine issue, batch limit 50",
+    "ticket_get_calls": 150,
+    "unchanged_updated_on_writes": 50
+  },
+  "after": {
+    "processed_tickets": 50,
+    "redmine_requests": 1,
+    "scenario": "125 linked tickets, one unchanged Redmine issue, batch limit 50",
+    "ticket_get_calls": 50,
+    "unchanged_updated_on_writes": 0
+  }
+}

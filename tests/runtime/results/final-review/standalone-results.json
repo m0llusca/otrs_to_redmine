@@ -1,0 +1,8 @@
+{
+  "command": "prove -I tests/lib -I . tests/*.t",
+  "exit_code": 0,
+  "files": 3,
+  "top_level_subtests": 35,
+  "result": "PASS",
+  "notes": "New failure scenarios were observed failing before the relevant fixes, then passing. Perl service-boundary doubles, real SQLite candidate SQL and real loopback LWP HTTP transport."
+}

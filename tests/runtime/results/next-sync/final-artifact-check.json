@@ -1,0 +1,8 @@
+{
+  "version": "1.0.31",
+  "package_sha256": "81c276b80899edc56668337b38de4d1ae36f4cdc700fb9f722b46f387d682552",
+  "source_payload_installed_match": true,
+  "files": 21,
+  "fresh_and_upgrade_schema_version_tags_correct": true,
+  "no_test_files_in_package": true
+}

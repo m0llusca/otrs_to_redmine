@@ -1,0 +1,14 @@
+{
+  "untrusted_certificate_rejected": true,
+  "verified_tls_upload": true,
+  "files": 16,
+  "hashes_verified": true,
+  "tokens_attached": true,
+  "connections": 1,
+  "open_connections_after": 0,
+  "checks": {
+    "new_notes": 1,
+    "operation_success": 1,
+    "stored_attachments": 0
+  }
+}

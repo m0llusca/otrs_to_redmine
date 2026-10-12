@@ -1,0 +1,130 @@
+{
+  "steady_shared": {
+    "old": {
+      "cpu_seconds": 16.956734,
+      "wall_seconds": 20.325537443161004,
+      "peak_rss_kib": 80512,
+      "sql_queries": 16050,
+      "http_requests": 23,
+      "connections": 23,
+      "response_bytes": 3396,
+      "worker_count": 20,
+      "repeats": 3,
+      "cpu_range": [
+        13.950749,
+        23.410215
+      ]
+    },
+    "new": {
+      "cpu_seconds": 0.087435,
+      "wall_seconds": 0.0912420749664307,
+      "peak_rss_kib": 69564,
+      "sql_queries": 13,
+      "http_requests": 1,
+      "connections": 1,
+      "response_bytes": 201,
+      "worker_count": 1,
+      "repeats": 3,
+      "cpu_range": [
+        0.078479,
+        0.092645
+      ]
+    }
+  },
+  "steady_unique": {
+    "old": {
+      "cpu_seconds": 14.129067,
+      "wall_seconds": 16.490174293518056,
+      "peak_rss_kib": 80640,
+      "sql_queries": 16050,
+      "http_requests": 1003,
+      "connections": 1003,
+      "response_bytes": 159216,
+      "worker_count": 20,
+      "repeats": 3,
+      "cpu_range": [
+        12.544238,
+        17.55537
+      ]
+    },
+    "new": {
+      "cpu_seconds": 0.145406,
+      "wall_seconds": 0.154427051544189,
+      "peak_rss_kib": 74464,
+      "sql_queries": 22,
+      "http_requests": 10,
+      "connections": 1,
+      "response_bytes": 150530,
+      "worker_count": 1,
+      "repeats": 3,
+      "cpu_range": [
+        0.144023,
+        0.149248
+      ]
+    }
+  },
+  "mass_shared": {
+    "old": {
+      "cpu_seconds": 287.497825,
+      "wall_seconds": 346.25927805900574,
+      "peak_rss_kib": 117832,
+      "sql_queries": 164068,
+      "http_requests": 63,
+      "connections": 63,
+      "response_bytes": 14836,
+      "worker_count": 20,
+      "repeats": 1,
+      "cpu_range": [
+        287.497825,
+        287.497825
+      ]
+    },
+    "new": {
+      "cpu_seconds": 165.657564,
+      "wall_seconds": 176.3944857120514,
+      "peak_rss_kib": 116600,
+      "sql_queries": 161324,
+      "http_requests": 42,
+      "connections": 42,
+      "response_bytes": 11231,
+      "worker_count": 21,
+      "repeats": 1,
+      "cpu_range": [
+        165.657564,
+        165.657564
+      ]
+    }
+  },
+  "mass_distinct": {
+    "old": {
+      "cpu_seconds": 199.564351,
+      "wall_seconds": 230.77465367317208,
+      "peak_rss_kib": 115172,
+      "sql_queries": 146067,
+      "http_requests": 2003,
+      "connections": 2003,
+      "response_bytes": 580216,
+      "worker_count": 20,
+      "repeats": 1,
+      "cpu_range": [
+        199.564351,
+        199.564351
+      ]
+    },
+    "new": {
+      "cpu_seconds": 151.998352,
+      "wall_seconds": 165.2571268081666,
+      "peak_rss_kib": 114272,
+      "sql_queries": 153138,
+      "http_requests": 1012,
+      "connections": 1003,
+      "response_bytes": 572045,
+      "worker_count": 22,
+      "repeats": 1,
+      "cpu_range": [
+        151.998352,
+        151.998352
+      ]
+    }
+  }
+}

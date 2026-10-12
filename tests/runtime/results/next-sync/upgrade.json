@@ -1,0 +1,11 @@
+{
+  "aggregate_settings_present": 1,
+  "bridge_field_count": 14,
+  "bridge_zoom_fields_present": 1,
+  "custom_sync_limit_preserved": 1,
+  "custom_zoom_field_preserved": 1,
+  "existing_field_ids_preserved": 1,
+  "link_preserved": 1,
+  "loaded_sync": "/opt/otrs/Kernel/System/Redmine/Sync.pm",
+  "new_cursor_field_created": 1
+}

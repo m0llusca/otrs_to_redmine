@@ -1,0 +1,18 @@
+{
+  "project": "bridge-perf-local",
+  "removed_resources": {
+    "container": 3,
+    "volume": 1,
+    "network": 1
+  },
+  "other_resources_preserved": true,
+  "removed_private_files": [
+    "tests/runtime/.env",
+    "tests/runtime/.state/seed.sql",
+    "tests/runtime/.state/tls",
+    "tests/runtime/.state/profile-before",
+    "tests/runtime/.state/profile-pre_cpu"
+  ],
+  "source_snapshots_retained": true,
+  "no_server_deployment": true
+}

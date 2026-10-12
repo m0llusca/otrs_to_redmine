@@ -1,0 +1,83 @@
+<?xml version='1.0' encoding='utf-8'?>
+<SyncStoreSchema>
+    <DatabaseInstall Type="post">
+        <Table Name="redmine_sync_issue">
+            <Column Name="issue_key" Type="VARCHAR" Required="true" Size="64" PrimaryKey="true" />
+            <Column Name="source_key" Type="VARCHAR" Required="true" Size="64" />
+            <Column Name="issue_id" Type="INTEGER" Required="true" Default="0" />
+            <Column Name="updated_on" Type="VARCHAR" Required="false" Size="40" />
+            <Column Name="issue_status" Type="VARCHAR" Required="false" Size="250" />
+            <Column Name="links_hash" Type="VARCHAR" Required="false" Size="64" />
+            <Column Name="generation" Type="INTEGER" Required="true" Default="0" />
+            <Column Name="round_generation" Type="INTEGER" Required="true" Default="1" />
+            <Column Name="done_generation" Type="INTEGER" Required="true" Default="0" />
+            <Column Name="after_ticket_id" Type="INTEGER" Required="true" Default="0" />
+            <Column Name="first_failed_ticket_id" Type="INTEGER" Required="true" Default="0" />
+            <Column Name="lease_token" Type="VARCHAR" Required="false" Size="64" />
+            <Column Name="lease_until" Type="INTEGER" Required="true" Default="0" />
+            <Column Name="retry_at" Type="INTEGER" Required="true" Default="0" />
+            <Column Name="served_at" Type="INTEGER" Required="true" Default="0" />
+            <Column Name="queued_at" Type="INTEGER" Required="true" Default="0" />
+            <Column Name="delivery_signature" Type="VARCHAR" Required="false" Size="64" />
+            <Column Name="observed_at" Type="INTEGER" Required="true" Default="0" />
+            <Column Name="probe_at" Type="INTEGER" Required="true" Default="0" />
+            <Column Name="last_error" Type="VARCHAR" Required="false" Size="2000" />
+            <Column Name="retry_count" Type="INTEGER" Required="true" Default="0" />
+            <Unique Name="redmine_sync_source_issue">
+                <UniqueColumn Name="source_key" />
+                <UniqueColumn Name="issue_id" />
+            </Unique>
+            <Index Name="redmine_sync_ready">
+                <IndexColumn Name="source_key" />
+                <IndexColumn Name="served_at" />
+                <IndexColumn Name="retry_at" />
+                <IndexColumn Name="lease_until" />
+            </Index>
+        </Table>
+        <Table Name="redmine_sync_lock">
+            <Column Name="lock_key" Type="VARCHAR" Required="true" Size="64" PrimaryKey="true" />
+            <Column Name="lease_token" Type="VARCHAR" Required="true" Size="64" />
+            <Column Name="lease_until" Type="INTEGER" Required="true" Default="0" />
+        </Table>
+    </DatabaseInstall>
+    <DatabaseUpgrade Type="post">
+        <TableCreate Name="redmine_sync_issue" Version="1.0.31">
+            <Column Name="issue_key" Type="VARCHAR" Required="true" Size="64" PrimaryKey="true" />
+            <Column Name="source_key" Type="VARCHAR" Required="true" Size="64" />
+            <Column Name="issue_id" Type="INTEGER" Required="true" Default="0" />
+            <Column Name="updated_on" Type="VARCHAR" Required="false" Size="40" />
+            <Column Name="issue_status" Type="VARCHAR" Required="false" Size="250" />
+            <Column Name="links_hash" Type="VARCHAR" Required="false" Size="64" />
+            <Column Name="generation" Type="INTEGER" Required="true" Default="0" />
+            <Column Name="round_generation" Type="INTEGER" Required="true" Default="1" />
+            <Column Name="done_generation" Type="INTEGER" Required="true" Default="0" />
+            <Column Name="after_ticket_id" Type="INTEGER" Required="true" Default="0" />
+            <Column Name="first_failed_ticket_id" Type="INTEGER" Required="true" Default="0" />
+            <Column Name="lease_token" Type="VARCHAR" Required="false" Size="64" />
+            <Column Name="lease_until" Type="INTEGER" Required="true" Default="0" />
+            <Column Name="retry_at" Type="INTEGER" Required="true" Default="0" />
+            <Column Name="served_at" Type="INTEGER" Required="true" Default="0" />
+            <Column Name="queued_at" Type="INTEGER" Required="true" Default="0" />
+            <Column Name="delivery_signature" Type="VARCHAR" Required="false" Size="64" />
+            <Column Name="observed_at" Type="INTEGER" Required="true" Default="0" />
+            <Column Name="probe_at" Type="INTEGER" Required="true" Default="0" />
+            <Column Name="last_error" Type="VARCHAR" Required="false" Size="2000" />
+            <Column Name="retry_count" Type="INTEGER" Required="true" Default="0" />
+            <Unique Name="redmine_sync_source_issue">
+                <UniqueColumn Name="source_key" />
+                <UniqueColumn Name="issue_id" />
+            </Unique>
+            <Index Name="redmine_sync_ready">
+                <IndexColumn Name="source_key" />
+                <IndexColumn Name="served_at" />
+                <IndexColumn Name="retry_at" />
+                <IndexColumn Name="lease_until" />
+            </Index>
+        </TableCreate>
+        <TableCreate Name="redmine_sync_lock" Version="1.0.31">
+            <Column Name="lock_key" Type="VARCHAR" Required="true" Size="64" PrimaryKey="true" />
+            <Column Name="lease_token" Type="VARCHAR" Required="true" Size="64" />
+            <Column Name="lease_until" Type="INTEGER" Required="true" Default="0" />
+        </TableCreate>
+    </DatabaseUpgrade>
+</SyncStoreSchema>

@@ -1,0 +1,14 @@
+{
+  "before": {
+    "cpu_seconds": 0.291361,
+    "wall_seconds": 0.339632987976074,
+    "peak_rss_kib": 103096,
+    "connections": 22
+  },
+  "installed": {
+    "cpu_seconds": 0.260335,
+    "wall_seconds": 0.300428867340088,
+    "peak_rss_kib": 87964,
+    "connections": 1
+  }
+}

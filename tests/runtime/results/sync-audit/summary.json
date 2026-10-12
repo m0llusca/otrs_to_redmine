@@ -1,0 +1,258 @@
+{
+  "shared_50": {
+    "current": {
+      "cpu_seconds": 0.32249,
+      "wall_seconds": 0.574231863021851,
+      "peak_rss_kib": 75688,
+      "sql_queries": 328,
+      "articles_after": 0,
+      "repeats": 3,
+      "history_add": 50,
+      "ticket_get": 150,
+      "html_to_ascii": 0,
+      "connections": 4,
+      "response_bytes": 344,
+      "http_requests": 4,
+      "last_check_field_writes": 50
+    },
+    "skip_check_timestamp": {
+      "cpu_seconds": 0.378216,
+      "wall_seconds": 0.441398143768311,
+      "peak_rss_kib": 74192,
+      "sql_queries": 126,
+      "articles_after": 0,
+      "repeats": 3,
+      "history_add": 0,
+      "ticket_get": 50,
+      "html_to_ascii": 0,
+      "connections": 4,
+      "response_bytes": 344,
+      "http_requests": 4,
+      "last_check_field_writes": 0
+    }
+  },
+  "unique_50": {
+    "current": {
+      "cpu_seconds": 0.705054,
+      "wall_seconds": 1.22909593582153,
+      "peak_rss_kib": 74160,
+      "sql_queries": 328,
+      "articles_after": 0,
+      "repeats": 3,
+      "history_add": 50,
+      "ticket_get": 150,
+      "html_to_ascii": 0,
+      "connections": 53,
+      "response_bytes": 6175,
+      "http_requests": 53,
+      "last_check_field_writes": 50
+    },
+    "scoped_http": {
+      "cpu_seconds": 0.418788,
+      "wall_seconds": 0.544356107711792,
+      "peak_rss_kib": 74228,
+      "sql_queries": 328,
+      "articles_after": 0,
+      "repeats": 3,
+      "history_add": 50,
+      "ticket_get": 150,
+      "html_to_ascii": 0,
+      "connections": 1,
+      "response_bytes": 6175,
+      "http_requests": 53,
+      "last_check_field_writes": 50
+    }
+  },
+  "ordinary_10": {
+    "current": {
+      "cpu_seconds": 3.050452,
+      "wall_seconds": 3.406574010849,
+      "peak_rss_kib": 84512,
+      "sql_queries": 272,
+      "articles_after": 0,
+      "repeats": 3,
+      "history_add": 40,
+      "ticket_get": 90,
+      "html_to_ascii": 10000,
+      "connections": 5,
+      "response_bytes": 982415,
+      "http_requests": 5,
+      "last_check_field_writes": 10
+    },
+    "skip_unused_journals": {
+      "cpu_seconds": 0.350502,
+      "wall_seconds": 0.483215093612671,
+      "peak_rss_kib": 84700,
+      "sql_queries": 272,
+      "articles_after": 0,
+      "repeats": 3,
+      "history_add": 40,
+      "ticket_get": 90,
+      "html_to_ascii": 0,
+      "connections": 5,
+      "response_bytes": 982415,
+      "http_requests": 5,
+      "last_check_field_writes": 10
+    },
+    "drop_json_copy": {
+      "cpu_seconds": 5.302204,
+      "wall_seconds": 6.14813685417175,
+      "peak_rss_kib": 83724,
+      "sql_queries": 272,
+      "articles_after": 0,
+      "repeats": 3,
+      "history_add": 40,
+      "ticket_get": 90,
+      "html_to_ascii": 10000,
+      "connections": 5,
+      "response_bytes": 982415,
+      "http_requests": 5,
+      "last_check_field_writes": 10
+    }
+  },
+  "failure_10": {
+    "current": {
+      "cpu_seconds": 0.446815,
+      "wall_seconds": 0.5383979082107545,
+      "peak_rss_kib": 79048.0,
+      "sql_queries": 48.0,
+      "articles_after": 0.0,
+      "repeats": 2,
+      "history_add": 0.0,
+      "ticket_get": 20.0,
+      "html_to_ascii": 10.0,
+      "connections": 15.0,
+      "response_bytes": 1175.0,
+      "http_requests": 15.0,
+      "last_check_field_writes": 0.0
+    },
+    "memoize_failed_download": {
+      "cpu_seconds": 0.4026995,
+      "wall_seconds": 0.6104164123535154,
+      "peak_rss_kib": 79002.0,
+      "sql_queries": 48.0,
+      "articles_after": 0.0,
+      "repeats": 2,
+      "history_add": 0.0,
+      "ticket_get": 20.0,
+      "html_to_ascii": 10.0,
+      "connections": 6.0,
+      "response_bytes": 833.0,
+      "http_requests": 6.0,
+      "last_check_field_writes": 0.0
+    }
+  },
+  "empty": {
+    "current": {
+      "cpu_seconds": 0.115231,
+      "wall_seconds": 0.206783771514893,
+      "peak_rss_kib": 68428,
+      "sql_queries": 2,
+      "articles_after": 0,
+      "repeats": 1,
+      "history_add": 0,
+      "ticket_get": 0,
+      "html_to_ascii": 0,
+      "connections": 3,
+      "response_bytes": 225,
+      "http_requests": 3,
+      "last_check_field_writes": 0
+    }
+  },
+  "shared_1000": {
+    "current": {
+      "cpu_seconds": 16.974694,
+      "wall_seconds": 42.3209748268127,
+      "peak_rss_kib": 80888,
+      "sql_queries": 6047,
+      "articles_after": 0,
+      "repeats": 1,
+      "history_add": 1000,
+      "ticket_get": 3000,
+      "html_to_ascii": 0,
+      "connections": 23,
+      "response_bytes": 2605,
+      "http_requests": 23,
+      "last_check_field_writes": 1000
+    },
+    "skip_check_timestamp": {
+      "cpu_seconds": 6.597436,
+      "wall_seconds": 9.99314188957214,
+      "peak_rss_kib": 88680,
+      "sql_queries": 2045,
+      "articles_after": 0,
+      "repeats": 1,
+      "history_add": 0,
+      "ticket_get": 1000,
+      "html_to_ascii": 0,
+      "connections": 23,
+      "response_bytes": 2605,
+      "http_requests": 23,
+      "last_check_field_writes": 0
+    }
+  },
+  "unique_1000": {
+    "current": {
+      "cpu_seconds": 13.553259,
+      "wall_seconds": 27.5084419250488,
+      "peak_rss_kib": 78944,
+      "sql_queries": 6047,
+      "articles_after": 0,
+      "repeats": 1,
+      "history_add": 1000,
+      "ticket_get": 3000,
+      "html_to_ascii": 0,
+      "connections": 1003,
+      "response_bytes": 119225,
+      "http_requests": 1003,
+      "last_check_field_writes": 1000
+    },
+    "scoped_http": {
+      "cpu_seconds": 18.136551,
+      "wall_seconds": 41.842376947403,
+      "peak_rss_kib": 82144,
+      "sql_queries": 6047,
+      "articles_after": 0,
+      "repeats": 1,
+      "history_add": 1000,
+      "ticket_get": 3000,
+      "html_to_ascii": 0,
+      "connections": 20,
+      "response_bytes": 119225,
+      "http_requests": 1003,
+      "last_check_field_writes": 1000
+    }
+  },
+  "mass_transition_1000": {
+    "current": {
+      "cpu_seconds": 146.438303,
+      "wall_seconds": 189.894593000412,
+      "peak_rss_kib": 96192,
+      "sql_queries": 54057,
+      "articles_after": 1000,
+      "repeats": 1,
+      "history_add": 7000,
+      "ticket_get": 18000,
+      "html_to_ascii": 1000,
+      "connections": 43,
+      "response_bytes": 9905,
+      "http_requests": 43,
+      "last_check_field_writes": 1000
+    },
+    "scoped_http": {
+      "cpu_seconds": 189.679772,
+      "wall_seconds": 255.983100175858,
+      "peak_rss_kib": 136912,
+      "sql_queries": 54057,
+      "articles_after": 1000,
+      "repeats": 1,
+      "history_add": 7000,
+      "ticket_get": 18000,
+      "html_to_ascii": 1000,
+      "connections": 20,
+      "response_bytes": 9905,
+      "http_requests": 43,
+      "last_check_field_writes": 1000
+    }
+  }
+}

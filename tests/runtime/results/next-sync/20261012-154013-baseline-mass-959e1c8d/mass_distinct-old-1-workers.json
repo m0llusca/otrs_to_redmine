@@ -1,0 +1,524 @@
+{
+  "workers": [
+    {
+      "cache_mode": "backend_only",
+      "cpu_seconds": 7.853002,
+      "cpu_system_seconds": 0.590329,
+      "cpu_user_seconds": 7.262673,
+      "events_flushed": 1,
+      "health": {
+        "LastSyncError": "",
+        "LastSyncOK": 1,
+        "SyncedCount": 50
+      },
+      "loaded_sync": "/bench/.state/release-1.0.30/Kernel/System/Redmine/Sync.pm",
+      "mode": "cron",
+      "peak_rss_kib": 115172,
+      "result": {
+        "Success": 1
+      },
+      "scenario": "mass_distinct",
+      "sql_queries": 7348,
+      "startup_peak_rss_kib": 56396,
+      "sync_sha256": "0cc33d1479fca6f19bc0d0e5fdc1604c91e5827bbfe6ea9513d8e02cf7ee26a9",
+      "variable_check": "//Kernel/System/VariableCheck.pm",
+      "variant": "old",
+      "wall_seconds": 8.53927397727966,
+      "host_process_wall_seconds": 8.948923208023189
+    },
+    {
+      "cache_mode": "backend_only",
+      "cpu_seconds": 8.27036,
+      "cpu_system_seconds": 0.624264,
+      "cpu_user_seconds": 7.646096,
+      "events_flushed": 1,
+      "health": {
+        "LastSyncError": "",
+        "LastSyncOK": 1,
+        "SyncedCount": 50
+      },
+      "loaded_sync": "/bench/.state/release-1.0.30/Kernel/System/Redmine/Sync.pm",
+      "mode": "cron",
+      "peak_rss_kib": 110628,
+      "result": {
+        "Success": 1
+      },
+      "scenario": "mass_distinct",
+      "sql_queries": 7301,
+      "startup_peak_rss_kib": 56304,
+      "sync_sha256": "0cc33d1479fca6f19bc0d0e5fdc1604c91e5827bbfe6ea9513d8e02cf7ee26a9",
+      "variable_check": "//Kernel/System/VariableCheck.pm",
+      "variant": "old",
+      "wall_seconds": 9.12600493431091,
+      "host_process_wall_seconds": 9.544743250007741
+    },
+    {
+      "cache_mode": "backend_only",
+      "cpu_seconds": 7.841585,
+      "cpu_system_seconds": 0.54408,
+      "cpu_user_seconds": 7.297505,
+      "events_flushed": 1,
+      "health": {
+        "LastSyncError": "",
+        "LastSyncOK": 1,
+        "SyncedCount": 50
+      },
+      "loaded_sync": "/bench/.state/release-1.0.30/Kernel/System/Redmine/Sync.pm",
+      "mode": "cron",
+      "peak_rss_kib": 110648,
+      "result": {
+        "Success": 1
+      },
+      "scenario": "mass_distinct",
+      "sql_queries": 7301,
+      "startup_peak_rss_kib": 56324,
+      "sync_sha256": "0cc33d1479fca6f19bc0d0e5fdc1604c91e5827bbfe6ea9513d8e02cf7ee26a9",
+      "variable_check": "//Kernel/System/VariableCheck.pm",
+      "variant": "old",
+      "wall_seconds": 8.48738193511963,
+      "host_process_wall_seconds": 8.895987625000998
+    },
+    {
+      "cache_mode": "backend_only",
+      "cpu_seconds": 7.863034,
+      "cpu_system_seconds": 0.554332,
+      "cpu_user_seconds": 7.308702,
+      "events_flushed": 1,
+      "health": {
+        "LastSyncError": "",
+        "LastSyncOK": 1,
+        "SyncedCount": 50
+      },
+      "loaded_sync": "/bench/.state/release-1.0.30/Kernel/System/Redmine/Sync.pm",
+      "mode": "cron",
+      "peak_rss_kib": 110644,
+      "result": {
+        "Success": 1
+      },
+      "scenario": "mass_distinct",
+      "sql_queries": 7301,
+      "startup_peak_rss_kib": 56224,
+      "sync_sha256": "0cc33d1479fca6f19bc0d0e5fdc1604c91e5827bbfe6ea9513d8e02cf7ee26a9",
+      "variable_check": "//Kernel/System/VariableCheck.pm",
+      "variant": "old",
+      "wall_seconds": 8.56994795799255,
+      "host_process_wall_seconds": 9.003233082999941
+    },
+    {
+      "cache_mode": "backend_only",
+      "cpu_seconds": 7.46762,
+      "cpu_system_seconds": 0.449426,
+      "cpu_user_seconds": 7.018194,
+      "events_flushed": 1,
+      "health": {
+        "LastSyncError": "",
+        "LastSyncOK": 1,
+        "SyncedCount": 50
+      },
+      "loaded_sync": "/bench/.state/release-1.0.30/Kernel/System/Redmine/Sync.pm",
+      "mode": "cron",
+      "peak_rss_kib": 111020,
+      "result": {
+        "Success": 1
+      },
+      "scenario": "mass_distinct",
+      "sql_queries": 7301,
+      "startup_peak_rss_kib": 57308,
+      "sync_sha256": "0cc33d1479fca6f19bc0d0e5fdc1604c91e5827bbfe6ea9513d8e02cf7ee26a9",
+      "variable_check": "//Kernel/System/VariableCheck.pm",
+      "variant": "old",
+      "wall_seconds": 8.13543796539307,
+      "host_process_wall_seconds": 8.524457708001137
+    },
+    {
+      "cache_mode": "backend_only",
+      "cpu_seconds": 7.393223,
+      "cpu_system_seconds": 0.463251,
+      "cpu_user_seconds": 6.929972,
+      "events_flushed": 1,
+      "health": {
+        "LastSyncError": "",
+        "LastSyncOK": 1,
+        "SyncedCount": 50
+      },
+      "loaded_sync": "/bench/.state/release-1.0.30/Kernel/System/Redmine/Sync.pm",
+      "mode": "cron",
+      "peak_rss_kib": 110628,
+      "result": {
+        "Success": 1
+      },
+      "scenario": "mass_distinct",
+      "sql_queries": 7301,
+      "startup_peak_rss_kib": 56176,
+      "sync_sha256": "0cc33d1479fca6f19bc0d0e5fdc1604c91e5827bbfe6ea9513d8e02cf7ee26a9",
+      "variable_check": "//Kernel/System/VariableCheck.pm",
+      "variant": "old",
+      "wall_seconds": 7.93338704109192,
+      "host_process_wall_seconds": 8.317107750015566
+    },
+    {
+      "cache_mode": "backend_only",
+      "cpu_seconds": 7.968472,
+      "cpu_system_seconds": 0.545743,
+      "cpu_user_seconds": 7.422729,
+      "events_flushed": 1,
+      "health": {
+        "LastSyncError": "",
+        "LastSyncOK": 1,
+        "SyncedCount": 50
+      },
+      "loaded_sync": "/bench/.state/release-1.0.30/Kernel/System/Redmine/Sync.pm",
+      "mode": "cron",
+      "peak_rss_kib": 110772,
+      "result": {
+        "Success": 1
+      },
+      "scenario": "mass_distinct",
+      "sql_queries": 7301,
+      "startup_peak_rss_kib": 56192,
+      "sync_sha256": "0cc33d1479fca6f19bc0d0e5fdc1604c91e5827bbfe6ea9513d8e02cf7ee26a9",
+      "variable_check": "//Kernel/System/VariableCheck.pm",
+      "variant": "old",
+      "wall_seconds": 8.65525794029236,
+      "host_process_wall_seconds": 9.047590791014954
+    },
+    {
+      "cache_mode": "backend_only",
+      "cpu_seconds": 8.413452,
+      "cpu_system_seconds": 0.562669,
+      "cpu_user_seconds": 7.850783,
+      "events_flushed": 1,
+      "health": {
+        "LastSyncError": "",
+        "LastSyncOK": 1,
+        "SyncedCount": 50
+      },
+      "loaded_sync": "/bench/.state/release-1.0.30/Kernel/System/Redmine/Sync.pm",
+      "mode": "cron",
+      "peak_rss_kib": 110564,
+      "result": {
+        "Success": 1
+      },
+      "scenario": "mass_distinct",
+      "sql_queries": 7301,
+      "startup_peak_rss_kib": 57144,
+      "sync_sha256": "0cc33d1479fca6f19bc0d0e5fdc1604c91e5827bbfe6ea9513d8e02cf7ee26a9",
+      "variable_check": "//Kernel/System/VariableCheck.pm",
+      "variant": "old",
+      "wall_seconds": 9.26514983177185,
+      "host_process_wall_seconds": 9.666118042019662
+    },
+    {
+      "cache_mode": "backend_only",
+      "cpu_seconds": 7.484095,
+      "cpu_system_seconds": 0.515227,
+      "cpu_user_seconds": 6.968868,
+      "events_flushed": 1,
+      "health": {
+        "LastSyncError": "",
+        "LastSyncOK": 1,
+        "SyncedCount": 50
+      },
+      "loaded_sync": "/bench/.state/release-1.0.30/Kernel/System/Redmine/Sync.pm",
+      "mode": "cron",
+      "peak_rss_kib": 110672,
+      "result": {
+        "Success": 1
+      },
+      "scenario": "mass_distinct",
+      "sql_queries": 7301,
+      "startup_peak_rss_kib": 57244,
+      "sync_sha256": "0cc33d1479fca6f19bc0d0e5fdc1604c91e5827bbfe6ea9513d8e02cf7ee26a9",
+      "variable_check": "//Kernel/System/VariableCheck.pm",
+      "variant": "old",
+      "wall_seconds": 8.0768301486969,
+      "host_process_wall_seconds": 8.496703957993304
+    },
+    {
+      "cache_mode": "backend_only",
+      "cpu_seconds": 7.583968,
+      "cpu_system_seconds": 0.477262,
+      "cpu_user_seconds": 7.106706,
+      "events_flushed": 1,
+      "health": {
+        "LastSyncError": "",
+        "LastSyncOK": 1,
+        "SyncedCount": 50
+      },
+      "loaded_sync": "/bench/.state/release-1.0.30/Kernel/System/Redmine/Sync.pm",
+      "mode": "cron",
+      "peak_rss_kib": 110896,
+      "result": {
+        "Success": 1
+      },
+      "scenario": "mass_distinct",
+      "sql_queries": 7301,
+      "startup_peak_rss_kib": 57456,
+      "sync_sha256": "0cc33d1479fca6f19bc0d0e5fdc1604c91e5827bbfe6ea9513d8e02cf7ee26a9",
+      "variable_check": "//Kernel/System/VariableCheck.pm",
+      "variant": "old",
+      "wall_seconds": 8.18300104141235,
+      "host_process_wall_seconds": 8.590293083019787
+    },
+    {
+      "cache_mode": "backend_only",
+      "cpu_seconds": 12.077117,
+      "cpu_system_seconds": 1.240184,
+      "cpu_user_seconds": 10.836933,
+      "events_flushed": 1,
+      "health": {
+        "LastSyncError": "",
+        "LastSyncOK": 1,
+        "SyncedCount": 50
+      },
+      "loaded_sync": "/bench/.state/release-1.0.30/Kernel/System/Redmine/Sync.pm",
+      "mode": "cron",
+      "peak_rss_kib": 110640,
+      "result": {
+        "Success": 1
+      },
+      "scenario": "mass_distinct",
+      "sql_queries": 7301,
+      "startup_peak_rss_kib": 56316,
+      "sync_sha256": "0cc33d1479fca6f19bc0d0e5fdc1604c91e5827bbfe6ea9513d8e02cf7ee26a9",
+      "variable_check": "//Kernel/System/VariableCheck.pm",
+      "variant": "old",
+      "wall_seconds": 13.9009790420532,
+      "host_process_wall_seconds": 14.57230558298761
+    },
+    {
+      "cache_mode": "backend_only",
+      "cpu_seconds": 12.143399,
+      "cpu_system_seconds": 1.125287,
+      "cpu_user_seconds": 11.018112,
+      "events_flushed": 1,
+      "health": {
+        "LastSyncError": "",
+        "LastSyncOK": 1,
+        "SyncedCount": 50
+      },
+      "loaded_sync": "/bench/.state/release-1.0.30/Kernel/System/Redmine/Sync.pm",
+      "mode": "cron",
+      "peak_rss_kib": 110804,
+      "result": {
+        "Success": 1
+      },
+      "scenario": "mass_distinct",
+      "sql_queries": 7301,
+      "startup_peak_rss_kib": 56512,
+      "sync_sha256": "0cc33d1479fca6f19bc0d0e5fdc1604c91e5827bbfe6ea9513d8e02cf7ee26a9",
+      "variable_check": "//Kernel/System/VariableCheck.pm",
+      "variant": "old",
+      "wall_seconds": 14.0854439735413,
+      "host_process_wall_seconds": 15.102840125007788
+    },
+    {
+      "cache_mode": "backend_only",
+      "cpu_seconds": 8.336154,
+      "cpu_system_seconds": 0.565061,
+      "cpu_user_seconds": 7.771093,
+      "events_flushed": 1,
+      "health": {
+        "LastSyncError": "",
+        "LastSyncOK": 1,
+        "SyncedCount": 50
+      },
+      "loaded_sync": "/bench/.state/release-1.0.30/Kernel/System/Redmine/Sync.pm",
+      "mode": "cron",
+      "peak_rss_kib": 111060,
+      "result": {
+        "Success": 1
+      },
+      "scenario": "mass_distinct",
+      "sql_queries": 7301,
+      "startup_peak_rss_kib": 56444,
+      "sync_sha256": "0cc33d1479fca6f19bc0d0e5fdc1604c91e5827bbfe6ea9513d8e02cf7ee26a9",
+      "variable_check": "//Kernel/System/VariableCheck.pm",
+      "variant": "old",
+      "wall_seconds": 9.17330598831177,
+      "host_process_wall_seconds": 9.66196666599717
+    },
+    {
+      "cache_mode": "backend_only",
+      "cpu_seconds": 12.965348,
+      "cpu_system_seconds": 1.395678,
+      "cpu_user_seconds": 11.56967,
+      "events_flushed": 1,
+      "health": {
+        "LastSyncError": "",
+        "LastSyncOK": 1,
+        "SyncedCount": 50
+      },
+      "loaded_sync": "/bench/.state/release-1.0.30/Kernel/System/Redmine/Sync.pm",
+      "mode": "cron",
+      "peak_rss_kib": 110776,
+      "result": {
+        "Success": 1
+      },
+      "scenario": "mass_distinct",
+      "sql_queries": 7301,
+      "startup_peak_rss_kib": 57476,
+      "sync_sha256": "0cc33d1479fca6f19bc0d0e5fdc1604c91e5827bbfe6ea9513d8e02cf7ee26a9",
+      "variable_check": "//Kernel/System/VariableCheck.pm",
+      "variant": "old",
+      "wall_seconds": 18.2225308418274,
+      "host_process_wall_seconds": 18.72543441702146
+    },
+    {
+      "cache_mode": "backend_only",
+      "cpu_seconds": 12.928078,
+      "cpu_system_seconds": 1.173427,
+      "cpu_user_seconds": 11.754651,
+      "events_flushed": 1,
+      "health": {
+        "LastSyncError": "",
+        "LastSyncOK": 1,
+        "SyncedCount": 50
+      },
+      "loaded_sync": "/bench/.state/release-1.0.30/Kernel/System/Redmine/Sync.pm",
+      "mode": "cron",
+      "peak_rss_kib": 110968,
+      "result": {
+        "Success": 1
+      },
+      "scenario": "mass_distinct",
+      "sql_queries": 7301,
+      "startup_peak_rss_kib": 57276,
+      "sync_sha256": "0cc33d1479fca6f19bc0d0e5fdc1604c91e5827bbfe6ea9513d8e02cf7ee26a9",
+      "variable_check": "//Kernel/System/VariableCheck.pm",
+      "variant": "old",
+      "wall_seconds": 15.2861099243164,
+      "host_process_wall_seconds": 15.972102833009558
+    },
+    {
+      "cache_mode": "backend_only",
+      "cpu_seconds": 13.527741,
+      "cpu_system_seconds": 1.206025,
+      "cpu_user_seconds": 12.321716,
+      "events_flushed": 1,
+      "health": {
+        "LastSyncError": "",
+        "LastSyncOK": 1,
+        "SyncedCount": 50
+      },
+      "loaded_sync": "/bench/.state/release-1.0.30/Kernel/System/Redmine/Sync.pm",
+      "mode": "cron",
+      "peak_rss_kib": 110716,
+      "result": {
+        "Success": 1
+      },
+      "scenario": "mass_distinct",
+      "sql_queries": 7301,
+      "startup_peak_rss_kib": 56392,
+      "sync_sha256": "0cc33d1479fca6f19bc0d0e5fdc1604c91e5827bbfe6ea9513d8e02cf7ee26a9",
+      "variable_check": "//Kernel/System/VariableCheck.pm",
+      "variant": "old",
+      "wall_seconds": 16.2825031280518,
+      "host_process_wall_seconds": 17.311864916991908
+    },
+    {
+      "cache_mode": "backend_only",
+      "cpu_seconds": 9.020194,
+      "cpu_system_seconds": 0.70132,
+      "cpu_user_seconds": 8.318874,
+      "events_flushed": 1,
+      "health": {
+        "LastSyncError": "",
+        "LastSyncOK": 1,
+        "SyncedCount": 50
+      },
+      "loaded_sync": "/bench/.state/release-1.0.30/Kernel/System/Redmine/Sync.pm",
+      "mode": "cron",
+      "peak_rss_kib": 110696,
+      "result": {
+        "Success": 1
+      },
+      "scenario": "mass_distinct",
+      "sql_queries": 7301,
+      "startup_peak_rss_kib": 56372,
+      "sync_sha256": "0cc33d1479fca6f19bc0d0e5fdc1604c91e5827bbfe6ea9513d8e02cf7ee26a9",
+      "variable_check": "//Kernel/System/VariableCheck.pm",
+      "variant": "old",
+      "wall_seconds": 9.94831013679504,
+      "host_process_wall_seconds": 10.466970584006049
+    },
+    {
+      "cache_mode": "backend_only",
+      "cpu_seconds": 7.743771,
+      "cpu_system_seconds": 0.489616,
+      "cpu_user_seconds": 7.254155,
+      "events_flushed": 1,
+      "health": {
+        "LastSyncError": "",
+        "LastSyncOK": 1,
+        "SyncedCount": 50
+      },
+      "loaded_sync": "/bench/.state/release-1.0.30/Kernel/System/Redmine/Sync.pm",
+      "mode": "cron",
+      "peak_rss_kib": 110676,
+      "result": {
+        "Success": 1
+      },
+      "scenario": "mass_distinct",
+      "sql_queries": 7301,
+      "startup_peak_rss_kib": 56224,
+      "sync_sha256": "0cc33d1479fca6f19bc0d0e5fdc1604c91e5827bbfe6ea9513d8e02cf7ee26a9",
+      "variable_check": "//Kernel/System/VariableCheck.pm",
+      "variant": "old",
+      "wall_seconds": 8.37561082839966,
+      "host_process_wall_seconds": 8.804794625000795
+    },
+    {
+      "cache_mode": "backend_only",
+      "cpu_seconds": 25.196222,
+      "cpu_system_seconds": 3.153674,
+      "cpu_user_seconds": 22.042548,
+      "events_flushed": 1,
+      "health": {
+        "LastSyncError": "",
+        "LastSyncOK": 1,
+        "SyncedCount": 50
+      },
+      "loaded_sync": "/bench/.state/release-1.0.30/Kernel/System/Redmine/Sync.pm",
+      "mode": "cron",
+      "peak_rss_kib": 110772,
+      "result": {
+        "Success": 1
+      },
+      "scenario": "mass_distinct",
+      "sql_queries": 7301,
+      "startup_peak_rss_kib": 57236,
+      "sync_sha256": "0cc33d1479fca6f19bc0d0e5fdc1604c91e5827bbfe6ea9513d8e02cf7ee26a9",
+      "variable_check": "//Kernel/System/VariableCheck.pm",
+      "variant": "old",
+      "wall_seconds": 32.4552381038666,
+      "host_process_wall_seconds": 32.9401609999768
+    },
+    {
+      "cache_mode": "backend_only",
+      "cpu_seconds": 7.487516,
+      "cpu_system_seconds": 0.491085,
+      "cpu_user_seconds": 6.996431,
+      "events_flushed": 1,
+      "health": {
+        "LastSyncError": "",
+        "LastSyncOK": 1,
+        "SyncedCount": 50
+      },
+      "loaded_sync": "/bench/.state/release-1.0.30/Kernel/System/Redmine/Sync.pm",
+      "mode": "cron",
+      "peak_rss_kib": 110660,
+      "result": {
+        "Success": 1
+      },
+      "scenario": "mass_distinct",
+      "sql_queries": 7301,
+      "startup_peak_rss_kib": 56208,
+      "sync_sha256": "0cc33d1479fca6f19bc0d0e5fdc1604c91e5827bbfe6ea9513d8e02cf7ee26a9",
+      "variable_check": "//Kernel/System/VariableCheck.pm",
+      "variant": "old",
+      "wall_seconds": 8.07294893264771,
+      "host_process_wall_seconds": 8.593722833000356
+    }
+  ]
+}

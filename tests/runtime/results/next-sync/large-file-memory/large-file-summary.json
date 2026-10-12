@@ -1,0 +1,40 @@
+{
+  "old": {
+    "cpu_seconds": 2.1291505,
+    "wall_seconds": 2.5683856010437003,
+    "peak_rss_kib": 110616.0,
+    "sql_queries": 1689.0,
+    "http_requests": 6.0,
+    "response_bytes": 4195253.0,
+    "connections": 6.0,
+    "worker_count": 1.0,
+    "repeats": 2,
+    "cpu_range": [
+      1.984926,
+      2.273375
+    ],
+    "peak_rss_range_kib": [
+      110220,
+      111012
+    ]
+  },
+  "new": {
+    "cpu_seconds": 1.9630885,
+    "wall_seconds": 2.2955493927001944,
+    "peak_rss_kib": 111296.0,
+    "sql_queries": 1685.0,
+    "http_requests": 4.0,
+    "response_bytes": 4195201.0,
+    "connections": 4.0,
+    "worker_count": 2.0,
+    "repeats": 2,
+    "cpu_range": [
+      1.947954,
+      1.978223
+    ],
+    "peak_rss_range_kib": [
+      110900,
+      111692
+    ]
+  }
+}

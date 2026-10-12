@@ -1,0 +1,19 @@
+{
+  "mariadb": "mariadbd  Ver 10.11.19-MariaDB-ubu2204 for debian-linux-gnu on aarch64 (mariadb.org binary distribution)",
+  "otrs_release": "PRODUCT = OTRS\nVERSION = 6.0.10\nBUILDDATE = Tue Jul 24 17:47:19 CEST 2018\nBUILDHOST = otrsbuild.otrs.com",
+  "host_arch": "arm64",
+  "docker_info": {
+    "Architecture": "aarch64",
+    "NCPU": 4,
+    "MemTotal": 3052277760,
+    "KernelVersion": "7.0.14-linuxkit",
+    "OperatingSystem": "Docker Desktop",
+    "ServerVersion": "29.8.2"
+  },
+  "isolation": true,
+  "worker_limits": {
+    "Memory": 1073741824,
+    "NanoCpus": 1000000000,
+    "PortBindings": {}
+  }
+}

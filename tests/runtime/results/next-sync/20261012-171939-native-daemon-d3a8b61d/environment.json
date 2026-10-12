@@ -1,0 +1,19 @@
+{
+  "seed": "/Users/dubrsky/Projects/OTRSRedmineBridge/tests/runtime/.state/next-sync-seed.sql",
+  "seed_sha256": "f0ce33ce373b209f2f8965ebf1ef7cfddfc0050887d85e4d49c89c6ed4e9e546",
+  "old_version": "1.0.30",
+  "old_sync_sha256": "0cc33d1479fca6f19bc0d0e5fdc1604c91e5827bbfe6ea9513d8e02cf7ee26a9",
+  "new_version": "1.0.31",
+  "new_sync_sha256": "82640402d7475e4d27169c1ba93566d47f3cad12a0cd9d7961d344e5ddf22f57",
+  "targets": {
+    "otrs": "bridge-perf-local-otrs-1",
+    "db": "bridge-perf-local-mariadb-1",
+    "fake_peer": "bridge-perf-local-redmine-1"
+  },
+  "measurement": "actual native daemon supervisor and SchedulerTaskWorker forks; /proc RSS/PSS sampling includes persistent poller, managers and delivery children",
+  "aggregation": "peak process RSS by role; peak whole-tree RSS/PSS; idle median poller and whole-tree footprint; sampled CPU is lower-bound only",
+  "validation": "real queued native fork delivery and post-drain core article/checkpoint verification",
+  "database": "actual OTRS MariaDB connection SHOW SESSION Questions includes raw DBI store queries",
+  "cache": "process memory disabled, shared backend enabled; cache cleared once after each SQL restoration",
+  "native_only": true
+}

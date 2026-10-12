@@ -1,0 +1,7 @@
+{
+  "test_containers_remaining": false,
+  "test_volumes_remaining": false,
+  "temporary_credentials_removed": true,
+  "sql_fixture_dump_removed": true,
+  "existing_user_containers_and_volumes_touched": false
+}

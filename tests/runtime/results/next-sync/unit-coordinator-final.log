@@ -1,0 +1,4 @@
+tests/coordinator.t .. ok
+All tests successful.
+Files=1, Tests=27,  7 wallclock secs ( 0.01 usr  0.01 sys +  1.46 cusr  4.29 csys =  5.77 CPU)
+Result: PASS

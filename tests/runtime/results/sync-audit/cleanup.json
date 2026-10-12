@@ -1,0 +1,15 @@
+{
+  "project": "bridge-perf-local",
+  "removed_resources": {
+    "container": 3,
+    "volume": 1,
+    "network": 1
+  },
+  "other_resources_preserved": true,
+  "removed_private_files": [
+    "tests/runtime/.env",
+    "tests/runtime/.state/seed.sql"
+  ],
+  "package_and_18_source_payloads_unchanged": true,
+  "no_server_deployment": true
+}

@@ -1,0 +1,8 @@
+tests/store.t ........ ok
+tests/coordinator.t .. ok
+tests/sync.t ......... ok
+tests/attachments.t .. ok
+tests/http.t ......... ok
+All tests successful.
+Files=5, Tests=104, 11 wallclock secs ( 0.02 usr  0.01 sys +  2.57 cusr  6.31 csys =  8.91 CPU)
+Result: PASS
