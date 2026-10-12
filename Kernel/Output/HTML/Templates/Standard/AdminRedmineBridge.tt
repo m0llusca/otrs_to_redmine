@@ -153,9 +153,9 @@
                 <p class="FieldExplanation" style="color:#a00;">[% Translate("Last sync error") | html %]: [% Data.LastSyncError | html %]</p>
 [% END %]
 [% ELSE %]
-                <p class="FieldExplanation">[% Translate("No sync health data yet. Daemon writes it after CronSync.") | html %]</p>
+                <p class="FieldExplanation">[% Translate("No sync health data yet. Daemon writes it after scanning or delivery.") | html %]</p>
 [% END %]
-                <p class="FieldExplanation">[% Translate("OTRS Daemon must be running for Redmine → OTRS sync (every 5 minutes).") | html %]</p>
+                <p class="FieldExplanation">[% Translate("OTRS Daemon must be running for Redmine → OTRS synchronization.") | html %]</p>
             </div>
         </div>
 
@@ -337,7 +337,7 @@
                         <label for="InboundSync">[% Translate("Inbound sync (Redmine → OTRS)") | html %]:</label>
                         <div class="Field">
                             <input type="checkbox" name="InboundSync" id="InboundSync" value="1" [% IF Data.InboundSync %]checked="checked"[% END %]/>
-                            <p class="FieldExplanation">[% Translate("Daemon polls linked issues every 5 minutes for status, comments and attachments. Requires OTRS Daemon running.") | html %]</p>
+                            <p class="FieldExplanation">[% Translate("Daemon detects linked issue changes and delivers status notes in bounded batches. Requires OTRS Daemon running.") | html %]</p>
                         </div>
                         <div class="Clear"></div>
 

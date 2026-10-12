@@ -17,6 +17,7 @@ use Kernel::System::Redmine::Diagnostics;
 use Kernel::System::Redmine::Catalog;
 use Kernel::System::Redmine::Issue;
 use Kernel::System::Redmine::Sync;
+use Kernel::System::Redmine::SyncCoordinator;
 use Kernel::System::Redmine::TicketDF;
 
 use parent qw(
@@ -25,18 +26,22 @@ use parent qw(
     Kernel::System::Redmine::Catalog
     Kernel::System::Redmine::Issue
     Kernel::System::Redmine::Sync
+    Kernel::System::Redmine::SyncCoordinator
     Kernel::System::Redmine::TicketDF
 );
 
 our @ObjectDependencies = (
     'Kernel::Config',
     'Kernel::System::Cache',
+    'Kernel::System::DB',
     'Kernel::System::DynamicField',
     'Kernel::System::DynamicField::Backend',
     'Kernel::System::Encode',
     'Kernel::System::HTMLUtils',
     'Kernel::System::JSON',
     'Kernel::System::Log',
+    'Kernel::System::Redmine::SyncStore',
+    'Kernel::System::Daemon::SchedulerDB',
     'Kernel::System::SysConfig',
     'Kernel::System::Ticket',
     'Kernel::System::Ticket::Article',

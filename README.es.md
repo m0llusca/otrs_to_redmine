@@ -8,7 +8,7 @@
 
 Puente OTRS 6 CE / Znuny 7 ↔ Redmine: escalar o vincular tickets; las notas de estado de Redmine vuelven a OTRS.
 
-[![Version](https://img.shields.io/badge/version-1.0.29-0B5FFF)](./OTRSRedmineBridge.sopm)
+[![Version](https://img.shields.io/badge/version-1.0.31-0B5FFF)](./OTRSRedmineBridge.sopm)
 [![License: GPL v3](https://img.shields.io/badge/license-GPL--3.0-green)](./LICENSE)
 [![OTRS](https://img.shields.io/badge/OTRS-6.0-informational)](https://community.znuny.org/)
 [![Znuny](https://img.shields.io/badge/Znuny-7.x-informational)](https://www.znuny.org/)
@@ -65,3 +65,9 @@ Kernel/System/Redmine/Diagnostics.pm  comprobaciones Admin
 ## Licencia
 
 [GNU GPL v3](./LICENSE).
+
+## Sincronización en 1.0.31
+
+Solo cambia la extensión OTRS. Se usa la API REST estándar de Redmine sin plugins ni webhooks. `DaemonModules###RedmineBridgePoller` consulta tareas vinculadas únicas en lotes de hasta 100 ID. `Redmine::SyncPollInterval` define la pausa entre recorridos (5 segundos por defecto), no el plazo de entrega. Mil tareas distintas requieren al menos diez peticiones por recorrido; mil tickets de una misma tarea requieren una. Una detección más rápida puede aumentar la frecuencia de peticiones respecto al cron anterior de cinco minutos.
+
+[Details](docs/es/DEPLOY.md).

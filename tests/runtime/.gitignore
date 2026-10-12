@@ -1,0 +1,11 @@
+.env
+.state/
+__pycache__/
+
+# Publish final measurements and their baselines; retain intermediate runs locally.
+results/next-sync/20*/
+!results/next-sync/20261012-152650-benchmark-42f3e1f3/
+!results/next-sync/20261012-154013-baseline-mass-959e1c8d/
+!results/next-sync/20261012-170633-verify-088d0b2c/
+!results/next-sync/20261012-170957-final-package-94bfde4f/
+!results/next-sync/20261012-171939-native-daemon-d3a8b61d/

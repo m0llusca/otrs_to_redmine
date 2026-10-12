@@ -8,7 +8,7 @@
 
 Мост OTRS 6 CE / Znuny 7 ↔ Redmine: эскалация или привязка тикетов; заметки Redmine при смене статуса приходят в OTRS.
 
-[![Version](https://img.shields.io/badge/version-1.0.29-0B5FFF)](./OTRSRedmineBridge.sopm)
+[![Version](https://img.shields.io/badge/version-1.0.31-0B5FFF)](./OTRSRedmineBridge.sopm)
 [![License: GPL v3](https://img.shields.io/badge/license-GPL--3.0-green)](./LICENSE)
 [![OTRS](https://img.shields.io/badge/OTRS-6.0-informational)](https://community.znuny.org/)
 [![Znuny](https://img.shields.io/badge/Znuny-7.x-informational)](https://www.znuny.org/)
@@ -65,3 +65,9 @@ Kernel/System/Redmine/Diagnostics.pm  проверки в Admin
 ## Лицензия
 
 [GNU GPL v3](./LICENSE).
+
+## Синхронизация 1.0.31
+
+Меняется только расширение OTRS: стандартный REST API Redmine используется без webhook и плагинов Redmine. Новый модуль `DaemonModules###RedmineBridgePoller` опрашивает уникальные связанные задачи пакетами до 100 ID. `Redmine::SyncPollInterval` задаёт паузу между проходами (по умолчанию 5 секунд). Это не гарантия мгновенной доставки: HTTP, очередь и массовая рассылка занимают дополнительное время. При 1000 различных задачах один проход требует не менее 10 запросов списка; при 1000 тикетов на одну задачу — одного. Уменьшение задержки относительно старого пятиминутного cron может увеличить частоту запросов Redmine.
+
+[Details](docs/ru/DEPLOY.md).

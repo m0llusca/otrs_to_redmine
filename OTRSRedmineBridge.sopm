@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <otrs_package version="1.0">
     <Name>OTRSRedmineBridge</Name>
-    <Version>1.0.29</Version>
+    <Version>1.0.31</Version>
     <Framework>7.3.x</Framework>
     <Framework>7.2.x</Framework>
     <Framework>7.1.x</Framework>
@@ -13,6 +13,8 @@
     <License>GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007</License>
     <Description Lang="en">OTRS CE ↔ Redmine bridge: escalate/link, Redmine status notes into OTRS, Admin health, hardened HTTP.</Description>
     <Description Lang="ru">Мост OTRS CE ↔ Redmine: эскалация/привязка, заметки Redmine при смене статуса в OTRS, Admin health, hardened HTTP.</Description>
+    <ChangeLog Version="1.0.31" Date="2026-10-12">Batch issue polling, durable bounded delivery, shared backoff and crash-safe inbound checkpoints; no Redmine changes required.</ChangeLog>
+    <ChangeLog Version="1.0.30" Date="2026-10-12">Reduce sync queries and attachment memory; reuse operation-scoped HTTP connections; preserve state mapping and retry checkpoints on file errors; snapshot form uploads before create.</ChangeLog>
     <ChangeLog Version="1.0.29" Date="2026-09-11">Link/unlink Redmine note is only ticket link + agent (no «Служебная запись моста» stamp).</ChangeLog>
     <ChangeLog Version="1.0.28" Date="2026-09-11">Do not write link/unlink journal comments in Redmine (no «Служебная запись моста»).</ChangeLog>
     <ChangeLog Version="1.0.27" Date="2026-09-11">Stop copying OTRS articles to Redmine; keep create/link and Redmine→OTRS notes on StatusSync |note.</ChangeLog>
@@ -65,7 +67,93 @@
         <File Permission="644" Location="Kernel/System/Redmine/Sync.pm"/>
         <File Permission="644" Location="Kernel/System/Redmine/TicketDF.pm"/>
         <File Permission="644" Location="var/packagesetup/OTRSRedmineBridge.pm"/>
+        <File Permission="644" Location="Kernel/System/Redmine/SyncStore.pm"/>
+        <File Permission="644" Location="Kernel/System/Redmine/SyncCoordinator.pm"/>
+        <File Permission="644" Location="Kernel/System/Daemon/DaemonModules/RedmineBridgePoller.pm"/>
     </Filelist>
+
+
+
+    <DatabaseInstall Type="post">
+        <Table Name="redmine_sync_issue">
+            <Column Name="issue_key" Type="VARCHAR" Required="true" Size="64" PrimaryKey="true" />
+            <Column Name="source_key" Type="VARCHAR" Required="true" Size="64" />
+            <Column Name="issue_id" Type="INTEGER" Required="true" Default="0" />
+            <Column Name="updated_on" Type="VARCHAR" Required="false" Size="40" />
+            <Column Name="issue_status" Type="VARCHAR" Required="false" Size="250" />
+            <Column Name="links_hash" Type="VARCHAR" Required="false" Size="64" />
+            <Column Name="generation" Type="INTEGER" Required="true" Default="0" />
+            <Column Name="round_generation" Type="INTEGER" Required="true" Default="1" />
+            <Column Name="done_generation" Type="INTEGER" Required="true" Default="0" />
+            <Column Name="after_ticket_id" Type="INTEGER" Required="true" Default="0" />
+            <Column Name="first_failed_ticket_id" Type="INTEGER" Required="true" Default="0" />
+            <Column Name="lease_token" Type="VARCHAR" Required="false" Size="64" />
+            <Column Name="lease_until" Type="INTEGER" Required="true" Default="0" />
+            <Column Name="retry_at" Type="INTEGER" Required="true" Default="0" />
+            <Column Name="served_at" Type="INTEGER" Required="true" Default="0" />
+            <Column Name="queued_at" Type="INTEGER" Required="true" Default="0" />
+            <Column Name="delivery_signature" Type="VARCHAR" Required="false" Size="64" />
+            <Column Name="observed_at" Type="INTEGER" Required="true" Default="0" />
+            <Column Name="probe_at" Type="INTEGER" Required="true" Default="0" />
+            <Column Name="last_error" Type="VARCHAR" Required="false" Size="2000" />
+            <Column Name="retry_count" Type="INTEGER" Required="true" Default="0" />
+            <Unique Name="redmine_sync_source_issue">
+                <UniqueColumn Name="source_key" />
+                <UniqueColumn Name="issue_id" />
+            </Unique>
+            <Index Name="redmine_sync_ready">
+                <IndexColumn Name="source_key" />
+                <IndexColumn Name="served_at" />
+                <IndexColumn Name="retry_at" />
+                <IndexColumn Name="lease_until" />
+            </Index>
+        </Table>
+        <Table Name="redmine_sync_lock">
+            <Column Name="lock_key" Type="VARCHAR" Required="true" Size="64" PrimaryKey="true" />
+            <Column Name="lease_token" Type="VARCHAR" Required="true" Size="64" />
+            <Column Name="lease_until" Type="INTEGER" Required="true" Default="0" />
+        </Table>
+    </DatabaseInstall>
+    <DatabaseUpgrade Type="post">
+        <TableCreate Name="redmine_sync_issue" Version="1.0.31">
+            <Column Name="issue_key" Type="VARCHAR" Required="true" Size="64" PrimaryKey="true" />
+            <Column Name="source_key" Type="VARCHAR" Required="true" Size="64" />
+            <Column Name="issue_id" Type="INTEGER" Required="true" Default="0" />
+            <Column Name="updated_on" Type="VARCHAR" Required="false" Size="40" />
+            <Column Name="issue_status" Type="VARCHAR" Required="false" Size="250" />
+            <Column Name="links_hash" Type="VARCHAR" Required="false" Size="64" />
+            <Column Name="generation" Type="INTEGER" Required="true" Default="0" />
+            <Column Name="round_generation" Type="INTEGER" Required="true" Default="1" />
+            <Column Name="done_generation" Type="INTEGER" Required="true" Default="0" />
+            <Column Name="after_ticket_id" Type="INTEGER" Required="true" Default="0" />
+            <Column Name="first_failed_ticket_id" Type="INTEGER" Required="true" Default="0" />
+            <Column Name="lease_token" Type="VARCHAR" Required="false" Size="64" />
+            <Column Name="lease_until" Type="INTEGER" Required="true" Default="0" />
+            <Column Name="retry_at" Type="INTEGER" Required="true" Default="0" />
+            <Column Name="served_at" Type="INTEGER" Required="true" Default="0" />
+            <Column Name="queued_at" Type="INTEGER" Required="true" Default="0" />
+            <Column Name="delivery_signature" Type="VARCHAR" Required="false" Size="64" />
+            <Column Name="observed_at" Type="INTEGER" Required="true" Default="0" />
+            <Column Name="probe_at" Type="INTEGER" Required="true" Default="0" />
+            <Column Name="last_error" Type="VARCHAR" Required="false" Size="2000" />
+            <Column Name="retry_count" Type="INTEGER" Required="true" Default="0" />
+            <Unique Name="redmine_sync_source_issue">
+                <UniqueColumn Name="source_key" />
+                <UniqueColumn Name="issue_id" />
+            </Unique>
+            <Index Name="redmine_sync_ready">
+                <IndexColumn Name="source_key" />
+                <IndexColumn Name="served_at" />
+                <IndexColumn Name="retry_at" />
+                <IndexColumn Name="lease_until" />
+            </Index>
+        </TableCreate>
+        <TableCreate Name="redmine_sync_lock" Version="1.0.31">
+            <Column Name="lock_key" Type="VARCHAR" Required="true" Size="64" PrimaryKey="true" />
+            <Column Name="lease_token" Type="VARCHAR" Required="true" Size="64" />
+            <Column Name="lease_until" Type="INTEGER" Required="true" Default="0" />
+        </TableCreate>
+    </DatabaseUpgrade>
     <CodeInstall Type="post"><![CDATA[
         my $Setup = $Kernel::OM->Get('var::packagesetup::OTRSRedmineBridge');
         $Setup->CodeInstall();

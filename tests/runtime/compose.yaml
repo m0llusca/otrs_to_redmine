@@ -1,0 +1,35 @@
+name: bridge-perf-local
+services:
+  mariadb:
+    image: mariadb:10.11
+    env_file: .env
+    command: ["--innodb-buffer-pool-size=64M", "--max-connections=40", "--max-allowed-packet=64M"]
+    mem_limit: 384m
+    cpus: 0.75
+    volumes:
+      - database:/var/lib/mysql
+    networks: [isolated]
+  redmine:
+    image: node:24-bookworm-slim
+    command: ["node", "/bench/redmine.mjs"]
+    mem_limit: 128m
+    cpus: 0.5
+    volumes:
+      - ./:/bench:ro
+    networks: [isolated]
+  otrs:
+    image: juanluisbaptiste/otrs:6.0.10
+    platform: linux/amd64
+    env_file: .env
+    entrypoint: ["/bin/bash", "/bench/init.sh"]
+    mem_limit: 1g
+    cpus: 1.0
+    depends_on: [mariadb, redmine]
+    volumes:
+      - ./:/bench:ro
+    networks: [isolated]
+networks:
+  isolated:
+    internal: true
+volumes:
+  database:

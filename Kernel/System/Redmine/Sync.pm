@@ -11,6 +11,9 @@ package Kernel::System::Redmine::Sync;
 use strict;
 use warnings;
 use utf8;
+use File::Temp ();
+use Digest::SHA qw(sha256_hex);
+use Scalar::Util qw(refaddr);
 
 # Methods are mixed into Kernel::System::Redmine via use parent.
 # $Self is the Redmine object. Use Kernel::OM normally.
@@ -21,6 +24,8 @@ use Kernel::System::VariableCheck qw(:all);
 our @ObjectDependencies = (
     'Kernel::Config',
     'Kernel::System::Cache',
+    'Kernel::System::DB',
+    'Kernel::System::DynamicField',
     'Kernel::System::HTMLUtils',
     'Kernel::System::JSON',
     'Kernel::System::Log',
@@ -33,6 +38,123 @@ our @ObjectDependencies = (
 # ---------------------------------------------------------------------------
 
 sub SyncTicketFromRedmine {
+    my ( $Self, %Param ) = @_;
+    return ( Success => 0, Error => 'Need TicketID' ) if !$Param{TicketID};
+    return ( Success => 1, Status => 'Disabled' )
+        if !$Kernel::OM->Get('Kernel::Config')->Get('Redmine::Enabled');
+    return $Self->_WithTicketSyncLease( TicketID => $Param{TicketID}, Work => $Param{Work}, Callback => sub {
+        my ( $Key, $Token ) = @_;
+        return $Self->_SyncTicketFromRedmineLocked( %Param, LeaseKey => $Key, LeaseToken => $Token );
+    } );
+}
+
+sub _WithTicketSyncLease {
+    my ( $Self, %Param ) = @_;
+    my $Store = $Kernel::OM->Get('Kernel::System::Redmine::SyncStore');
+    my $Key = 'Ticket::' . $Param{TicketID};
+    my $Token = eval { $Store->LockAcquire( Key => $Key ) };
+    if ($@) {
+        $Kernel::OM->Get('Kernel::System::Log')->Log( Priority => 'error',
+            Message => 'Redmine sync lock: ' . $Self->_ScrubCredentials($@) );
+        return ( Success => 0, Status => 'Error', Error => 'Не удалось получить блокировку синхронизации OTRS.' );
+    }
+    return ( Success => 0, Status => 'Busy', RetryAfterSeconds => 2,
+        Error => 'Синхронизация этого тикета уже выполняется.' ) if !$Token;
+    $Self->_InvalidateSyncTicket( TicketID => $Param{TicketID} );
+    local $Self->{_TicketSyncLease} = { Key => $Key, Token => $Token, RenewedAt => time(), Work => $Param{Work} };
+    my %Result = eval { $Param{Callback}->( $Key, $Token ) };
+    my $Error = $@;
+    eval { $Store->LockRelease( Key => $Key, Token => $Token ) };
+    if ($Error) {
+        $Kernel::OM->Get('Kernel::System::Log')->Log( Priority => 'error',
+            Message => 'Redmine sync: ' . $Self->_ScrubCredentials($Error) );
+        return ( Success => 0, Status => 'Error', Error => 'Не удалось завершить синхронизацию OTRS; повтор сохранён.' );
+    }
+    return %Result;
+}
+
+# Keep long multi-file operations alive, but never resurrect expired ownership.
+sub _CheckTicketSyncLease {
+    my ($Self) = @_;
+    my $Lease = $Self->{_TicketSyncLease} or return 1;
+    my $Store = $Kernel::OM->Get('Kernel::System::Redmine::SyncStore');
+    my $Now = time();
+    if ($Now - $Lease->{RenewedAt} >= 30) {
+        $Store->RenewLock(%$Lease, Now => $Now) or die 'Ticket synchronization lease lost';
+        $Store->RenewIssueLease(%{$Lease->{Work}}, Now => $Now)
+            or die 'Issue synchronization lease lost' if $Lease->{Work};
+        $Lease->{RenewedAt} = $Now;
+    }
+    else {
+        $Store->LockValid(%$Lease, Now => $Now) or die 'Ticket synchronization lease lost';
+    }
+    return 1;
+}
+
+sub _InvalidateSyncTicket {
+    my ( $Self, %Param ) = @_;
+    $Kernel::OM->Get('Kernel::System::Cache')->Delete(
+        Type => 'DynamicFieldValue', Key => 'ValueGet::ObjectID::' . $Param{TicketID} );
+    $Kernel::OM->Get('Kernel::System::Ticket')->_TicketCacheClear( TicketID => $Param{TicketID} );
+    return 1;
+}
+
+sub _CommitInbound {
+    my ( $Self, %Param ) = @_;
+    $Self->_CheckTicketSyncLease();
+    my $Store = $Kernel::OM->Get('Kernel::System::Redmine::SyncStore');
+    my $DBH = $Store->BeginTransaction( LockKey => $Param{LeaseKey}, Token => $Param{LeaseToken} );
+    return ( Success => 0, Error => 'Блокировка синхронизации истекла; повтор сохранён.' ) if !$DBH;
+    my %EventSizes = map { defined $_ ? ( refaddr($_) => scalar @{ $_->{EventHandlerPipe} || [] } ) : () }
+        @{ $Kernel::OM->{EventHandlers} || [] };
+    my $Skipped;
+    my $OK = eval {
+        # Revalidate the live link after network IO and fence the issue generation.
+        my $Field = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldGet( Name => 'RedmineID' );
+        my $STH = $DBH->prepare('SELECT value_text FROM dynamic_field_value WHERE field_id = ? AND object_id = ?');
+        $STH->execute( $Field->{ID}, $Param{TicketID} ) or die 'Cannot validate current Redmine link';
+        my ($ID) = $STH->fetchrow_array(); $STH->finish();
+        if ( !defined $ID || "$ID" ne "$Param{IssueID}" ) { $Skipped = 1; }
+        else {
+            if ( my $Work = $Param{Work} ) {
+                my $SQL = 'SELECT issue_key FROM redmine_sync_issue WHERE issue_key = ? AND lease_token = ? AND round_generation = ? AND lease_until > ?';
+                $SQL .= ' FOR UPDATE' if lc($DBH->{Driver}{Name}) ne 'sqlite';
+                my $Guard = $DBH->prepare($SQL);
+                $Guard->execute( $Work->{IssueKey}, $Work->{Token}, $Work->{RoundGeneration}, time() )
+                    or die 'Cannot fence delivery generation';
+                my @Owner = $Guard->fetchrow_array(); $Guard->finish();
+                die 'Delivery round ownership changed' if !@Owner;
+            }
+            $Param{Commit}->();
+            if ( my $Work = $Param{Work} ) {
+                $Store->Progress( %$Work, AfterTicketID => $Param{TicketID} )
+                    or die 'Delivery progress changed';
+            }
+        }
+        $DBH->commit() or die 'Cannot commit inbound update';
+        1;
+    };
+    my $Error = $@;
+    if (!$OK) {
+        eval { $DBH->rollback() if !$DBH->{AutoCommit} };
+        # OTRS has deferred transaction listeners outside DBI. Cancel only events
+        # from this failed transaction, retaining earlier independent state events.
+        for my $Handler ( @{ $Kernel::OM->{EventHandlers} || [] } ) {
+            next if !$Handler || !$Handler->{EventHandlerPipe};
+            my $Length = $EventSizes{ refaddr($Handler) } || 0;
+            splice @{ $Handler->{EventHandlerPipe} }, $Length
+                if @{ $Handler->{EventHandlerPipe} } > $Length;
+        }
+        $Kernel::OM->Get('Kernel::System::Log')->Log( Priority => 'error',
+            Message => 'Redmine inbound transaction: ' . $Self->_ScrubCredentials($Error) );
+    }
+    $Self->_InvalidateSyncTicket( TicketID => $Param{TicketID} );
+    return ( Success => 0, Error => 'Не удалось записать обновление OTRS; повтор сохранён.' ) if !$OK;
+    return ( Success => 1, Status => $Skipped ? 'Skip' : 'Synced',
+        ProgressCommitted => $Param{Work} && !$Skipped ? 1 : 0 );
+}
+
+sub _SyncTicketFromRedmineLocked {
     my ( $Self, %Param ) = @_;
 
     return ( Success => 0, Error => 'Need TicketID' ) if !$Param{TicketID};
@@ -51,50 +173,99 @@ sub SyncTicketFromRedmine {
     return ( Success => 1, Status => 'Skip' ) if !IsStringWithData( $Ticket{DynamicField_RedmineID} );
 
     my $IssueID = $Ticket{DynamicField_RedmineID};
+    return ( Success => 1, Status => 'Skip' ) if defined $Param{ExpectedIssueID}
+        && "$IssueID" ne "$Param{ExpectedIssueID}";
     return ( Success => 0, Status => 'Error', Error => 'RedmineID is not numeric' )
         if !IsNumber($IssueID);
 
-    # S8: always fetch issue (status / updated_on / attachments) without journals first
+    # Scope is one issue group in CronSync, or one manual invocation.
+    my $IssueCache = $Param{IssueCache} || {};
+    $IssueCache = {} if defined $IssueCache->{IssueID} && $IssueCache->{IssueID} ne $IssueID;
+    $IssueCache->{IssueID} = $IssueID;
     my $SyncAtt = $ConfigObject->Get('Redmine::SyncAttachments') ? 1 : 0;
-    my $Path    = $SyncAtt
-        ? "/issues/$IssueID.json?include=attachments"
-        : "/issues/$IssueID.json";
-
-    my %Res = $Self->_Request(
-        Method => 'GET',
-        Path   => $Path,
-    );
+    if ( !exists $IssueCache->{Snapshot} ) {
+        $IssueCache->{Snapshot} = { $Self->_Request(
+            Method => 'GET', Path => "/issues/$IssueID.json",
+        ) };
+    }
+    my %Res = %{ $IssueCache->{Snapshot} };
     return ( Success => 0, Status => 'Error', Error => $Res{Error} ) if !$Res{Success};
-
-    my $Issue      = $Res{Data}->{issue} || {};
-    my $StatusName = $Issue->{status}->{name} || '';
-    my $UpdatedOn  = $Issue->{updated_on} // '';
-    my $StoredOn   = $Ticket{DynamicField_RedmineLastUpdatedOn} // '';
-    $StatusName = $Self->_DecodeUTF8($StatusName) if $Self->can('_DecodeUTF8');
-    $UpdatedOn  = $Self->_DecodeUTF8($UpdatedOn)  if $Self->can('_DecodeUTF8');
-
-    my $NeedJournals = !length($StoredOn) || ( length($UpdatedOn) && $UpdatedOn gt $StoredOn );
-
+    my $Issue = $Res{Data}->{issue};
+    return ( Success => 0, Status => 'Error', Error => 'Redmine response missing issue' )
+        if !IsHashRefWithData($Issue);
+    my $StatusName = $Self->_DecodeUTF8( $Issue->{status}->{name} || '' );
+    my $UpdatedOn = $Issue->{updated_on} // '';
+    my $StoredOn = $Ticket{DynamicField_RedmineLastUpdatedOn} // '';
+    my $AttachmentOn = $Ticket{DynamicField_RedmineLastAttachmentSyncOn} // '';
+    my $AppliedState = $Ticket{State} // '';
+    my $ApplyMappedState = sub {
+        my ($State) = @_;
+        return if !$State || $State eq $AppliedState;
+        $Self->_CheckTicketSyncLease();
+        $TicketObject->TicketStateSet( TicketID => $Param{TicketID}, State => $State,
+            UserID => $UserID, SendNoNotification => 1 ) or die 'Cannot apply mapped OTRS state';
+        $AppliedState = $State;
+    };
+    my $ApplyState = sub {
+        my ($Name) = @_;
+        return if !length $Name || $Name eq ( $Ticket{DynamicField_RedmineStatus} // '' );
+        my ($State) = $Self->_StatusSyncActions($Name);
+        $ApplyMappedState->($State);
+    };
+    my $NeedDetails = $Param{ForceDetails} || !length($StoredOn)
+        || ( length($UpdatedOn) && $UpdatedOn gt $StoredOn )
+        || $StatusName ne ( $Ticket{DynamicField_RedmineStatus} // '' )
+        || ( $SyncAtt && ( !length($AttachmentOn) || $UpdatedOn gt $AttachmentOn ) );
     my @Journals;
-    if ($NeedJournals) {
-        my %JRes = $Self->_Request(
-            Method => 'GET',
-            Path   => "/issues/$IssueID.json?include=journals",
-        );
-        if ( $JRes{Success} ) {
-            @Journals = @{ $JRes{Data}->{issue}->{journals} || [] };
-            # Prefer freshest status/updated_on from journals response when present
-            my $JIssue = $JRes{Data}->{issue} || {};
-            $StatusName = $JIssue->{status}->{name} || $StatusName;
-            $UpdatedOn  = $JIssue->{updated_on}     // $UpdatedOn;
+    if ($NeedDetails) {
+        if ( !exists $IssueCache->{Details} ) {
+            my $Include = $SyncAtt ? 'journals,attachments' : 'journals';
+            $IssueCache->{Details} = { $Self->_Request(
+                Method => 'GET', Path => "/issues/$IssueID.json?include=$Include",
+            ) };
         }
-        else {
-            $Kernel::OM->Get('Kernel::System::Log')->Log(
-                Priority => 'error',
-                Message  => "Redmine SyncTicketFromRedmine journals GET failed for #$IssueID: "
-                    . ( $JRes{Error} || 'unknown' ),
-            );
+        my $Details = $IssueCache->{Details};
+        if ( !$Details->{Success} ) {
+            $ApplyState->($StatusName);
+            return ( Success => 0, Status => 'Error', Error => $Details->{Error} || 'Issue details unavailable' );
         }
+        $Issue = $Details->{Data}->{issue};
+        if ( !IsHashRefWithData($Issue) ) {
+            $ApplyState->($StatusName);
+            return ( Success => 0, Status => 'Error', Error => 'Redmine response missing issue details' );
+        }
+        @Journals = @{ $Issue->{journals} || [] };
+        $StatusName = $Self->_DecodeUTF8( $Issue->{status}->{name} || $StatusName );
+        $UpdatedOn = $Issue->{updated_on} // $UpdatedOn;
+    }
+    else {
+        $Self->_RecordSyncCheck( TicketID => $Param{TicketID} );
+        return ( Success => 1, Status => 'Synced', IssueStatus => $StatusName );
+    }
+
+    # A grouped worker snapshot can predate a completed manual sync. Do not
+    # downgrade status or emit a second fallback note for an older snapshot.
+    my $SeenJournal = 0;
+    for my $Journal (@Journals) {
+        $SeenJournal = $Journal->{id} if ($Journal->{id} || 0) > $SeenJournal;
+    }
+    my $StoredJournal = 0 + ($Ticket{DynamicField_RedmineLastJournalID} || 0);
+    if ($Param{Work} && !$Param{RefreshedSnapshot} && $UpdatedOn eq $StoredOn
+        && $SeenJournal < $StoredJournal && $StatusName ne ($Ticket{DynamicField_RedmineStatus} // '')) {
+        # Empty/private history cannot prove age. Fetch once under this ticket's
+        # lease, then share the fresh snapshot with the remaining sibling tickets.
+        my $Include = $SyncAtt ? 'journals,attachments' : 'journals';
+        my %Fresh = $Self->_Request(Method => 'GET', Path => "/issues/$IssueID.json?include=$Include");
+        return (Success => 0, Status => 'Error', Error => $Fresh{Error} || 'Issue details unavailable',
+            RetryAfterSeconds => $Fresh{RetryAfterSeconds} || 0) if !$Fresh{Success};
+        delete @Fresh{qw(Content ContentFile)};
+        $IssueCache->{Snapshot} = $IssueCache->{Details} = \%Fresh;
+        delete @{$IssueCache}{qw(JournalCandidates JournalMax NormalizedJournals)};
+        return $Self->_SyncTicketFromRedmineLocked(%Param, IssueCache => $IssueCache, RefreshedSnapshot => 1);
+    }
+    if ((length($StoredOn) && length($UpdatedOn) && $UpdatedOn lt $StoredOn && $SeenJournal <= $StoredJournal)
+        || ($UpdatedOn eq $StoredOn && $SeenJournal > 0 && $SeenJournal < $StoredJournal)) {
+        return (Success => 1, Status => 'Skip', IssueStatus => $Ticket{DynamicField_RedmineStatus});
     }
 
     my $ArticleObject = $Kernel::OM->Get('Kernel::System::Ticket::Article');
@@ -105,23 +276,6 @@ sub SyncTicketFromRedmine {
     my ( $MappedState, $WriteNote ) = $StatusChanged
         ? $Self->_StatusSyncActions($StatusName)
         : ( undef, 0 );
-
-    if ($StatusChanged) {
-        $Self->_SetDF(
-            TicketID => $Param{TicketID},
-            Name     => 'RedmineStatus',
-            Value    => $StatusName,
-            UserID   => $UserID,
-        );
-        if ($MappedState) {
-            $TicketObject->TicketStateSet(
-                TicketID           => $Param{TicketID},
-                State              => $MappedState,
-                UserID             => $UserID,
-                SendNoNotification => 1,
-            );
-        }
-    }
 
     # One inbound OTRS note per sync run: status / comments / attachments as blocks.
     my $LastJournal       = 0 + ( $Ticket{DynamicField_RedmineLastJournalID} || 0 );
@@ -134,53 +288,70 @@ sub SyncTicketFromRedmine {
     my @AttachmentFiles;    # { Content, ContentType, Filename }
     my @AttachmentLines;    # text lines for the «Вложения» block
 
+    if ( !exists $IssueCache->{JournalCandidates} ) {
+        my $Max = 0;
+        my @Candidates;
+        for my $Journal ( sort { ($a->{id}||0) <=> ($b->{id}||0) } @Journals ) {
+            my $ID = 0 + ( $Journal->{id} || 0 );
+            $Max = $ID if $ID > $Max;
+            push @Candidates, $Journal if $Self->_JournalHasStatusChange($Journal);
+        }
+        $IssueCache->{JournalMax} = $Max;
+        $IssueCache->{JournalCandidates} = \@Candidates;
+    }
+    $MaxJournal = $IssueCache->{JournalMax} if $IssueCache->{JournalMax} > $MaxJournal;
+    my $NewStatusJournal = 0;
     JOURNAL:
-    for my $Journal (@Journals) {
+    for my $Journal ( @{ $IssueCache->{JournalCandidates} } ) {
         my $JID = 0 + ( $Journal->{id} || 0 );
         next JOURNAL if $JID <= $LastJournal;
-        $MaxJournal = $JID if $JID > $MaxJournal;
-
-        my $Notes = $Journal->{notes} // '';
-        $Notes = $Self->_DecodeUTF8($Notes) if $Self->can('_DecodeUTF8');
-        if ( $Notes =~ m{<\s*(?:p|div|br|span)\b}i ) {
-            $Notes = $Kernel::OM->Get('Kernel::System::HTMLUtils')->ToAscii( String => $Notes );
-        }
-        $Notes =~ s{\A\s+}{};
-        $Notes =~ s{\s+\z}{};
-
-        my $IsOutboundEcho = $Self->_IsOutboundEchoNote(
-            Notes        => $Notes,
-            TicketNumber => $TicketNumber,
-        );
-
-        my $HasStatusDetail = $Self->_JournalHasStatusChange($Journal);
-        my $Author          = $Journal->{user}->{name} || $Journal->{user}->{login} || 'Redmine';
-        $Author = $Self->_DecodeUTF8($Author) if $Self->can('_DecodeUTF8');
-
-        # Comments → OTRS only when StatusSync for the new status has |note
-        # (e.g. «Проверка решения» = open|note). Plain journals without that
-        # status transition are ignored (cursor still advances).
-        my $IncludeStatus = ( $HasStatusDetail && $WriteNote ) ? 1 : 0;
-        my $IncludeNotes
-            = ( length $Notes && !$IsOutboundEcho && $WriteNote && $HasStatusDetail )
-            ? 1
-            : 0;
-        next JOURNAL if !$IncludeStatus && !$IncludeNotes;
-
-        if ($IncludeStatus) {
-            my $StatusPart = 'Статус Redmine изменён';
-            $StatusPart .= " с «$OldStatus»" if length $OldStatus;
-            $StatusPart .= " на «$StatusName».";
-            if ($MappedState) {
-                $StatusPart .= " Состояние тикета OTRS: $MappedState.";
+        $NewStatusJournal = 1;
+        my ($Detail) = grep { ($_->{property}//'') eq 'attr' && ($_->{name}//'') eq 'status_id' }
+            @{ $Journal->{details} || [] };
+        my $Target = $StatusName;
+        my $Origin = $OldStatus;
+        if ( defined $Detail->{new_value} && length $Detail->{new_value} ) {
+            my %Names = $Self->_IssueStatusNames( IssueCache => $IssueCache, RequiredID => $Detail->{new_value} );
+            if (!$Names{Success}) {
+                $ApplyState->($StatusName);
+                return ( Success => 0, Status => 'Error', Error => $Names{Error} );
             }
-            $StatusPart .= " Автор в Redmine: $Author.";
-            push @StatusLines, $StatusPart;
-            $StatusNoteEmitted = 1;
+            $Target = defined $Issue->{status}->{id} && "$Detail->{new_value}" eq "$Issue->{status}->{id}"
+                ? $StatusName : $Names{Names}->{ $Detail->{new_value} };
+            return ( Success => 0, Status => 'Error', Error => 'Не найден статус Redmine из журнала.' )
+                if !defined $Target;
+            $Origin = $Names{Names}->{ $Detail->{old_value} } // $OldStatus;
         }
-        if ($IncludeNotes) {
-            push @CommentBlocks, "$Author:\n$Notes";
+        my ( $JournalState, $JournalNote ) = $Self->_StatusSyncActions($Target);
+        next JOURNAL if !$JournalNote;
+        my $Normalized = $IssueCache->{NormalizedJournals}->{$JID};
+        if (!$Normalized) {
+            my $Notes = $Self->_DecodeUTF8( $Journal->{notes} // '' );
+            if ( $Notes =~ m{<\s*(?:p|div|br|span)\b}i ) {
+                $Notes = $Kernel::OM->Get('Kernel::System::HTMLUtils')->ToAscii( String => $Notes );
+            }
+            $Notes =~ s{\A\s+}{}; $Notes =~ s{\s+\z}{};
+            my $Author = $Self->_DecodeUTF8( $Journal->{user}->{name} || $Journal->{user}->{login} || 'Redmine' );
+            $Normalized = $IssueCache->{NormalizedJournals}->{$JID} = { Notes => $Notes, Author => $Author };
         }
+        my $StatusPart = 'Статус Redmine изменён';
+        $StatusPart .= " с «$Origin»" if length $Origin;
+        $StatusPart .= " на «$Target».";
+        $StatusPart .= " Состояние тикета OTRS: $JournalState." if $JournalState && $Target eq $StatusName;
+        $StatusPart .= " Автор в Redmine: $Normalized->{Author}.";
+        push @StatusLines, $StatusPart;
+        $StatusNoteEmitted = 1;
+        if ( length $Normalized->{Notes} && !$Self->_IsOutboundEchoNote(
+            Notes => $Normalized->{Notes}, TicketNumber => $TicketNumber,
+        ) ) {
+            push @CommentBlocks, "$Normalized->{Author}:\n$Normalized->{Notes}";
+        }
+    }
+    # Replay all eligible notes, but apply only the current mapped state once.
+    # An ordinary comment must not change an agent override or replay old states.
+    if ($StatusChanged || $NewStatusJournal) {
+        my ($FinalMappedState) = $Self->_StatusSyncActions($StatusName);
+        $ApplyMappedState->($FinalMappedState);
     }
 
     # Status-only change (empty journal notes): still emit «Статус» when StatusSync has |note.
@@ -196,20 +367,15 @@ sub SyncTicketFromRedmine {
         $StatusNoteEmitted = 1;
     }
 
-    if ( $MaxJournal > $LastJournal ) {
-        $Self->_BumpLastJournalID(
-            TicketID     => $Param{TicketID},
-            MaxJournalID => $MaxJournal,
-            UserID       => $UserID,
-        );
-    }
-
     # Attachments from Redmine:
     # - file alone (no status note / comment) → only advance cursor (no OTRS article, no loop)
     # - with status/comment → download and attach to the same consolidated note
+    my $LastAtt = 0 + ( $Ticket{DynamicField_RedmineLastAttachmentID} || 0 );
+    my $OldLastAtt = $LastAtt;
     if ($SyncAtt) {
-        my $LastAtt  = 0 + ( $Ticket{DynamicField_RedmineLastAttachmentID} || 0 );
-        my $MaxBytes = $ConfigObject->Get('Redmine::MaxAttachmentBytes') || 5_000_000;
+        my ( $MaxBytes, $MaxTotal, $MaxCount ) = $Self->_AttachmentLimits();
+        my $TotalBytes = 0;
+        my $DownloadAttempts = 0;
         my $BaseURL  = $Res{BaseURL} || $ConfigObject->Get('Redmine::BaseURL') || '';
         $BaseURL =~ s{/\z}{};
 
@@ -229,12 +395,6 @@ sub SyncTicketFromRedmine {
 
             # No status/comment this run — mark seen, do not import (breaks escalate file loop).
             if ( !$WantFiles ) {
-                $Self->_SetDF(
-                    TicketID => $Param{TicketID},
-                    Name     => 'RedmineLastAttachmentID',
-                    Value    => "$AID",
-                    UserID   => $UserID,
-                );
                 $LastAtt = $AID;
                 next ATT;
             }
@@ -244,12 +404,6 @@ sub SyncTicketFromRedmine {
             if ( $KnownSize > 0 && $KnownSize > $MaxBytes ) {
                 push @AttachmentLines,
                     "• $Filename — не импортировано (размер $KnownSize байт > лимита $MaxBytes).";
-                $Self->_SetDF(
-                    TicketID => $Param{TicketID},
-                    Name     => 'RedmineLastAttachmentID',
-                    Value    => "$AID",
-                    UserID   => $UserID,
-                );
                 $LastAtt = $AID;
                 next ATT;
             }
@@ -267,56 +421,68 @@ sub SyncTicketFromRedmine {
                     Message  => "Redmine SyncTicketFromRedmine: unsafe or empty content path "
                         . "for attachment #$AID on issue #$IssueID — skipped",
                 );
-                $Self->_SetDF(
-                    TicketID => $Param{TicketID},
-                    Name     => 'RedmineLastAttachmentID',
-                    Value    => "$AID",
-                    UserID   => $UserID,
-                );
                 $LastAtt = $AID;
                 next ATT;
             }
 
-            my %FileRes = $Self->_Request(
-                Method     => 'GET',
-                Path       => $Rel,
-                ExpectJSON => 0,
-            );
-
-            if ( !$FileRes{Success} ) {
-                $Kernel::OM->Get('Kernel::System::Log')->Log(
-                    Priority => 'error',
-                    Message  => "Redmine SyncTicketFromRedmine: download failed for attachment #$AID: "
-                        . ( $FileRes{Error} || 'unknown' ),
-                );
-                next ATT;
-            }
-
-            my $Bin = $FileRes{Content};
-            if ( !defined $Bin || !length $Bin ) {
-                $Self->_SetDF(
-                    TicketID => $Param{TicketID},
-                    Name     => 'RedmineLastAttachmentID',
-                    Value    => "$AID",
-                    UserID   => $UserID,
-                );
+            if ( @AttachmentFiles >= $MaxCount || $DownloadAttempts >= $MaxCount
+                || $TotalBytes >= $MaxTotal || $TotalBytes + $KnownSize > $MaxTotal ) {
+                push @AttachmentLines, "• $Filename — не импортировано (общий лимит вложений).";
                 $LastAtt = $AID;
                 next ATT;
             }
-
-            my $GotLen = length($Bin);
-            if ( $GotLen > $MaxBytes ) {
-                push @AttachmentLines,
-                    "• $Filename — не импортировано (получено $GotLen байт > лимита $MaxBytes).";
-                $Self->_SetDF(
-                    TicketID => $Param{TicketID},
-                    Name     => 'RedmineLastAttachmentID',
-                    Value    => "$AID",
-                    UserID   => $UserID,
+            # Shared disk spool: no binary payloads retained between sibling tickets.
+            my $File = $IssueCache->{Files}->{$AID};
+            if (!$File) {
+                if ( my $Failure = $IssueCache->{FileErrors}->{$AID} ) {
+                    return ( Success => 0, Status => 'Error', %$Failure );
+                }
+                $DownloadAttempts++;
+                my $Remaining = $MaxTotal - $TotalBytes;
+                my $DownloadLimit = $MaxBytes < $Remaining ? $MaxBytes : $Remaining;
+                my $Temp = File::Temp->new( UNLINK => 1 );
+                binmode $Temp;
+                $Self->_CheckTicketSyncLease();
+                my %FileRes = $Self->_Request(
+                    Method => 'GET', Path => $Rel, ExpectJSON => 0,
+                    ContentFile => $Temp, MaxResponseBytes => $DownloadLimit,
                 );
+                $Self->_CheckTicketSyncLease();
+                if ( !$FileRes{Success} ) {
+                    if ( $FileRes{TooLarge} ) {
+                        push @AttachmentLines, "• $Filename — не импортировано (превышен лимит размера).";
+                        $LastAtt = $AID;
+                        next ATT;
+                    }
+                    my $Failure = { Error => $FileRes{Error} || 'Attachment download failed',
+                        RetryAfterSeconds => $FileRes{RetryAfterSeconds} || 0 };
+                    $IssueCache->{FileErrors}->{$AID} = $Failure;
+                    return ( Success => 0, Status => 'Error', %$Failure );
+                }
+                my $Size = $FileRes{ContentLength};
+                # At most MaxCount open spool handles in the group.
+                if ( scalar keys %{ $IssueCache->{Files} || {} } >= $MaxCount ) {
+                    my ($Evict) = sort { $a <=> $b } keys %{ $IssueCache->{Files} };
+                    delete $IssueCache->{Files}->{$Evict};
+                }
+                $File = $IssueCache->{Files}->{$AID} = { Handle => $Temp, Size => $Size };
+            }
+            if ( $TotalBytes + $File->{Size} > $MaxTotal ) {
+                push @AttachmentLines, "• $Filename — не импортировано (общий лимит вложений).";
                 $LastAtt = $AID;
                 next ATT;
             }
+            seek( $File->{Handle}, 0, 0 ) or return ( Success => 0, Error => 'Cannot rewind attachment' );
+            my $Bin = '';
+            my $Read = read( $File->{Handle}, $Bin, $MaxTotal - $TotalBytes + 1 );
+            return ( Success => 0, Error => 'Cannot read attachment spool' ) if !defined $Read;
+            if ( $TotalBytes + $Read > $MaxTotal ) {
+                push @AttachmentLines, "• $Filename — не импортировано (общий лимит вложений).";
+                $LastAtt = $AID;
+                next ATT;
+            }
+            if ( !length $Bin ) { $LastAtt = $AID; next ATT; }
+            $TotalBytes += length $Bin;
 
             push @AttachmentFiles, {
                 Content     => $Bin,
@@ -324,16 +490,11 @@ sub SyncTicketFromRedmine {
                 Filename    => $Filename,
             };
 
-            $Self->_SetDF(
-                TicketID => $Param{TicketID},
-                Name     => 'RedmineLastAttachmentID',
-                Value    => "$AID",
-                UserID   => $UserID,
-            );
             $LastAtt = $AID;
         }
     }
 
+    my $Note;
     if ( @StatusLines || @CommentBlocks || @AttachmentLines || @AttachmentFiles ) {
         my @Sections;
         push @Sections, "— Статус —\n" . join( "\n", @StatusLines ) if @StatusLines;
@@ -386,141 +547,97 @@ sub SyncTicketFromRedmine {
             $Create{ForceNotificationToUserID} = \@Notify if @Notify;
         }
 
-        $Backend->ArticleCreate(%Create);
+        $Note = \%Create;
     }
 
-    # S8: store updated_on cursor
-    if ( length $UpdatedOn ) {
-        $Self->_SetDF(
-            TicketID => $Param{TicketID},
-            Name     => 'RedmineLastUpdatedOn',
-            Value    => "$UpdatedOn",
-            UserID   => $UserID,
-        );
-    }
+    my %Committed = $Self->_CommitInbound( TicketID => $Param{TicketID}, IssueID => $IssueID,
+        LeaseKey => $Param{LeaseKey}, LeaseToken => $Param{LeaseToken}, Work => $Param{Work}, Commit => sub {
+        if ($Note) {
+            my %Create = %$Note;
+            my $Files = delete $Create{Attachment};
+            my $ArticleID = $Backend && $Backend->ArticleCreate(%Create);
+            die 'Cannot create inbound OTRS note' if !$ArticleID;
+            # ArticleCreate ignores storage return values in OTRS 6. Check the
+            # public write API explicitly before committing note and checkpoints.
+            for my $File ( @{ $Files || [] } ) {
+                $Backend->ArticleWriteAttachment( %$File, ArticleID => $ArticleID, UserID => $UserID )
+                    or die 'Cannot store inbound attachment';
+            }
+        }
+        my $Set = sub {
+            my ( $Name, $Value ) = @_;
+            $Self->_SetDF( TicketID => $Param{TicketID}, Name => $Name, Value => $Value, UserID => $UserID )
+                or die "Cannot checkpoint $Name";
+        };
+        $Set->('RedmineStatus', $StatusName) if $StatusChanged;
+        for my $Item (
+            [ 'RedmineLastJournalID', $MaxJournal ],
+            [ 'RedmineLastAttachmentID', $LastAtt ],
+        ) {
+            my $Current = 0 + ($Self->_GetDF(TicketID=>$Param{TicketID},Name=>$Item->[0])||0);
+            $Set->($Item->[0], "$Item->[1]") if $Item->[1] > $Current;
+        }
+        for my $Name ( 'RedmineLastUpdatedOn', ( $SyncAtt ? 'RedmineLastAttachmentSyncOn' : () ) ) {
+            my $Current = $Self->_GetDF(TicketID=>$Param{TicketID},Name=>$Name) // '';
+            $Set->($Name, $UpdatedOn) if length $UpdatedOn && $UpdatedOn gt $Current;
+        }
+    } );
+    return %Committed if !$Committed{Success} || ($Committed{Status}//'') eq 'Skip';
+    $Self->_RecordSyncCheck( TicketID => $Param{TicketID} );
 
-    # K8: last successful sync timestamp (ISO-ish / epoch string for sort)
-    $Self->_SetDF(
-        TicketID => $Param{TicketID},
-        Name     => 'RedmineLastSyncAt',
-        Value    => '' . time(),
-        UserID   => $UserID,
-    );
-
-    return ( Success => 1, Status => 'Synced', IssueStatus => $StatusName );
+    return ( Success => 1, Status => 'Synced', IssueStatus => $StatusName,
+        ProgressCommitted => $Committed{ProgressCommitted} );
 }
 
-sub CronSync {
+sub _RecordSyncCheck {
     my ( $Self, %Param ) = @_;
-
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
-    return 1 if !$ConfigObject->Get('Redmine::Enabled');
-    return 1 if !$ConfigObject->Get('Redmine::InboundSync');
-
-    my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
-    my $CacheObject  = $Kernel::OM->Get('Kernel::System::Cache');
-    my $LogObject    = $Kernel::OM->Get('Kernel::System::Log');
-
-    my $Limit  = $ConfigObject->Get('Redmine::SyncBatchLimit') || 50;
-    $Limit = 50 if !IsNumber($Limit) || $Limit < 1;
-    my $FetchLimit = $Limit * 2;
-
-    # K8: TicketSearch may not sort by DF — fetch larger set, sort by RedmineLastSyncAt ASC
-    my @TicketIDs = $TicketObject->TicketSearch(
-        Result                 => 'ARRAY',
-        UserID                 => 1,
-        Limit                  => $FetchLimit,
-        DynamicField_RedmineID => {
-            Empty => 0,
-        },
+    $Kernel::OM->Get('Kernel::System::Cache')->Set(
+        Type => 'RedmineBridgeHealth', Key => 'TicketCheck::' . $Param{TicketID},
+        Value => { At => time() }, TTL => 60 * 60 * 24 * 7,
     );
-
-    my @Candidates;
-    for my $TicketID (@TicketIDs) {
-        my %Ticket = $TicketObject->TicketGet(
-            TicketID      => $TicketID,
-            DynamicFields => 1,
-            UserID        => 1,
-            Silent        => 1,
-        );
-        push @Candidates, {
-            TicketID => $TicketID,
-            SyncAt   => $Ticket{DynamicField_RedmineLastSyncAt} // '',
-        };
-    }
-
-    @Candidates = sort {
-        ( $a->{SyncAt} // '' ) cmp ( $b->{SyncAt} // '' )
-            || ( $a->{TicketID} <=> $b->{TicketID} )
-    } @Candidates;
-
-    if ( @Candidates > $Limit ) {
-        $LogObject->Log(
-            Priority => 'notice',
-            Message  => 'Redmine CronSync: hit SyncBatchLimit='
-                . $Limit
-                . ' (candidates='
-                . scalar(@Candidates)
-                . '); remaining tickets deferred to next run',
-        );
-        @Candidates = @Candidates[ 0 .. ( $Limit - 1 ) ];
-    }
-
-    my $SyncedCount  = 0;
-    my $LastError    = '';
-    my $LastSyncOK   = 1;
-
-    for my $Row (@Candidates) {
-        my %Res = $Self->SyncTicketFromRedmine(
-            TicketID => $Row->{TicketID},
-            UserID   => 1,
-        );
-        if ( $Res{Success} && ( $Res{Status} // '' ) eq 'Synced' ) {
-            $SyncedCount++;
-        }
-        elsif ( !$Res{Success} ) {
-            $LastSyncOK = 0;
-            $LastError  = $Res{Error} || 'sync failed';
-            $LogObject->Log(
-                Priority => 'error',
-                Message  => "Redmine CronSync TicketID=$Row->{TicketID}: $LastError",
-            );
-        }
-    }
-
-    my $HealthTTL = 60 * 60 * 24 * 7;
-    my $Now       = time();
-    $CacheObject->Set(
-        Type  => 'RedmineBridgeHealth',
-        Key   => 'LastSyncAt',
-        Value => $Now,
-        TTL   => $HealthTTL,
-    );
-    $CacheObject->Set(
-        Type  => 'RedmineBridgeHealth',
-        Key   => 'LastSyncError',
-        Value => $LastError,
-        TTL   => $HealthTTL,
-    );
-    $CacheObject->Set(
-        Type  => 'RedmineBridgeHealth',
-        Key   => 'SyncedCount',
-        Value => $SyncedCount,
-        TTL   => $HealthTTL,
-    );
-    $CacheObject->Set(
-        Type  => 'RedmineBridgeHealth',
-        Key   => 'LastSyncOK',
-        Value => $LastSyncOK ? 1 : 0,
-        TTL   => $HealthTTL,
-    );
-
-    # Optionally warm escalate-form catalog (full Daemon timeout)
-    if ( $Self->can('WarmCatalog') ) {
-        eval { $Self->WarmCatalog(); 1; };
-    }
-
     return 1;
+}
+
+sub _IssueStatusNames {
+    my ( $Self, %Param ) = @_;
+    my $Group = $Param{IssueCache};
+    return %{ $Group->{StatusNames} } if $Group->{StatusNames}
+        && (!$Group->{StatusNames}->{Success} || !defined $Param{RequiredID}
+            || exists $Group->{StatusNames}->{Names}->{$Param{RequiredID}});
+    my $Config = $Kernel::OM->Get('Kernel::Config');
+    my $Key = sha256_hex( ($Config->Get('Redmine::BaseURL')//'') . "\0" . ($Config->Get('Redmine::APIKey')//'') );
+    my $Cache = $Kernel::OM->Get('Kernel::System::Cache');
+    my $Names = $Cache->Get( Type => 'RedmineBridgeCatalog', Key => 'StatusNames::' . $Key );
+    if (!$Names || (defined $Param{RequiredID} && !exists $Names->{$Param{RequiredID}})) {
+        my %Reply = $Self->_Request( Method => 'GET', Path => '/issue_statuses.json' );
+        if ( !$Reply{Success} ) {
+            $Group->{StatusNames} = { Success => 0, Error => $Reply{Error} || 'Не удалось получить статусы Redmine.' };
+            return %{ $Group->{StatusNames} };
+        }
+        $Names = { map { $_->{id} => $Self->_DecodeUTF8($_->{name}) }
+            @{ $Reply{Data}->{issue_statuses} || [] } };
+        return ( Success => 0, Error => 'Redmine вернул пустой список статусов.' ) if !%$Names;
+        $Cache->Set( Type => 'RedmineBridgeCatalog', Key => 'StatusNames::' . $Key,
+            Value => $Names, TTL => 900 );
+    }
+    $Group->{StatusNames} = { Success => 1, Names => $Names };
+    return %{ $Group->{StatusNames} };
+}
+
+# Admin "Run sync now": detect all linked issues, then perform one bounded
+# delivery batch immediately. The daemon dispatches remaining durable work.
+sub CronSync {
+    my ($Self) = @_;
+    return 1 if !$Self->_SyncEnabled();
+    return if !$Self->PollSync();
+    my $Store = $Kernel::OM->Get('Kernel::System::Redmine::SyncStore');
+    my $Source = $Store->SourceKey();
+    my $Rows = $Store->ReadyIssues(SourceKey=>$Source,Limit=>1);
+    if (@$Rows) {
+        my $Result = $Self->ProcessSyncBatch(SourceKey=>$Source,SeedIssueKey=>$Rows->[0]{key});
+        return if !$Result->{Success};
+    }
+    return $Self->DispatchSync();
 }
 
 sub CronRetry {
@@ -771,13 +888,8 @@ sub _BumpLastJournalID {
         return if !$Max;
     }
 
-    my %Ticket = $Kernel::OM->Get('Kernel::System::Ticket')->TicketGet(
-        TicketID      => $Param{TicketID},
-        DynamicFields => 1,
-        UserID        => $UserID,
-        Silent        => 1,
-    );
-    my $Last = 0 + ( $Ticket{DynamicField_RedmineLastJournalID} || 0 );
+    my $Last = 0 + ( $Self->_GetDF( TicketID => $Param{TicketID},
+        Name => 'RedmineLastJournalID' ) || 0 );
     return if $Max <= $Last;
 
     $Self->_SetDF(
@@ -812,13 +924,8 @@ sub _BumpLastAttachmentID {
         return if !$Max;
     }
 
-    my %Ticket = $Kernel::OM->Get('Kernel::System::Ticket')->TicketGet(
-        TicketID      => $Param{TicketID},
-        DynamicFields => 1,
-        UserID        => $UserID,
-        Silent        => 1,
-    );
-    my $Last = 0 + ( $Ticket{DynamicField_RedmineLastAttachmentID} || 0 );
+    my $Last = 0 + ( $Self->_GetDF( TicketID => $Param{TicketID},
+        Name => 'RedmineLastAttachmentID' ) || 0 );
     return if $Max <= $Last;
 
     $Self->_SetDF(

@@ -88,8 +88,8 @@ sub Data {
             'Настройки пишутся в SysConfig и применяются при сохранении.',
         'Numeric IDs are taken from Redmine URLs or Administration → Settings (projects, trackers, priorities).' =>
             'Числовые ID берутся из URL Redmine или Администрирование → настройки (проекты, трекеры, приоритеты).',
-        'OTRS Daemon must be running for Redmine → OTRS sync (every 5 minutes).' =>
-            'Для синхронизации Redmine → OTRS (каждые 5 мин.) должен работать OTRS Daemon.',
+        'OTRS Daemon must be running for Redmine → OTRS synchronization.' =>
+            'Для синхронизации Redmine → OTRS должен работать OTRS Daemon.',
         'Show Redmine fields on TicketZoom' =>
             'Показать поля Redmine в карточке тикета',
         'TicketZoom dynamic fields updated.' =>
@@ -156,6 +156,8 @@ sub Data {
         'Slower. When off, only the default project is loaded (cached).' =>
             'Медленнее. Если выкл. — только проект по умолчанию (с кэшем).',
         'Catalog cache TTL (seconds)' => 'TTL кэша каталога (сек.)',
+        'Daemon detects linked issue changes and delivers status notes in bounded batches. Requires OTRS Daemon running.' =>
+            'Демон проверяет изменения связанных задач и доставляет статусные заметки ограниченными порциями. Должен работать OTRS Daemon.',
         'Synchronization'             => 'Синхронизация',
         'Sync attachments'            => 'Синхронизировать вложения',
         'Inbound sync (Redmine → OTRS)' => 'Входящая синхронизация (Redmine → OTRS)',
@@ -278,8 +280,16 @@ sub Data {
         'Max attachment size to sync (bytes). Default 5000000.' =>
             'Максимальный размер вложения для синхронизации (байты). По умолчанию 5000000.',
         'Sync batch limit' => 'Лимит пакета синхронизации',
-        'Max tickets per inbound sync cron run.' =>
-            'Максимум тикетов за один запуск входящей синхронизации (cron).',
+        'Max tickets per inbound synchronization worker batch.' =>
+            'Максимум тикетов за одну порцию доставки обновлений.',
+        'No sync health data yet. Daemon writes it after scanning or delivery.' =>
+            'Данных о синхронизации пока нет. Демон запишет их после опроса или доставки.',
+        'Seconds between Redmine issue-list scans (1-60).' =>
+            'Пауза между опросами списка задач Redmine (1–60 секунд).',
+        'Maximum concurrent Redmine delivery workers (1-4).' =>
+            'Максимум одновременных обработчиков доставки Redmine (1–4).',
+        'Detect Redmine changes and dispatch bounded synchronization workers.' =>
+            'Опрос изменений Redmine и запуск обработчиков с ограниченным размером порции.',
         'Retry batch limit' => 'Лимит пакета повторов',
         'Max tickets per auto-retry cron run.' =>
             'Максимум тикетов за один запуск автоповтора (cron).',
@@ -314,6 +324,10 @@ sub Data {
         'Inbound sync finished.' => 'Входящая синхронизация завершена.',
         'Inbound sync failed.' => 'Входящая синхронизация не удалась.',
         'Defaults for create form' => 'Значения по умолчанию для формы создания',
+        'Maximum total attachment bytes per create operation or inbound note.' =>
+            'Максимальный суммарный объём вложений в байтах при создании задачи или добавлении входящей заметки.',
+        'Maximum attachment count per create operation or inbound note.' =>
+            'Максимальное количество вложений при создании задачи или добавлении входящей заметки.',
     );
 
     for my $Key ( keys %Trans ) {

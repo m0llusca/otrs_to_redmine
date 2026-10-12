@@ -17,8 +17,10 @@ use utf8;
 # NO sub new — facade owns construction.
 
 use HTTP::Request;
+use HTTP::Date qw(str2time);
 use LWP::UserAgent;
 use Encode qw();
+use Digest::SHA qw(sha256_hex);
 use URI::Escape qw(uri_escape);
 
 use Kernel::System::VariableCheck qw(:all);
@@ -356,7 +358,67 @@ sub _CircuitClear {
     return 1;
 }
 
+# Reachable rate limits and temporary server errors share a cooldown across
+# workers. Keep credentials out of cache keys and scope it to one Redmine API.
+sub _HTTPCooldownKey {
+    my ( $Self, %Param ) = @_;
+    return 'Cooldown::' . sha256_hex(
+        Encode::encode_utf8( join "\0", $Param{BaseURL}, $Param{APIKey} )
+    );
+}
+
+sub _HTTPCooldownRecordFailure {
+    my ( $Self, %Param ) = @_;
+
+    my $CacheObject = $Kernel::OM->Get('Kernel::System::Cache');
+    my $Previous = $CacheObject->Get(
+        Type => 'RedmineBridgeHTTP', Key => $Param{Key}, CacheInMemory => 0, CacheInBackend => 1,
+    );
+    $Previous = {} if !IsHashRefWithData($Previous);
+    my $Count = ( $Previous->{Count} || 0 ) + 1;
+    $Count = 6 if $Count > 6;
+    my $Delay = 2 ** $Count;
+    $Delay = 60 if $Delay > 60;
+
+    my $Now = time();
+    my $RetryAfter = $Param{RetryAfter};
+    if ( defined $RetryAfter ) {
+        $RetryAfter =~ s{\A\s+|\s+\z}{}g;
+        my $HeaderDelay;
+        if ( $RetryAfter =~ m{\A\d+\z} ) {
+            $HeaderDelay = $RetryAfter > 3600 ? 3600 : int($RetryAfter);
+        }
+        else {
+            my $Until = str2time($RetryAfter);
+            $HeaderDelay = $Until - $Now if defined $Until;
+        }
+        if ( defined $HeaderDelay && $HeaderDelay > 0 ) {
+            $Delay = $HeaderDelay > 3600 ? 3600 : $HeaderDelay;
+        }
+    }
+
+    my $OpenUntil = $Now + $Delay;
+    $CacheObject->Set(
+        Type  => 'RedmineBridgeHTTP',
+        Key   => $Param{Key},
+        Value => { Count => $Count, OpenUntil => $OpenUntil, HTTPCode => $Param{HTTPCode} },
+        TTL   => 7200,
+        CacheInMemory  => 0,
+        CacheInBackend => 1,
+    );
+    my $Remaining = $OpenUntil - time();
+    return $Remaining > 0 ? $Remaining : 0;
+}
+
 sub _Request {
+    my ( $Self, %Param ) = @_;
+    $Self->_CheckTicketSyncLease() if $Self->{_TicketSyncLease};
+    my @Result = $Self->_RequestHTTP(%Param);
+    $Self->_CheckTicketSyncLease() if $Self->{_TicketSyncLease};
+    return @Result;
+}
+
+sub _RequestHTTP {
     my ( $Self, %Param ) = @_;
 
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
@@ -381,6 +443,22 @@ sub _Request {
         return ( Success => 0, Error => 'Redmine request path must start with /' );
     }
 
+    my $CooldownKey = $Self->_HTTPCooldownKey( BaseURL => $BaseURL, APIKey => $APIKey );
+    my $CacheObject = $Kernel::OM->Get('Kernel::System::Cache');
+    my $Cooldown = $CacheObject->Get(
+        Type => 'RedmineBridgeHTTP', Key => $CooldownKey, CacheInMemory => 0, CacheInBackend => 1,
+    );
+    my $Remaining = IsHashRefWithData($Cooldown) ? ( $Cooldown->{OpenUntil} || 0 ) - time() : 0;
+    if ( $Remaining > 0 ) {
+        return (
+            Success           => 0,
+            Retryable         => 1,
+            HTTPCode          => $Cooldown->{HTTPCode},
+            RetryAfterSeconds => $Remaining,
+            Error             => "Redmine temporarily busy; retry in ${Remaining}s.",
+        );
+    }
+
     my $Host = $Self->_HostFromURL($BaseURL);
     my $CircuitError = $Self->_CircuitIsOpen( Host => $Host );
     if ($CircuitError) {
@@ -393,19 +471,34 @@ sub _Request {
 
     my $URL = $BaseURL . $Path;
 
-    my $UserAgent = LWP::UserAgent->new(
-        timeout => $Timeout,
-        agent   => 'OTRSRedmineBridge/1.0',
-    );
-    $Self->_ApplySSLOpts(
-        UserAgent    => $UserAgent,
-        ConfigObject => $ConfigObject,
-        Host         => $Host,
-        Timeout      => $Timeout,
-    );
     my $Proxy = $ConfigObject->Get('WebUserAgent::Proxy') || '';
-    if ($Proxy) {
-        $UserAgent->proxy( [ 'http', 'https' ], $Proxy );
+    my $Scope = $Self->{_RequestScope};
+    my $ScopeKey;
+    my $UserAgent;
+    if ($Scope) {
+        $ScopeKey = join "\0", $BaseURL, $Timeout, $Proxy,
+            ( $ConfigObject->Get('Redmine::SSLVersion') // '' ),
+            ( $ConfigObject->Get('Redmine::AllowLegacyTLS') || 0 ),
+            ( $ConfigObject->Get('WebUserAgent::DisableSSLVerification') || 0 );
+        $UserAgent = $Scope->{UserAgent} if ( $Scope->{Key} // '' ) eq $ScopeKey;
+    }
+    if (!$UserAgent) {
+        $UserAgent = LWP::UserAgent->new(
+            timeout    => $Timeout,
+            agent      => 'OTRSRedmineBridge/1.0',
+            keep_alive => $Scope ? 1 : 0,
+        );
+        $Self->_ApplySSLOpts(
+            UserAgent    => $UserAgent,
+            ConfigObject => $ConfigObject,
+            Host         => $Host,
+            Timeout      => $Timeout,
+        );
+        $UserAgent->proxy( [ 'http', 'https' ], $Proxy ) if $Proxy;
+        if ($Scope) {
+            $Scope->{Key} = $ScopeKey;
+            $Scope->{UserAgent} = $UserAgent;
+        }
     }
 
     my $Request = HTTP::Request->new( $Method, $URL );
@@ -426,7 +519,37 @@ sub _Request {
         $Request->content($Payload);
     }
 
-    my $Response = eval { $UserAgent->request($Request) };
+    my $Binary = !( $Param{ExpectJSON} // 1 );
+    my $BinaryContent = '';
+    my $Received = 0;
+    my $TooLarge = 0;
+    my $MaxResponse = $Param{MaxResponseBytes}
+        // $ConfigObject->Get('Redmine::MaxAttachmentBytes') // 5_000_000;
+    $MaxResponse = 5_000_000 if !IsNumber($MaxResponse) || $MaxResponse < 1;
+    if ($Binary) {
+        $UserAgent->max_size($MaxResponse);
+        $Request->header( 'Accept-Encoding' => 'identity' );
+    }
+    elsif ($Scope) {
+        $UserAgent->max_size(undef);
+    }
+    my $Response = eval {
+        if ($Binary) {
+            $UserAgent->request( $Request, sub {
+                my ( $Chunk, $Reply ) = @_;
+                if ( $Received + length($Chunk) > $MaxResponse ) {
+                    $TooLarge = 1;
+                    die "RedmineBodyTooLarge\n";
+                }
+                $Received += length($Chunk);
+                if ( $Param{ContentFile} ) {
+                    print { $Param{ContentFile} } $Chunk or die "Cannot write attachment spool\n";
+                }
+                else { $BinaryContent .= $Chunk; }
+            }, 64 * 1024 );
+        }
+        else { $UserAgent->request($Request); }
+    };
     if ( !$Response || $@ ) {
         my $Detail = $@ || 'no response';
         $Detail =~ s{\s+at\s+/.*}{}s;
@@ -444,13 +567,27 @@ sub _Request {
     }
 
     my $Code = $Response->code();
-
-    # charset=>'none': keep raw octets (Redmine often omits charset → Latin-1 mojibake).
-    # Decode as UTF-8 with replacement — never EncodeInput/_utf8_on on invalid octets
-    # (that causes "Malformed UTF-8 character (fatal)" later in regex/TT).
-    my $Content = $Response->decoded_content( charset => 'none' );
-    $Content = '' if !defined $Content;
-    $Content = $Self->_DecodeUTF8($Content);
+    if ( $TooLarge || ( $Binary && ( $Response->header('Client-Aborted') || '' ) eq 'max_size' ) ) {
+        return ( Success => 0, TooLarge => 1, HTTPCode => $Code,
+            Error => "Attachment exceeds $MaxResponse bytes" );
+    }
+    if ( $Binary && ( $Response->header('X-Died') || $Response->header('Client-Aborted') ) ) {
+        return ( Success => 0, HTTPCode => $Code, Error => 'Attachment download aborted' );
+    }
+    if ( $Binary && $Code =~ m{\A20[0-9]\z} ) {
+        my $Declared = $Response->header('Content-Length');
+        my $Encoding = lc( $Response->header('Content-Encoding') || 'identity' );
+        if ( $Encoding ne 'identity' ) {
+            return ( Success => 0, HTTPCode => $Code, Error => 'Unexpected compressed attachment response' );
+        }
+        if ( defined $Declared && $Declared =~ m{\A\d+\z} && $Declared != $Received ) {
+            return ( Success => 0, HTTPCode => $Code, Error => 'Incomplete attachment response' );
+        }
+    }
+    # Binary responses are octets, never decoded as UTF-8. JSON/errors remain text.
+    my $Content = $Binary && $Code =~ m{\A20[0-9]\z}
+        ? $BinaryContent
+        : $Self->_DecodeUTF8( $Response->decoded_content( charset => 'none' ) // '' );
 
     if ( $Code !~ m{\A20[0-9]\z} ) {
         my $Message = $Response->message() // '';
@@ -461,7 +598,8 @@ sub _Request {
         # LWP uses synthetic HTTP 500 for client connect/TLS failures — not a Redmine status.
         my $ConnectHint = "$Message $Snippet";
         if (
-            $ConnectHint =~ m{Can.?t\s+connect|Connection\s+timed\s+out|timed?\s*out|Name\s+or\s+service\s+not\s+known|SSL\s+connect|certificate\s+verify|Network\s+is\s+unreachable}i
+            $Code == 500
+            && $ConnectHint =~ m{Can.?t\s+connect|Connection\s+timed\s+out|timed?\s*out|Name\s+or\s+service\s+not\s+known|SSL\s+connect|certificate\s+verify|Network\s+is\s+unreachable}i
             )
         {
             my $Detail = $Snippet || $Message;
@@ -480,7 +618,19 @@ sub _Request {
             );
         }
 
-        # HTTP API errors (4xx etc.) do not trip the circuit — Redmine was reachable.
+        my %Retry;
+        if ( $Code == 429 || $Code == 502 || $Code == 503 || $Code == 504 ) {
+            %Retry = (
+                Retryable         => 1,
+                RetryAfterSeconds => $Self->_HTTPCooldownRecordFailure(
+                    Key        => $CooldownKey,
+                    HTTPCode   => $Code,
+                    RetryAfter => scalar $Response->header('Retry-After'),
+                ),
+            );
+        }
+
+        # HTTP API errors do not trip the connect circuit — Redmine was reachable.
         $LogObject->Log(
             Priority => 'error',
             Message  => "Redmine $Method $Path failed HTTP=$Code body=$Snippet",
@@ -490,10 +640,23 @@ sub _Request {
             HTTPCode => $Code,
             Error    => "HTTP $Code: $Snippet",
             Content  => $Content,
+            %Retry,
         );
     }
 
     $Self->_CircuitClear( Host => $Host );
+    # A concurrent request may have recorded a cooldown while this request was
+    # in flight. Only clear the expired record this request originally observed.
+    my $LatestCooldown = $CacheObject->Get(
+        Type => 'RedmineBridgeHTTP', Key => $CooldownKey, CacheInMemory => 0, CacheInBackend => 1,
+    );
+    if ( IsHashRefWithData($Cooldown) && IsHashRefWithData($LatestCooldown)
+        && ( $LatestCooldown->{OpenUntil} || 0 ) <= time()
+        && join( ':', @{$Cooldown}{qw(Count OpenUntil HTTPCode)} )
+            eq join( ':', @{$LatestCooldown}{qw(Count OpenUntil HTTPCode)} ) )
+    {
+        $CacheObject->Delete( Type => 'RedmineBridgeHTTP', Key => $CooldownKey );
+    }
 
     my $Data;
     if ( length $Content && ( $Param{ExpectJSON} // 1 ) ) {
@@ -506,6 +669,7 @@ sub _Request {
         Data     => $Data,
         Content  => $Content,
         BaseURL  => $BaseURL,
+        ContentLength => $Binary ? $Received : length($Content),
     );
 }
 

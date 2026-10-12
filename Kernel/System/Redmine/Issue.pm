@@ -11,6 +11,7 @@ package Kernel::System::Redmine::Issue;
 use strict;
 use warnings;
 use utf8;
+use File::Temp ();
 
 use Kernel::System::VariableCheck qw(:all);
 
@@ -31,7 +32,18 @@ our @ObjectDependencies = (
 # ---------------------------------------------------------------------------
 
 sub EscalateTicket {
+    my ($Self, %Param) = @_;
+    return (Success => 0, Error => 'Need TicketID') if !$Param{TicketID};
+    return $Self->_WithTicketSyncLease(TicketID => $Param{TicketID}, Callback => sub {
+        return $Self->_EscalateTicketLocked(%Param);
+    });
+}
+
+sub _EscalateTicketLocked {
     my ( $Self, %Param ) = @_;
+
+    # One bounded connection cache for this operation, released on every exit.
+    local $Self->{_RequestScope} = {};
 
     for my $Needed (qw(TicketID UserID)) {
         return ( Success => 0, Status => 'error', Error => "Need $Needed" ) if !$Param{$Needed};
@@ -64,57 +76,10 @@ sub EscalateTicket {
         );
     }
 
-    my $CacheObject = $Kernel::OM->Get('Kernel::System::Cache');
-    my $LockKey     = 'EscalateLock::' . $Param{TicketID};
-    if (
-        $CacheObject->Get(
-            Type => 'RedmineBridge',
-            Key  => $LockKey,
-        )
-        )
-    {
-        return (
-            Success => 0,
-            Status  => 'error',
-            Error   => 'Escalation already in progress',
-        );
-    }
-    $CacheObject->Set(
-        Type  => 'RedmineBridge',
-        Key   => $LockKey,
-        Value => 1,
-        TTL   => 120,
-    );
-
-    my $ClearLock = sub {
-        $CacheObject->Delete(
-            Type => 'RedmineBridge',
-            Key  => $LockKey,
-        );
-    };
-
-    # Re-read RedmineID before create (cross-process race).
-    my %TicketFresh = $TicketObject->TicketGet(
-        TicketID      => $Param{TicketID},
-        DynamicFields => 1,
-        UserID        => $Param{UserID},
-        Silent        => 1,
-    );
-    if ( IsStringWithData( $TicketFresh{DynamicField_RedmineID} ) ) {
-        $ClearLock->();
-        return (
-            Success => 1,
-            Status  => 'linked',
-            IssueID => $TicketFresh{DynamicField_RedmineID},
-            URL     => $TicketFresh{DynamicField_RedmineURL} || '',
-        );
-    }
-
     my $ProjectID = $Param{ProjectID} // $ConfigObject->Get('Redmine::ProjectID');
     my $TrackerID = $Param{TrackerID} // $ConfigObject->Get('Redmine::TrackerID');
 
     if ( !$Self->_IsAllowedRedmineProjectID($ProjectID) ) {
-        $ClearLock->();
         return (
             Success => 0,
             Status  => 'error',
@@ -122,6 +87,11 @@ sub EscalateTicket {
                 . ( $ProjectID // '?' )
                 . ' не разрешён для создания задачи (Redmine::AllowedProjectIDs / Redmine::ProjectID).',
         );
+    }
+
+    my %Plan = eval { $Self->_EscalateUploadPlan(%Param) };
+    if ( $@ || !$Plan{Success} ) {
+        return ( Success => 0, Status => 'error', Error => $Plan{Error} || 'Не удалось подготовить вложения.' );
     }
 
     $Self->_SetDF(
@@ -157,7 +127,6 @@ sub EscalateTicket {
     $Subject = substr( $Subject, 0, 250 );
 
     if ( !length $Subject || !length $Body ) {
-        $ClearLock->();
         return (
             Success => 0,
             Status  => 'error',
@@ -189,18 +158,6 @@ sub EscalateTicket {
         1;
     };
 
-    # Collect file bytes only — mint Redmine upload tokens after create+fix.
-    my @PendingUploads = (
-        $Self->_CollectEscalateUploadFiles(
-            TicketID           => $Param{TicketID},
-            IncludeAttachments => $Param{IncludeAttachments},
-            AttachmentKeys     => $Param{AttachmentKeys},
-        ),
-        $Self->_CollectFormIDUploadFiles(
-            FormID => $Param{FormID},
-        ),
-    );
-
     my %Create = eval {
         $Self->CreateIssue(
             Subject        => $Subject,
@@ -211,7 +168,7 @@ sub EscalateTicket {
             AssignedToID   => $Param{AssignedToID},
             DueDate        => $Param{DueDate},
             MassIncident   => $Param{MassIncident},
-            PendingUploads => \@PendingUploads,
+            UploadPlan     => $Plan{Plan},
         );
     };
     if ($@) {
@@ -231,7 +188,6 @@ sub EscalateTicket {
             );
             1;
         };
-        $ClearLock->();
         return ( Success => 0, Status => 'error', Error => "CreateIssue failed: $Die" );
     }
 
@@ -261,7 +217,6 @@ sub EscalateTicket {
             );
             1;
         };
-        $ClearLock->();
         return (
             Success => 0,
             Status  => 'error',
@@ -370,7 +325,6 @@ sub EscalateTicket {
         };
     }
 
-    $ClearLock->();
     return (
         Success => 1,
         Status  => 'created',
@@ -386,6 +340,14 @@ sub EscalateTicket {
 
 # Link this OTRS ticket to an existing Redmine issue (no create). Enables N tickets → 1 issue.
 sub LinkTicketToIssue {
+    my ( $Self, %Param ) = @_;
+    return ( Success => 0, Error => 'Need TicketID' ) if !$Param{TicketID};
+    return $Self->_WithTicketSyncLease( TicketID => $Param{TicketID}, Callback => sub {
+        return $Self->_LinkTicketToIssueLocked(%Param);
+    } );
+}
+
+sub _LinkTicketToIssueLocked {
     my ( $Self, %Param ) = @_;
 
     for my $Needed (qw(TicketID UserID IssueID)) {
@@ -461,6 +423,7 @@ sub LinkTicketToIssue {
     my %User = $Kernel::OM->Get('Kernel::System::User')->GetUserData( UserID => $Param{UserID} );
     my $AgentLabel = $User{UserLogin} || $Param{UserID};
 
+    $Self->_CheckTicketSyncLease();
     # Order: OTRS DFs first, then a compact Redmine journal (ticket link + agent).
     eval {
         $Self->_SetDF(
@@ -503,6 +466,12 @@ sub LinkTicketToIssue {
             TicketID => $Param{TicketID},
             Name     => 'RedmineLastAttachmentID',
             Value    => "$MaxAtt",
+            UserID   => $Param{UserID},
+        );
+        $Self->_SetDF(
+            TicketID => $Param{TicketID},
+            Name     => 'RedmineLastAttachmentSyncOn',
+            Value    => $Issue->{updated_on} // '',
             UserID   => $Param{UserID},
         );
         if ( IsNumber( $Issue->{project}->{id} ) ) {
@@ -586,6 +555,14 @@ sub LinkTicketToIssue {
 # Clear local Redmine link DFs; best-effort note on the Redmine issue.
 sub UnlinkTicketFromIssue {
     my ( $Self, %Param ) = @_;
+    return ( Success => 0, Error => 'Need TicketID' ) if !$Param{TicketID};
+    return $Self->_WithTicketSyncLease( TicketID => $Param{TicketID}, Callback => sub {
+        return $Self->_UnlinkTicketFromIssueLocked(%Param);
+    } );
+}
+
+sub _UnlinkTicketFromIssueLocked {
+    my ( $Self, %Param ) = @_;
 
     for my $Needed (qw(TicketID UserID)) {
         return ( Success => 0, Status => 'error', Error => "Need $Needed" ) if !$Param{$Needed};
@@ -614,7 +591,7 @@ sub UnlinkTicketFromIssue {
         qw(
             RedmineID RedmineURL RedmineStatus RedmineLastError
             RedmineLastJournalID RedmineLastAttachmentID
-            RedmineLastUpdatedOn RedmineLastSyncAt
+            RedmineLastUpdatedOn RedmineLastSyncAt RedmineLastAttachmentSyncOn
             RedmineProjectID RedmineTrackerID
         )
         )
@@ -671,6 +648,14 @@ sub UnlinkTicketFromIssue {
 }
 
 sub RelinkTicketToIssue {
+    my ($Self, %Param) = @_;
+    return (Success => 0, Error => 'Need TicketID') if !$Param{TicketID};
+    return $Self->_WithTicketSyncLease(TicketID => $Param{TicketID}, Callback => sub {
+        return $Self->_RelinkTicketToIssueLocked(%Param);
+    });
+}
+
+sub _RelinkTicketToIssueLocked {
     my ( $Self, %Param ) = @_;
 
     for my $Needed (qw(TicketID UserID IssueID)) {
@@ -698,14 +683,14 @@ sub RelinkTicketToIssue {
     }
 
     if ( IsStringWithData($OldID) ) {
-        my %Un = $Self->UnlinkTicketFromIssue(
+        my %Un = $Self->_UnlinkTicketFromIssueLocked(
             TicketID => $Param{TicketID},
             UserID   => $Param{UserID},
         );
         return %Un if !$Un{Success};
     }
 
-    return $Self->LinkTicketToIssue(
+    return $Self->_LinkTicketToIssueLocked(
         TicketID => $Param{TicketID},
         UserID   => $Param{UserID},
         IssueID  => $NewID,
@@ -830,20 +815,7 @@ sub CreateIssue {
         } @CustomFields;
     }
 
-    my @PendingUploads;
-    if ( IsArrayRefWithData( $Param{PendingUploads} ) ) {
-        @PendingUploads = @{ $Param{PendingUploads} };
-    }
-    elsif ( IsArrayRefWithData( $Param{Uploads} ) ) {
-
-        # Legacy: already-minted tokens (outbound sync still uses this shape).
-        @PendingUploads = map {
-            IsHashRefWithData($_) && $_->{token}
-                ? { TokenReady => 1, %$_ }
-                : ()
-        } @{ $Param{Uploads} };
-    }
-
+    my $UploadPlan = $Param{UploadPlan} || { Files => [] };
     $Kernel::OM->Get('Kernel::System::Log')->Log(
         Priority => 'notice',
         Message  => sprintf(
@@ -857,7 +829,7 @@ sub CreateIssue {
                 ',',
                 map { ( $_->{id} // '?' ) . '=' . ( $_->{value} // '' ) } @CustomFields
             ),
-            scalar @PendingUploads,
+            scalar @{ $UploadPlan->{Files} },
         ),
     );
 
@@ -942,66 +914,40 @@ sub CreateIssue {
         }
     }
 
-    # Attach files after create/fix — mint tokens immediately before PUT.
-    # Attach even if tracker is still wrong.
+    # Read one ticket file at a time, mint its token, then release the bytes.
+    # OTRS 6 exposes extra UploadCache content only as a bounded aggregate.
     my $AttachErr = '';
-    if (@PendingUploads) {
-        my @Uploads;
-        PENDING:
-        for my $Pending (@PendingUploads) {
-            next PENDING if !IsHashRefWithData($Pending);
-            if ( $Pending->{TokenReady} && $Pending->{token} ) {
-                push @Uploads, {
-                    token        => $Pending->{token},
-                    filename     => $Pending->{filename} // 'file',
-                    content_type => $Pending->{content_type} || 'application/octet-stream',
-                };
-                next PENDING;
-            }
-            my $Filename = $Pending->{Filename} // $Pending->{filename} // '';
-            my $Content  = $Pending->{Content};
-            $Content = ${$Content} if ref $Content eq 'SCALAR';
-            next PENDING if !length $Filename || !defined $Content || !length $Content;
-            my %Up = $Self->UploadFile(
-                Filename    => $Filename,
-                Content     => $Content,
-                ContentType => $Pending->{ContentType}
-                    || $Pending->{content_type}
-                    || 'application/octet-stream',
-            );
-            if ( !$Up{Success} || !$Up{Token} ) {
-                $Kernel::OM->Get('Kernel::System::Log')->Log(
-                    Priority => 'error',
-                    Message  => "Redmine UploadFile failed for $Filename: "
-                        . ( $Up{Error} || 'no token' ),
-                );
-                next PENDING;
-            }
-            push @Uploads, {
-                token        => $Up{Token},
-                filename     => $Filename,
-                content_type => $Pending->{ContentType}
-                    || $Pending->{content_type}
-                    || 'application/octet-stream',
-            };
+    my @Uploads;
+    my $TotalBytes = 0;
+    my ( $MaxBytes, $MaxTotal, $MaxCount ) = $Self->_AttachmentLimits();
+    for my $Pending ( @{ $UploadPlan->{Files} } ) {
+        my %File = eval { $Self->_ReadPlannedUpload( File => $Pending ) };
+        if ( $@ || !$File{Success} ) {
+            $AttachErr = $File{Error} || 'Cannot read attachment';
+            next;
         }
-        if (@Uploads) {
-            my %Up = $Self->_Request(
-                Method => 'PUT',
-                Path   => "/issues/$IssueID.json",
-                JSON   => { issue => { uploads => \@Uploads } },
-            );
-            if ( !$Up{Success} ) {
-                $AttachErr = $Self->_FormatRedmineAPIError(%Up) || $Up{Error} || 'upload failed';
-                $Kernel::OM->Get('Kernel::System::Log')->Log(
-                    Priority => 'error',
-                    Message  => "Redmine issue #$IssueID created but attachments failed: $AttachErr",
-                );
-            }
+        my $Content = $File{Content};
+        $Content = ${$Content} if ref $Content eq 'SCALAR';
+        next if !defined $Content || !length $Content;
+        if ( length($Content) > $MaxBytes || $TotalBytes + length($Content) > $MaxTotal
+            || @Uploads >= $MaxCount ) {
+            $AttachErr = 'Превышен лимит вложений; часть файлов не отправлена.';
+            next;
         }
-        elsif (@PendingUploads) {
-            $AttachErr = 'could not mint Redmine upload tokens for attachments';
+        $TotalBytes += length($Content);
+        my %Up = eval { $Self->UploadFile( Filename => $File{Filename}, Content => $Content ) };
+        if ( $@ || !$Up{Success} || !$Up{Token} ) {
+            $AttachErr = $Up{Error} || 'Cannot upload attachment';
+            next;
         }
+        push @Uploads, { token => $Up{Token}, filename => $File{Filename},
+            content_type => $File{ContentType} || 'application/octet-stream' };
+    }
+    if (@Uploads) {
+        my %Up = $Self->_Request( Method => 'PUT', Path => "/issues/$IssueID.json",
+            JSON => { issue => { uploads => \@Uploads } } );
+        $AttachErr = $Self->_FormatRedmineAPIError(%Up) || $Up{Error} || 'upload failed'
+            if !$Up{Success};
     }
 
     if ( !IsNumber($GotTracker) || ( 0 + $GotTracker ) != ( 0 + $TrackerID ) ) {
@@ -1363,107 +1309,119 @@ sub ListEscalateAttachments {
     return @List;
 }
 
-sub _CollectEscalateUploadFiles {
-    my ( $Self, %Param ) = @_;
-
-    return () if !$Param{TicketID};
-
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
-    return () if !$ConfigObject->Get('Redmine::SyncAttachments');
-
-    if ( exists $Param{IncludeAttachments} && !$Param{IncludeAttachments} ) {
-        return ();
+sub _AttachmentLimits {
+    my ($Self) = @_;
+    my $Config = $Kernel::OM->Get('Kernel::Config');
+    my @Limits;
+    for my $Item (
+        [ 'Redmine::MaxAttachmentBytes', 5_000_000 ],
+        [ 'Redmine::MaxAttachmentTotalBytes', 20_000_000 ],
+        [ 'Redmine::MaxAttachmentCount', 20 ],
+    ) {
+        my $Value = $Config->Get( $Item->[0] );
+        push @Limits, IsNumber($Value) && $Value > 0 ? 0 + $Value : $Item->[1];
     }
-
-    my @Candidates = $Self->ListEscalateAttachments( TicketID => $Param{TicketID} );
-    return () if !@Candidates;
-
-    my %Want;
-    my $Filter = 0;
-    if ( IsArrayRefWithData( $Param{AttachmentKeys} ) ) {
-        $Filter = 1;
-        for my $Key ( @{ $Param{AttachmentKeys} } ) {
-            next if !defined $Key || !length $Key;
-            $Want{$Key} = 1;
-        }
-    }
-
-    my $ArticleObject = $Kernel::OM->Get('Kernel::System::Ticket::Article');
-    my $Max           = $ConfigObject->Get('Redmine::MaxAttachmentBytes') || 5_000_000;
-    my @Files;
-
-    CANDIDATE:
-    for my $Item (@Candidates) {
-        next CANDIDATE if $Filter && !$Want{ $Item->{Key} };
-        next CANDIDATE if $Item->{TooLarge};
-
-        my $Backend = $ArticleObject->BackendForArticle(
-            TicketID  => $Param{TicketID},
-            ArticleID => $Item->{ArticleID},
-        );
-        my %File = $Backend->ArticleAttachment(
-            ArticleID => $Item->{ArticleID},
-            FileID    => $Item->{FileID},
-            UserID    => 1,
-        );
-        next CANDIDATE if !%File;
-
-        my $Filename = $File{Filename} // $Item->{Filename};
-        my $Content  = $File{Content};
-        $Content = ${$Content} if ref $Content eq 'SCALAR';
-        next CANDIDATE if !defined $Content || !length $Content;
-        if ( length($Content) > $Max ) {
-            $Kernel::OM->Get('Kernel::System::Log')->Log(
-                Priority => 'notice',
-                Message  => "Redmine escalate skip attachment $Filename (too large)",
-            );
-            next CANDIDATE;
-        }
-
-        push @Files, {
-            Filename    => $Filename,
-            Content     => $Content,
-            ContentType => $File{ContentType} || $Item->{ContentType} || 'application/octet-stream',
-        };
-    }
-
-    return @Files;
+    return @Limits;
 }
 
-sub _CollectFormIDUploadFiles {
+sub _EscalateUploadPlan {
     my ( $Self, %Param ) = @_;
-
-    return () if !$Param{FormID};
-
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
-    my $Max          = $ConfigObject->Get('Redmine::MaxAttachmentBytes') || 5_000_000;
-    my @CacheFiles   = $Kernel::OM->Get('Kernel::System::Web::UploadCache')->FormIDGetAllFilesData(
-        FormID => $Param{FormID},
-    );
+    my ( $MaxBytes, $MaxTotal, $MaxCount ) = $Self->_AttachmentLimits();
     my @Files;
-
-    FILE:
-    for my $File (@CacheFiles) {
-        my $Filename = $File->{Filename} // '';
-        next FILE if !length $Filename;
-        my $Content = $File->{Content};
-        $Content = ${$Content} if ref $Content eq 'SCALAR';
-        next FILE if !defined $Content || !length $Content;
-        if ( length($Content) > $Max ) {
-            $Kernel::OM->Get('Kernel::System::Log')->Log(
-                Priority => 'notice',
-                Message  => "Redmine escalate skip FormID file $Filename (too large)",
-            );
-            next FILE;
+    if ( $Kernel::OM->Get('Kernel::Config')->Get('Redmine::SyncAttachments')
+        && ( !exists $Param{IncludeAttachments} || $Param{IncludeAttachments} ) ) {
+        my %Want = map { $_ => 1 } @{ $Param{AttachmentKeys} || [] };
+        for my $Meta ( $Self->ListEscalateAttachments( TicketID => $Param{TicketID} ) ) {
+            next if $Meta->{TooLarge};
+            next if IsArrayRefWithData( $Param{AttachmentKeys} ) && !$Want{ $Meta->{Key} };
+            push @Files, { %$Meta, Origin => 'ticket', TicketID => $Param{TicketID} };
         }
-        push @Files, {
-            Filename    => $Filename,
-            Content     => $Content,
-            ContentType => $File->{ContentType} || 'application/octet-stream',
-        };
     }
+    if ( $Param{FormID} ) {
+        for my $Meta ( $Kernel::OM->Get('Kernel::System::Web::UploadCache')->FormIDGetAllFilesMeta(
+            FormID => $Param{FormID},
+        ) ) {
+            my $Size = $Meta->{FilesizeRaw} // $Meta->{Filesize};
+            return ( Success => 0, Error => 'Не удалось определить размер загруженного файла.' )
+                if !IsNumber($Size) || $Size < 0;
+            push @Files, { %$Meta, Origin => 'form', FormID => $Param{FormID}, Size => 0 + $Size };
+        }
+    }
+    my $Total = 0;
+    for my $File (@Files) {
+        my $Size = 0 + ( $File->{Size} || 0 );
+        return ( Success => 0, Error => 'Превышен допустимый размер вложения.' ) if $Size > $MaxBytes;
+        $Total += $Size;
+    }
+    if ( @Files > $MaxCount || $Total > $MaxTotal ) {
+        return ( Success => 0, Error => "Превышен общий лимит вложений: максимум $MaxCount файлов и $MaxTotal байт." );
+    }
+    # UploadCache FileID is positional in OTRS 6. Freeze its content before
+    # network calls; reject a changed metadata snapshot instead of matching IDs.
+    my @FormFiles = grep { $_->{Origin} eq 'form' } @Files;
+    if (@FormFiles) {
+        my @Data = $Kernel::OM->Get('Kernel::System::Web::UploadCache')->FormIDGetAllFilesData(
+            FormID => $Param{FormID},
+        );
+        my $Signature = sub {
+            my ( $File, $Size ) = @_;
+            return join "\0", $File->{Filename} // '',
+                $File->{ContentType} || 'application/octet-stream', $File->{ContentID} // '', $Size;
+        };
+        my %Expected;
+        $Expected{ $Signature->( $_, $_->{Size} ) }++ for @FormFiles;
+        my $ActualTotal = $Total;
+        $ActualTotal -= $_->{Size} for @FormFiles;
+        return ( Success => 0, Error => 'Список загруженных файлов изменился; повторите создание задачи.' )
+            if @Data != @FormFiles;
+        my @Prepared;
+        for my $Data (@Data) {
+            my $Content = delete $Data->{Content};
+            $Content = $$Content if ref $Content eq 'SCALAR';
+            return ( Success => 0, Error => 'Не удалось прочитать загруженный файл.' ) if !defined $Content;
+            my $Size = length $Content;
+            my $ReportedSize = $Data->{FilesizeRaw} // $Data->{Filesize};
+            my $Key = $Signature->( $Data, $ReportedSize // '' );
+            return ( Success => 0, Error => 'Список загруженных файлов изменился; повторите создание задачи.' )
+                if !$Expected{$Key};
+            $Expected{$Key}--;
+            # FS UploadCache metadata may underreport size; enforce raw bytes.
+            $ActualTotal += $Size;
+            return ( Success => 0, Error => 'Превышен допустимый размер вложений.' )
+                if $Size > $MaxBytes || $ActualTotal > $MaxTotal;
+            my $Temp = File::Temp->new( UNLINK => 1 );
+            binmode $Temp;
+            print {$Temp} $Content or die "Cannot spool form attachment\n";
+            push @Prepared, { Origin => 'spool', Handle => $Temp, Size => $Size,
+                Filename => $Data->{Filename}, ContentType => $Data->{ContentType} };
+        }
+        @Files = ( ( grep { $_->{Origin} eq 'ticket' } @Files ), @Prepared );
+    }
+    return ( Success => 1, Plan => { Files => \@Files } );
+}
 
-    return @Files;
+sub _ReadPlannedUpload {
+    my ( $Self, %Param ) = @_;
+    my $File = $Param{File};
+    my %Data;
+    if ( $File->{Origin} eq 'ticket' ) {
+        my $Backend = $Kernel::OM->Get('Kernel::System::Ticket::Article')->BackendForArticle(
+            TicketID => $File->{TicketID}, ArticleID => $File->{ArticleID},
+        );
+        %Data = $Backend->ArticleAttachment( ArticleID => $File->{ArticleID},
+            FileID => $File->{FileID}, UserID => 1 );
+    }
+    else {
+        my $Handle = $File->{Handle};
+        seek( $Handle, 0, 0 ) or return ( Success => 0, Error => 'Не удалось открыть временное вложение.' );
+        my $Content = '';
+        my $Read = read( $Handle, $Content, $File->{Size} + 1 );
+        return ( Success => 0, Error => 'Не удалось прочитать временное вложение.' )
+            if !defined $Read || $Read != $File->{Size};
+        %Data = ( Content => $Content, Filename => $File->{Filename}, ContentType => $File->{ContentType} );
+    }
+    return ( Success => 0, Error => 'Не удалось прочитать вложение.' ) if !%Data;
+    return ( %Data, Success => 1, Filename => $Data{Filename} || $File->{Filename} );
 }
 
 # ---------------------------------------------------------------------------

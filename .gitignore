@@ -21,3 +21,6 @@ dist/
 
 # Lab / one-off helpers (not the package)
 scripts/
+
+# Local generated architecture graph and query cache
+graphify-out/
